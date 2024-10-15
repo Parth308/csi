@@ -1,0 +1,229 @@
+{
+    "currentLeads": [
+        {
+            "id": "1",
+            "title": "Ekansh Srivastava",
+            "subtitle": "President",
+            "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839490/Untitled_design_-_Ekansh_Srivastava_rbmktv.jpg",
+            "linkedin": "https://www.linkedin.com/in/ekansh-srivastava/",
+            "github": "https://github.com/ekansh-srivastava"
+        },
+        {
+            "id": "2",
+            "title": "Siddhant Srivastava",
+            "subtitle": "Vice President",
+            "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839508/DSC04290_-_Siddhant_Srivastava_b4sahc.jpg",
+            "linkedin": "https://www.linkedin.com/in/siddhant-srivastava/",
+            "github": "https://github.com/siddhant-srivastava"
+        },
+		{
+			"id": "3",
+			"title": "Kshitij Bhushan",
+			"subtitle": " Executive",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839500/20230630_095557_-_Kshitij_Bhushan_vvnait.jpg"
+		},
+		{
+			"id": "4",
+			"title": "Trupti Sonagara",
+			"subtitle": " Executive",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839498/IMG-20221030-WA0010_-_Trupti_Sonagara_xttoqx.jpg"
+		},
+		{
+			"id": "5",
+			"title": "Navya Srivastava",
+			"subtitle": "Technical Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839478/IMG_20230418_185135_-_NAVYA_SRIVASTAVA_RA2111003030111_bzg5ms.jpg"
+		},
+		{
+			"id": "6",
+			"title": "Garima Bhandari",
+			"subtitle": "Technical Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839479/IMG-20240215-WA0090_-_Garima_Bhandari_v90qtz.jpg"
+		},
+		{
+			"id": "7",
+			"title": "Mradul Kapoor",
+			"subtitle": "App Development Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839493/IMG_20240224_201816_-_Mradul_Kapoor_zprat6.jpg"
+		},
+		{
+			"id": "8",
+			"title": "Ravi Shankar",
+			"subtitle": "Web Development Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839502/IMG_20240222_235317_-_Ravi_Shankar_vyo7ih.png"
+		},
+		{
+			"id": "9",
+			"title": "Palak Diwedi",
+			"subtitle": "CP Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839481/IMG-20231027-WA0030_-_Palak_Dwivedi_puwiwa.jpg"
+		},
+		{
+			"id": "10",
+			"title": "Kinshuk",
+			"subtitle": "CP Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839474/IMG_20220928_174123_-_KINSHUK_GOEL_RA2111003030320_p2y10d.png"
+		},
+		{
+			"id": "11",
+			"title": "Abhishek Khare",
+			"subtitle": "Management Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839497/DSC04310_-_Abhishek_Khare_d937b9.jpg"
+		},
+		{
+			"id": "12",
+			"title": "Manav Singh Shekhawat",
+			"subtitle": "Management Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839473/Manav_Singh_Shekhawat_-_Manav_Shekhawat_omtbfw.jpg"
+		},
+		{
+			"id": "13",
+			"title": "Ishita Mishra",
+			"subtitle": "Management Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839509/DSC04300_-_ISHITA_MISHRA_RA2111003030115_lizzoa.jpg"
+		},
+		{
+			"id": "14",
+			"title": "Kanika Sharma",
+			"subtitle": "Event Management Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839505/InShot_20240221_205615117_-_KANIKA_SHARMA_RA2211056030004_ukwbiw.jpg"
+		},
+		{
+			"id": "15",
+			"title": "Keshav Bhatia",
+			"subtitle": "Event Management Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839470/Profile_pic_-_Keshav_Bhatia_f7c3zx.jpg"
+		},
+		{
+			"id": "16",
+			"title": "Debasmita Mukherjee",
+			"subtitle": "Anchor",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839475/Debo_formal_-_DEBASMITA_MUKHERJEE_RA2211026030005_m5phnn.jpg"
+		},
+		{
+			"id": "17",
+			"title": "Soham Roy",
+			"subtitle": "Treasurer & File Manager",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839474/DSC_0167_-_SOHAM_ROY_RA2111003030086_gvsin4.jpg"
+		},
+		{
+			"id": "18",
+			"title": "Himang Bhardwaj",
+			"subtitle": "Creative Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839490/Himang_ungi0y.png"
+		},
+		{
+			"id": "19",
+			"title": "Amit Kumar Gupta",
+			"subtitle": "Creative Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839486/Profile_Photo_-_AMIT_GUPTA_RA2111003030106_wika14.jpg"
+		},
+		{
+			"id": "20",
+			"title": "Aditya Singh Pramar",
+			"subtitle": "Creative Co-Lead",
+			"imageUrl": "https://www.shutterstock.com/image-vector/young-smiling-man-avatar-brown-600nw-2261401207.jpg"
+		},
+		{
+			"id": "21",
+			"title": "Ananya Vij",
+			"subtitle": "Social Designing Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839483/Ananya_hzyalp.png"
+		},
+		{
+			"id": "22",
+			"title": "Anubhav Bhattacharyya",
+			"subtitle": "Content Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839492/20240222_213642_-_ANUBHAV_BHATTACHARYYA_RA2111003030339_y7rblc.jpg"
+		},
+		{
+			"id": "23",
+			"title": "Utkarsh Verma",
+			"subtitle": "Content Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839476/IMG_20230415_090058_208_-_UTKARSH_VERMA_RA2111003030365_eiibkp.webp"
+		},
+		{
+			"id": "24",
+			"title": "Arya Jha",
+			"subtitle": "Social Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839471/IMG-20240223-WA0000_-_Arya_Jha_gvyfi4.jpg"
+		},
+		{
+			"id": "25",
+			"title": "Shauryadeep Singh",
+			"subtitle": "Social Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839472/Itiswhatitis_-_shauryadeep_singh_iol4ii.jpg"
+		},
+		{
+			"id": "26",
+			"title": "Naman Bhattacharya",
+			"subtitle": "Photography Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839486/NAman_xgj9jt.png"
+		},
+		{
+			"id": "27",
+			"title": "Krish Billa",
+			"subtitle": "Photography Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839484/IMG_0366_-_KRISH_BILLA_RA2211026030104_-Photoroom.png-Photoroom_ikc7qg.png"
+		},
+		{
+			"id": "28",
+			"title": "Aanya Bhardwa",
+			"subtitle": "Publicity & Public Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839471/IMG-20240131-WA0072_-_Aanya_Bhardwaj_st2dt1.jpg"
+		},
+		{
+			"id": "29",
+			"title": "Sanya Vohra",
+			"subtitle": "Publicity & Public Co-Lead",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839489/IMG_20240222_210540_-_SANYA_VOHRA_RA2211056030017_yopl95.jpg"
+		},
+		{
+			"id": "30",
+			"title": "Ankit Tiwari",
+			"subtitle": "Mentor",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839507/DSC04274_-_Ankit_Tiwari_iudva5.jpg"
+		},
+		{
+			"id": "31",
+			"title": "Nikhil Sathe",
+			"subtitle": "Mentor",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839481/Nikhil_ud7vig.png"
+		}
+    ],
+    "pastLeads": [
+        {
+            "id": "101",
+            "title": "Samriddha Basu",
+            "subtitle": "Former President",
+            "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719838850/SamriddhaBasu_emua3a.png",
+            "linkedin": "https://www.linkedin.com/in/samriddha-basu-cloud",
+            "github": "https://github.com/samriddha-basu-cloud"
+        },
+        {
+            "id": "102",
+            "title": "Archita Sharda",
+            "subtitle": "Former Vice President",
+            "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719838846/ArchitaSharda_yoyylx.png",
+            "linkedin": "https://www.linkedin.com/in/archita-sharda",
+            "github": "https://github.com/archita-sharda"
+        },
+		{
+			"id": "103",
+			"title": "Shreyansh Sharma",
+			"subtitle": "Former Executive",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719838847/ExPresident_sdkjo0.jpg",
+			"linkedin":"https://www.linkedin.com/in/shreyansh-sharma-cs",
+			"github":"https://github.com/shreyansh-sharma-cs"
+		},
+		{
+			"id": "104",
+			"title": "Tounov Dutta",
+			"subtitle": "Former Co-Executive",
+			"imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719838846/IMG-20240620-WA0000_alvznd.jpg",
+			"linkedin":"https://www.linkedin.com/in/tounov-dutta",
+			"github":"https://github.com/toonov-dutta"
+		}
+        
+    ]
+}
