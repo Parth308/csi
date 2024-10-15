@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Menu, X } from 'lucide-react'
+import { Menu} from 'lucide-react'
 
 interface NavBarProps {
   activeSection: string;
@@ -19,12 +19,15 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
 
   const handleNavigation = (sectionId: string) => {
     if (pathname === '/') {
-      scrollToSection && scrollToSection(sectionId as 'home' | 'about' | 'faculty' | 'events')
+      if (scrollToSection) {
+        scrollToSection(sectionId as 'home' | 'about' | 'faculty' | 'events');
+      }
     } else {
-      window.location.href = `/#${sectionId}`
+      window.location.href = `/#${sectionId}`;
     }
-    setIsOpen(false)
-  }
+    setIsOpen(false);
+  };
+  
 
   useEffect(() => {
     const handleResize = () => {

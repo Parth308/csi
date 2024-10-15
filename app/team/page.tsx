@@ -131,7 +131,7 @@ interface TeamMemberCardProps {
   subtitle: string
 }
 
-const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, role, image, linkedin, github, index, isCurrent, subtitle }) => (
+const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ name, image, linkedin, github, index, subtitle }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}

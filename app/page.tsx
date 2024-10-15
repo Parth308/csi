@@ -1,6 +1,5 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
-import { motion, useAnimation } from 'framer-motion'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import HeroSection from '@/components/HeroSection'
