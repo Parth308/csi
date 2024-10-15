@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# 🌐 CSI SRMIST Website
 
-First, run the development server:
+Welcome to the official website of **CSI SRMIST**, built using [Next.js](https://nextjs.org). This project is designed to provide information about the **Computer Society of India (CSI) SRMIST** chapter, its events, and its members.
+
+## 📚 Table of Contents
+
+- [🚀 Getting Started](#getting-started)
+- [✨ Features](#features)
+- [🛠 Technologies Used](#technologies-used)
+- [🤝 Contributing](#contributing)
+- [📄 License](#license)
+
+## 🚀 Getting Started
+
+To get started with this project, follow the instructions below.
+
+### Prerequisites
+
+Make sure you have the following installed:
+
+- **Node.js** (version 14.x or later)
+- **Git**
+
+### Installation
+
+First, clone the repository:
+
+```bash
+git clone https://github.com/Parth308/csi.git
+cd csi-srmist
+```
+
+Install the necessary dependencies:
+
+```bash
+npm install
+```
+
+### Running the Development Server
+
+Once the dependencies are installed, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the website in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
+## ✨ Features
 
-To learn more about Next.js, take a look at the following resources:
+- 🏠 **Homepage**: Overview of the club and its mission.
+- 📅 **Events**: Information about upcoming and past events.
+- 👥 **Team**: Meet the team and faculty behind CSI SRMIST.
+- 📝 **Join Us**: Interested in joining CSI? Submit an application.
+- 📱 **Responsive Design**: Optimized for mobile, tablet, and desktop.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠 Technologies Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Next.js**: React framework for server-side rendering and static site generation.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **TypeScript**: JavaScript with type definitions for enhanced development.
+- **Axios**: Promise-based HTTP client for API requests.
 
-## Deploy on Vercel
+## 🤝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We welcome contributions! To contribute:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add new feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Create a pull request.
+
+Please follow the [code of conduct](CODE_OF_CONDUCT.md) and ensure all changes pass tests and linters.
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+👨‍💻 Made with ❤️ by **CSI SRMIST Web Development Team**.
