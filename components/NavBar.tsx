@@ -54,11 +54,7 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
             <NavLink href="/#faculty" isActive={pathname === '/' && activeSection === 'faculty'} onClick={() => handleNavigation('faculty')}>Faculty</NavLink>
             <NavLink href="/#events" isActive={pathname === '/' && activeSection === 'events'} onClick={() => handleNavigation('events')}>Events</NavLink>
             <NavLink href="/team" isActive={pathname === '/team'}>Team</NavLink>
-            <Link href="/join-us">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              Join Us
-            </Button>
-            </Link>
+            <NavLink href="/join-us" isActive={pathname === '/join-us'}>Join Us</NavLink>
           </nav>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
