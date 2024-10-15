@@ -54,7 +54,11 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
             <NavLink href="/#faculty" isActive={pathname === '/' && activeSection === 'faculty'} onClick={() => handleNavigation('faculty')}>Faculty</NavLink>
             <NavLink href="/#events" isActive={pathname === '/' && activeSection === 'events'} onClick={() => handleNavigation('events')}>Events</NavLink>
             <NavLink href="/team" isActive={pathname === '/team'}>Team</NavLink>
-            <NavLink href="/join-us" isActive={pathname === '/join-us'}>Join Us</NavLink>
+            <Link href="/join-us">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              Join Us
+            </Button>
+            </Link>
           </nav>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -70,9 +74,11 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
                 <MobileNavLink href="/#faculty" isActive={pathname === '/' && activeSection === 'faculty'} onClick={() => handleNavigation('faculty')}>Faculty</MobileNavLink>
                 <MobileNavLink href="/#events" isActive={pathname === '/' && activeSection === 'events'} onClick={() => handleNavigation('events')}>Events</MobileNavLink>
                 <MobileNavLink href="/team" isActive={pathname === '/team'}>Team</MobileNavLink>
+                <Link href="/join-us">
                 <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full">
                   Join Us
                 </Button>
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
