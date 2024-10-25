@@ -28,7 +28,7 @@ First, clone the repository:
 
 ```bash
 git clone https://github.com/Parth308/csi.git
-cd csi-srmist
+cd csi
 ```
 
 Install the necessary dependencies:
