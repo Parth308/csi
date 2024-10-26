@@ -1,77 +1,177 @@
-import { useEffect } from 'react'
-import Image from 'next/image'
-import { motion, useAnimation } from 'framer-motion'
+import React from 'react';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-export default function CoolEventsSection() {
-  const controls = useAnimation()
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 1,
+      staggerChildren: 0.4
+    }
+  }
+};
 
-  useEffect(() => {
-    controls.start(i => ({
-      rotate: [0, 360],
-      transition: { repeat: Infinity, duration: 20, delay: i * 0.2 },
-    }))
-  }, [controls])
+const itemVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
 
-  return (
-    <section className="py-20 bg-gray-800 overflow-hidden">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-12 text-center text-blue-300">Cool Random Events</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
-          <motion.div
-            className="absolute inset-0 z-0"
-            animate={controls}
-            custom={0}
-          >
-            <div className="w-full h-full bg-gradient-to-r from-blue-500 to-blue-700 opacity-10 rounded-full" />
-          </motion.div>
-          <motion.div
-            className="absolute inset-0 z-0"
-            animate={controls}
-            custom={1}
-          >
-            <div className="w-full h-full bg-gradient-to-r from-blue-700 to-blue-900 opacity-10 rounded-full" />
-          </motion.div>
-          <CoolEventCard
-            title="Midnight Coding Marathon"
-            description="Our annual 12-hour coding spree fueled by pizza and energy drinks. Last year's winner created a fully functional AI chatbot!"
-            image="/placeholder.svg"
-          />
-          <CoolEventCard
-            title="Tech Treasure Hunt"
-            description="A campus-wide scavenger hunt using AR technology. Participants solved coding puzzles to unlock clues and navigate to the next location."
-            image="/placeholder.svg"
-          />
-          <CoolEventCard
-            title="Retro Gaming Night"
-            description="We transformed our lab into an 80s arcade, complete with classic consoles and a game development challenge using vintage hardware."
-            image="/placeholder.svg"
-          />
-          <CoolEventCard
-            title="AI vs. Human Chess Tournament"
-            description="Our student-developed AI went head-to-head with chess champions. The nail-biting final match ended in a surprising draw!"
-            image="/placeholder.svg"
-          />
-        </div>
-      </div>
-    </section>
-  )
-}
+const events = [
+  {
+    title: "Midnight Coding Marathon",
+    description: "Our annual 12-hour coding spree fueled by pizza and energy drinks. Last year's winner created a fully functional AI chatbot!",
+    image: "/api/placeholder/600/400",
+    tags: ["Coding", "Competition", "Fun"]
+  },
+  {
+    title: "Tech Treasure Hunt",
+    description: "A campus-wide scavenger hunt using AR technology. Participants solved coding puzzles to unlock clues and navigate to the next location.",
+    image: "/api/placeholder/600/400",
+    tags: ["AR", "Puzzle", "Adventure"]
+  },
+  {
+    title: "Retro Gaming Night",
+    description: "We transformed our lab into an 80s arcade, complete with classic consoles and a game development challenge using vintage hardware.",
+    image: "/api/placeholder/600/400",
+    tags: ["Gaming", "Retro", "Development"]
+  },
+  {
+    title: "AI vs. Human Chess Tournament",
+    description: "Our student-developed AI went head-to-head with chess champions. The nail-biting final match ended in a surprising draw!",
+    image: "/api/placeholder/600/400",
+    tags: ["AI", "Chess", "Competition"]
+  }
+];
 
-interface CoolEventCardProps {
+interface EventCardProps {
   title: string;
   description: string;
   image: string;
+  tags: string[];
+  index: number;
 }
 
-const CoolEventCard = ({ title, description, image }: CoolEventCardProps) => (
+const EventCard = ({ title, description, image, tags}: EventCardProps) => (
   <motion.div
-    whileHover={{ scale: 1.03 }}
-    className="bg-gray-900 rounded-lg shadow-xl overflow-hidden z-10"
+    variants={itemVariants}
+    whileHover={{ y: -5 }}
+    className="bg-white dark:bg-blue-900/50 rounded-2xl border border-blue-50 dark:border-blue-800 overflow-hidden backdrop-blur-sm"
   >
-    <Image src={image} alt={title} width={600} height={400} className="w-full h-48 object-cover" />
+    <div className="relative h-48">
+      <Image
+        src={image}
+        alt={title}
+        fill
+        className="object-cover transition-transform duration-300 group-hover:scale-110"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+    </div>
     <div className="p-6">
-      <h3 className="text-xl font-semibold mb-2 text-blue-300">{title}</h3>
-      <p className="text-blue-100">{description}</p>
+      <h3 className="text-xl font-bold text-blue-600 dark:text-blue-300 mb-3">
+        {title}
+      </h3>
+      <p className="text-gray-600 dark:text-gray-300 mb-4">
+        {description}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span
+            key={tag}
+            className="px-3 py-1 text-sm bg-blue-50 dark:bg-blue-800/50 text-blue-600 dark:text-blue-300 rounded-full"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
     </div>
   </motion.div>
-)
+);
+
+export default function CoolEventsSection() {
+  return (
+    <section className="pt-24 pb-40 bg-gradient-to-b from-white to-[#f0f9ff] dark:from-blue-900 dark:to-blue-950 relative overflow-hidden">
+      <motion.div 
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1.5 }}
+        viewport={{ once: true }}
+      >
+        <motion.div 
+          className="absolute top-40 -right-20 w-96 h-96 bg-blue-400 dark:bg-blue-600 rounded-full blur-3xl opacity-20"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2]
+          }}
+          transition={{ 
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-40 -left-20 w-96 h-96 bg-blue-300 dark:bg-blue-500 rounded-full blur-3xl opacity-20"
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.2, 0.25, 0.2]
+          }}
+          transition={{ 
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+      </motion.div>
+
+      <motion.div 
+        className="container mx-auto px-4 relative"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+      >
+        <motion.div 
+          className="text-center mb-24"
+          variants={itemVariants}
+        >
+          <motion.h2 
+            className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-200 bg-clip-text text-transparent mb-6"
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            Cool Random Events
+          </motion.h2>
+          <motion.div 
+            className="w-32 h-1.5 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto rounded-full"
+            initial={{ width: 0 }}
+            whileInView={{ width: 128 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          />
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {events.map((event, index) => (
+            <EventCard
+              key={event.title}
+              {...event}
+              index={index}
+            />
+          ))}
+        </div>
+      </motion.div>
+    </section>
+  );
+}
