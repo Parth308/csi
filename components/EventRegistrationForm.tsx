@@ -49,7 +49,6 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     
-    // Basic validation
     if (Object.values(formData).some(value => value === '')) {
       toast({
         title: "Error",
@@ -59,7 +58,6 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
       return
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.officialEmail)) {
       toast({
