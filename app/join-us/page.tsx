@@ -35,11 +35,12 @@ export default function JoinUs() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen flex flex-col bg-gray-900 text-blue-100">
-        <NavBar activeSection={''} />
-        <main className="flex-grow pt-20">
-          <div className="container mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold text-center mb-8 text-blue-300">Join Us</h1>
+<div className="min-h-screen flex flex-col bg-white text-gray-900 relative"> {/* Added relative */}
+  <div className="absolute top-0 w-full h-[60vh] bg-gradient-to-b from-gray-300 to-white z-0" /> {/* Added z-0 */}
+  <NavBar activeSection={''} />
+  <main className="flex-grow pt-20 relative z-1"> {/* z-1 to stay above gradient */}
+    <div className="container mx-auto px-4 py-12">
+      <h1 className="text-4xl font-bold text-center mb-8 text-blue-400">Join Us</h1>
             
             <AnimatePresence mode="wait">
               {isRegistrationOpen ? (
@@ -56,3 +57,10 @@ export default function JoinUs() {
     </ToastProvider>
   )
 }
+
+
+
+
+
+
+
