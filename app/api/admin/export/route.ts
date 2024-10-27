@@ -1,19 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as xlsx from 'xlsx'
 
+interface Event {
+  _id: string;
+  name: string;
+}
+
+interface Registration {
+  name: string;
+  registrationNumber: string;
+  officialEmail: string;
+  phoneNumber: string;
+  event: string | { _id: string; name: string };
+  createdAt: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { registrations } = await request.json()
+    const { registrations, events } = await request.json()
 
     // Create workbook and worksheet
     const workbook = xlsx.utils.book_new()
-    interface Registration {
-      name: string;
-      registrationNumber: string;
-      officialEmail: string;
-      phoneNumber: string;
-      event: string;
-      createdAt: string;
+
+    const getEventName = (eventData: Registration['event']) => {
+      if (typeof eventData === 'string') {
+        const event = events.find((e: Event) => e._id === eventData)
+        return event?.name || eventData
+      }
+      return eventData.name
     }
 
     const worksheet = xlsx.utils.json_to_sheet(registrations.map((reg: Registration) => ({
@@ -21,7 +35,7 @@ export async function POST(request: NextRequest) {
       'Registration Number': reg.registrationNumber,
       Email: reg.officialEmail,
       'Phone Number': reg.phoneNumber,
-      Event: reg.event,
+      Event: getEventName(reg.event),
       'Registration Date': new Date(reg.createdAt).toLocaleDateString()
     })))
 

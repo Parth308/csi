@@ -26,7 +26,7 @@ import {
   Line,
   Legend
 } from 'recharts'
-import { Download, Users, Calendar, TrendingUp, Home, LayoutDashboard, ChevronLeft, ChevronRight, Loader2, PlusCircle } from 'lucide-react'
+import { Download, Users, Calendar, TrendingUp, Home, LayoutDashboard, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { DateRange } from "react-day-picker"
@@ -40,7 +40,7 @@ interface Registration {
   registrationNumber: string
   officialEmail: string
   phoneNumber: string
-  event: string
+  event: string | { _id: string; name: string }
   createdAt: string
 }
 
@@ -52,7 +52,7 @@ interface Event {
 }
 
 export default function AdminDashboard() {
-  useSession()
+  const { status } = useSession()
   const [registrations, setRegistrations] = useState<Registration[]>([])
   const [events, setEvents] = useState<Event[]>([])
   const [stats, setStats] = useState<{
@@ -76,7 +76,14 @@ export default function AdminDashboard() {
   const { toast } = useToast()
 
   useEffect(() => {
+    if (status === 'unauthenticated') {
+      window.location.href = '/admin/login'
+    }
+  }, [status])
+
+  useEffect(() => {
     const fetchData = async () => {
+      if (status !== 'authenticated') return
       setLoading(true)
       setError(null)
       try {
@@ -97,10 +104,19 @@ export default function AdminDashboard() {
 
         setRegistrations(registrationsData.registrations)
         setEvents(eventsData.events)
+
+        const eventMap = eventsData.events.reduce((acc: Record<string, Event>, event: Event) => {
+          acc[event._id] = event
+          return acc
+        }, {})
         
         // Calculate statistics
         const eventCounts = registrationsData.registrations.reduce((acc: Record<string, number>, reg: Registration) => {
-          acc[reg.event] = (acc[reg.event] || 0) + 1
+          // const eventId = typeof reg.event === 'string' ? reg.event : reg.event._id
+          const eventName = typeof reg.event === 'string' 
+            ? (eventMap[reg.event]?.name || reg.event)
+            : reg.event.name
+          acc[eventName] = (acc[eventName] || 0) + 1
           return acc
         }, {})
 
@@ -122,7 +138,7 @@ export default function AdminDashboard() {
             count: count as number
           }))
         })
-            } catch (error) {
+      } catch (error) {
         console.error('Error fetching data:', error)
         setError((error as Error).message)
       } finally {
@@ -131,7 +147,7 @@ export default function AdminDashboard() {
     }
 
     fetchData()
-  }, [dateRange])
+  }, [dateRange, status])
 
   const downloadExcel = async () => {
     try {
@@ -140,7 +156,7 @@ export default function AdminDashboard() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ registrations }),
+        body: JSON.stringify({ registrations, events }),
       })
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
@@ -207,6 +223,22 @@ export default function AdminDashboard() {
   const currentItems = registrations.slice(indexOfFirstItem, indexOfLastItem)
   const totalPages = Math.ceil(registrations.length / itemsPerPage)
 
+  if (status === 'loading') {
+    return <div>Loading...</div>
+  }
+
+  if (status === 'unauthenticated') {
+    return null
+  }
+
+  const getEventName = (eventData: Registration['event']) => {
+    if (typeof eventData === 'string') {
+      const event = events.find(e => e._id === eventData)
+      return event?.name || eventData
+    }
+    return eventData.name
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -216,10 +248,10 @@ export default function AdminDashboard() {
         "md:relative md:translate-x-0"
       )}>
         <div className="flex flex-col h-full">
-          <Link href={`/admin`}>
-          <div className="flex items-center justify-center h-16 bg-blue-600">
-            <span className="text-2xl font-semibold text-white">Admin Panel</span>
-          </div>
+          <Link href="/admin">
+            <div className="flex items-center justify-center h-16 bg-blue-600">
+              <span className="text-2xl font-semibold text-white">Admin Panel</span>
+            </div>
           </Link>
           <nav className="flex-1 px-2 py-4 space-y-2">
             <Link href="/admin/dashboard" className="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-lg">
@@ -230,6 +262,7 @@ export default function AdminDashboard() {
               <Calendar className="mr-3 h-5 w-5" />
               Events
             </Link>
+            
           </nav>
           <div className="p-4 border-t border-gray-200">
             <Button variant="outline" className="w-full justify-start text-gray-900" asChild>
@@ -246,14 +279,12 @@ export default function AdminDashboard() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-white shadow-sm z-10">
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <Link href={`/admin`}>
             <h1 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
+            </Link>
             <div className="flex space-x-2 text-gray-900">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Add Event
-                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
@@ -329,7 +360,8 @@ export default function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-gray-900">
-                        {(stats.totalRegistrations / stats.registrationTrend.length).toFixed(2)}
+                        {(stats.totalRegistrations / 
+                          (stats.registrationTrend.length || 1)).toFixed(2)}
                       </div>
                       <p className="text-xs text-muted-foreground text-gray-600">Per day in selected range</p>
                     </CardContent>
@@ -350,7 +382,7 @@ export default function AdminDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="h-[300px]">
-                        <ResponsiveContainer  width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%">
                           <LineChart data={stats.registrationTrend}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                             <XAxis 
@@ -439,15 +471,17 @@ export default function AdminDashboard() {
                                 </span>
                               )}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className='text-gray-900'>
                               <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => toggleEventRegistration(event._id, event.isOpen)}
+                              variant="outline"
+                              size="sm"
+                              className={`rounded-full ${event.isOpen ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
+                              onClick={() => toggleEventRegistration(event._id, event.isOpen)}
                               >
                                 {event.isOpen ? 'Close Registration' : 'Open Registration'}
-                              </Button>
-                            </TableCell>
+                                </Button>
+                                </TableCell>
+
                           </TableRow>
                         ))}
                       </TableBody>
@@ -480,7 +514,7 @@ export default function AdminDashboard() {
                             <TableCell className="text-gray-900">{registration.name}</TableCell>
                             <TableCell className="text-gray-900">{registration.registrationNumber}</TableCell>
                             <TableCell className="text-gray-900">{registration.officialEmail}</TableCell>
-                            <TableCell className="text-gray-900">{registration.event}</TableCell>
+                            <TableCell className="text-gray-900">{getEventName(registration.event)}</TableCell>
                             <TableCell className="text-gray-900">
                               {new Date(registration.createdAt).toLocaleDateString()}
                             </TableCell>

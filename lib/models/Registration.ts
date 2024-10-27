@@ -8,7 +8,6 @@ const RegistrationSchema = new mongoose.Schema({
   registrationNumber: {
     type: String,
     required: true,
-    unique: true,
   },
   year: {
     type: String,
@@ -21,14 +20,14 @@ const RegistrationSchema = new mongoose.Schema({
   officialEmail: {
     type: String,
     required: true,
-    unique: true,
   },
   phoneNumber: {
     type: String,
     required: true,
   },
   event: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
     required: true,
   },
   createdAt: {

@@ -10,17 +10,36 @@ import { Toaster } from "@/components/ui/toaster"
 import { ToastProvider } from "@/components/ui/toast"
 import { useToast } from "@/hooks/use-toast"
 
+interface Event {
+  _id: string
+  name: string
+  date: string
+  isOpen: boolean
+}
+
 export default function JoinUs() {
-  const [isRegistrationOpen, setIsRegistrationOpen] = useState(true)
+  const [events, setEvents] = useState<Event[]>([])
   const { toast } = useToast()
 
   useEffect(() => {
-    const fetchRegistrationState = async () => {
-      setIsRegistrationOpen(true) 
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('/api/admin/events')
+        if (!response.ok) throw new Error('Failed to fetch events')
+        const data = await response.json()
+        setEvents(data.events.filter((event: Event) => event.isOpen))
+      } catch (error) {
+        console.error('Error fetching events:', error)
+        toast({
+          title: "Error",
+          description: "Failed to load events. Please try again later.",
+          variant: "destructive",
+        })
+      }
     }
 
-    fetchRegistrationState()
-  }, [])
+    fetchEvents()
+  }, [toast])
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -44,7 +63,7 @@ export default function JoinUs() {
         description: "Thank you for registering!",
         variant: "default",
       })
-      console.log('Registration successful:', data);
+      console.log('Registration successful:', data)
     } catch (error) {
       console.error('Registration error:', error)
       toast({
@@ -55,12 +74,6 @@ export default function JoinUs() {
     }
   }
 
-  const events = [
-    { value: "workshop", label: "Tech Workshop" },
-    { value: "hackathon", label: "Hackathon 2024" },
-    { value: "conference", label: "Annual Conference" },
-  ]
-
   return (
     <ToastProvider>
       <div className="min-h-screen flex flex-col bg-white text-gray-900 relative">
@@ -70,7 +83,7 @@ export default function JoinUs() {
           <div className="container mx-auto px-4 py-12">
             <h1 className="text-4xl font-bold text-center mb-8 text-blue-400">Join Us</h1>
             <AnimatePresence mode="wait">
-              {isRegistrationOpen ? (
+              {events.length > 0 ? (
                 <EventRegistrationForm key="form" events={events} onSubmit={handleSubmit} />
               ) : (
                 <ClosedRegistrationMessage key="closed" />
@@ -84,10 +97,3 @@ export default function JoinUs() {
     </ToastProvider>
   )
 }
-
-
-
-
-
-
-

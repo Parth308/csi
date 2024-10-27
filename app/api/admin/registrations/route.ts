@@ -28,6 +28,7 @@ export async function POST(request: NextRequest) {
 
     // Check for existing registration
     const existingRegistration = await Registration.findOne({
+      event,
       $or: [
         { registrationNumber },
         { officialEmail }
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     if (existingRegistration) {
       return NextResponse.json(
-        { error: 'Registration number or email already exists' },
+        { error: 'You have already registered for this event with this email or registration number' },
         { status: 400 }
       );
     }
