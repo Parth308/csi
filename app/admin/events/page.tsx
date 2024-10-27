@@ -98,11 +98,13 @@ export default function EventsPage() {
         "md:relative md:translate-x-0"
       )}>
         <div className="flex flex-col h-full">
+        <Link href={`/admin`}>
           <div className="flex items-center justify-center h-16 bg-blue-600">
             <span className="text-2xl font-semibold text-white">Admin Panel</span>
           </div>
+          </Link>
           <nav className="flex-1 px-2 py-4 space-y-2">
-            <Link href="/admin" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+            <Link href="/admin/dashboard" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
               <LayoutDashboard className="mr-3 h-5 w-5" />
               Dashboard
             </Link>

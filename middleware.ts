@@ -15,6 +15,14 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
 
+    if(session && path === '/admin') {
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+    }
+
+    if(!session && path === '/admin') {
+      return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+
     if (session && path === '/admin/login') {
       return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     }
