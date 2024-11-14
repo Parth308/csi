@@ -16,19 +16,20 @@ interface Event {
   isOpen: boolean
 }
 
-interface FormData {
-  name: string
-  registrationNumber: string
-  year: string  
-  branch: string
-  officialEmail: string
-  phoneNumber: string
-  event: string
+interface RegistrationFormData {
+  name: string;
+  registrationNumber: string;
+  year: string;
+  branch: string;
+  officialEmail: string;
+  phoneNumber: string;
+  event: string;
 }
+
 
 interface EventRegistrationFormProps {
   events: Event[]
-  onSubmit?: (formData: FormData) => Promise<void>
+  onSubmit?: (formData: RegistrationFormData) => Promise<void>
 }
 
 // Constants
@@ -39,7 +40,7 @@ const FORM_SECTIONS = {
   CONTACT: 'Contact Information'
 } as const
 
-const INITIAL_FORM_STATE: FormData = {
+const INITIAL_FORM_STATE: RegistrationFormData = {
   name: '',
   registrationNumber: '',
   year: '',
@@ -139,11 +140,11 @@ const SelectField = ({ id, label, icon: Icon, options, value, onChange }: Select
 
 // Main Component
 export default function EventRegistrationForm({ events, onSubmit }: EventRegistrationFormProps) {
-  const [formData, setFormData] = useState<FormData>(INITIAL_FORM_STATE)
+  const [formData, setFormData] = useState<RegistrationFormData>(INITIAL_FORM_STATE)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
-  const handleChange = (field: keyof FormData, value: string) => {
+  const handleChange = (field: keyof RegistrationFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 

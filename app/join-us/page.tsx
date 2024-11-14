@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect} from 'react'
 import { AnimatePresence } from 'framer-motion'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
@@ -15,6 +15,16 @@ interface Event {
   name: string
   date: string
   isOpen: boolean
+}
+
+interface RegistrationFormData {
+  name: string;
+  registrationNumber: string;
+  year: string;
+  branch: string;
+  officialEmail: string;
+  phoneNumber: string;
+  event: string;
 }
 
 export default function JoinUs() {
@@ -40,8 +50,9 @@ export default function JoinUs() {
 
     fetchEvents()
   }, [toast])
+  
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (formData: RegistrationFormData) => {
     try {
       const response = await fetch('/api/admin/registrations', {
         method: 'POST',
@@ -49,12 +60,16 @@ export default function JoinUs() {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(Object.fromEntries(formData))
+        body: JSON.stringify(Object.fromEntries(Object.entries(formData)))
       })
 
       if (!response.ok) {
-        const errorData: { error?: string } = await response.json()
-        throw new Error(errorData.error || 'Registration failed')
+        if (response.status === 400) {
+          const errorData: { error?: string } = await response.json()
+          throw new Error(errorData.error || 'Registration failed')
+        } else {
+          throw new Error('An unexpected error occurred')
+        }
       }
 
       const data = await response.json()
