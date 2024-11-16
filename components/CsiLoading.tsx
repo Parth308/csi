@@ -18,7 +18,7 @@ export default function CSILoading() {
           <div className="w-3 h-3 bg-[#2196f3] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
           <div className="w-3 h-3 bg-[#2196f3] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
         </div>
-        <p className="mt-4 text-gray-700">Authenticating...</p>
+        <p className="mt-4 text-gray-700">Loading...</p>
       </div>
     </div>
   )

@@ -309,9 +309,7 @@ export default function AdminDashboard() {
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-              </div>
+              <CSILoading />
             ) : error ? (
               <div className="text-center text-red-600">
                 <p>Error: {error}</p>
