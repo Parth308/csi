@@ -250,7 +250,7 @@ export default function AdminDashboard() {
         <div className="flex flex-col h-full">
           <Link href="/admin">
             <div className="flex items-center justify-center h-16 bg-blue-600">
-              <span className="text-2xl font-semibold text-white">Admin Panel</span>
+              <span className="text-2xl font-semibold text-white">CSI</span>
             </div>
           </Link>
           <nav className="flex-1 px-2 py-4 space-y-2">
