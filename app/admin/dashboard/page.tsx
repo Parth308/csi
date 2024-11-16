@@ -33,6 +33,7 @@ import { DateRange } from "react-day-picker"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AddEventForm } from "@/components/AddEventForm"
 import { useToast } from "@/hooks/use-toast"
+import CSILoading from '@/components/CsiLoading'
 
 interface Registration {
   _id: string
@@ -224,7 +225,7 @@ export default function AdminDashboard() {
   const totalPages = Math.ceil(registrations.length / itemsPerPage)
 
   if (status === 'loading') {
-    return <div>Loading...</div>
+    return <div><CSILoading /></div>
   }
 
   if (status === 'unauthenticated') {
