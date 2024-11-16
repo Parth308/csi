@@ -14,7 +14,6 @@ interface NavBarProps {
 export default function NavBar({ activeSection, scrollToSection }: NavBarProps) {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
 
   const handleNavigation = (sectionId: string) => {
     if (pathname === '/') {
@@ -28,30 +27,20 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
-
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setIsOpen(false)
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
     window.addEventListener('resize', handleResize)
     return () => {
-      window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', handleResize)
     }
   }, [])
 
   return (
-    <header className={`fixed w-full transition-all duration-500 z-50 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-md shadow-lg py-2' 
-        : 'bg-transparent py-4'
-    }`}>
+    <header className="fixed w-full bg-white shadow-lg py-2 z-50">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-3 group">
@@ -64,19 +53,17 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
                 className="rounded-full transition-transform duration-300 group-hover:scale-105" 
               />
             </div>
-            <span className={`text-xl font-bold transition-colors duration-300 ${
-              isScrolled ? 'text-sky-500' : 'text-sky-400'
-            } group-hover:text-sky-600`}>
+            <span className="text-xl font-bold text-sky-500 transition-colors duration-300 group-hover:text-sky-600">
               CSI SRMIST
             </span>
           </Link>
           
           <nav className="hidden md:flex items-center space-x-1">
-            <NavLink href="/" isActive={pathname === '/' && activeSection === 'home'} onClick={() => handleNavigation('home')} isScrolled={isScrolled}>Home</NavLink>
-            <NavLink href="/#about" isActive={pathname === '/' && activeSection === 'about'} onClick={() => handleNavigation('about')} isScrolled={isScrolled}>About</NavLink>
-            <NavLink href="/#faculty" isActive={pathname === '/' && activeSection === 'faculty'} onClick={() => handleNavigation('faculty')} isScrolled={isScrolled}>Faculty</NavLink>
-            <NavLink href="/#events" isActive={pathname === '/' && activeSection === 'events'} onClick={() => handleNavigation('events')} isScrolled={isScrolled}>Events</NavLink>
-            <NavLink href="/team" isActive={pathname === '/team'} isScrolled={isScrolled}>Team</NavLink>
+            <NavLink href="/" isActive={pathname === '/' && activeSection === 'home'} onClick={() => handleNavigation('home')}>Home</NavLink>
+            <NavLink href="/#about" isActive={pathname === '/' && activeSection === 'about'} onClick={() => handleNavigation('about')}>About</NavLink>
+            <NavLink href="/#faculty" isActive={pathname === '/' && activeSection === 'faculty'} onClick={() => handleNavigation('faculty')}>Faculty</NavLink>
+            <NavLink href="/#events" isActive={pathname === '/' && activeSection === 'events'} onClick={() => handleNavigation('events')}>Events</NavLink>
+            <NavLink href="/team" isActive={pathname === '/team'}>Team</NavLink>
             <Link href="/join-us">
               <button className="ml-4 bg-sky-500 hover:bg-sky-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
                 Join Us
@@ -121,17 +108,16 @@ interface NavLinkProps {
   href: string;
   children: React.ReactNode;
   isActive?: boolean;
-  isScrolled?: boolean;
   onClick?: () => void;
 }
 
-const NavLink = ({ href, children, isActive, isScrolled, onClick }: NavLinkProps) => (
+const NavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
   <Link 
     href={href} 
     className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
       ${isActive 
         ? `text-sky-600 bg-sky-50/80` 
-        : `${isScrolled ? 'text-sky-500' : 'text-sky-400'} hover:text-sky-600 hover:bg-sky-50/50`
+        : `text-sky-500 hover:text-sky-600 hover:bg-sky-50/50`
       }
     `}
     onClick={(e) => {
