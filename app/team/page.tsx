@@ -298,7 +298,7 @@ export default function Team() {
           >
             <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold">
               <span className="bg-gradient-to-r from-blue-500 via-gray-600 to-blue-500 bg-clip-text text-transparent">
-                Meet Our Team
+                Meet Our Leads
               </span>
             </h1>
           </motion.div>
