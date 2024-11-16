@@ -50,42 +50,43 @@ export default function JoinUs() {
 
     fetchEvents()
   }, [toast])
-  
 
-  const handleSubmit = async (formData: RegistrationFormData) => {
+  const handleSubmit = async (formData: RegistrationFormData): Promise<boolean> => {
     try {
+      console.log('Submitting form data:', formData)
+
       const response = await fetch('/api/admin/registrations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
         },
-        body: JSON.stringify(Object.fromEntries(Object.entries(formData)))
+        body: JSON.stringify(formData)
       })
+
+      console.log('Response status:', response.status)
+      const data = await response.json()
+      console.log('Response data:', data)
 
       if (!response.ok) {
-        if (response.status === 400) {
-          const errorData: { error?: string } = await response.json()
-          throw new Error(errorData.error || 'Registration failed')
-        } else {
-          throw new Error('An unexpected error occurred')
-        }
+        console.log('Response not ok, throwing error')
+        throw new Error(data.error || 'Registration failed')
       }
 
-      const data = await response.json()
+      console.log('Registration successful')
       toast({
-        title: "Registration successful",
-        description: "Thank you for registering!",
-        variant: "default",
+        title: "Success!",
+        description: "Your registration has been submitted successfully",
       })
-      console.log('Registration successful:', data)
+      
+      return true
     } catch (error) {
       console.error('Registration error:', error)
       toast({
-        title: "Registration failed",
-        description: (error as Error).message || "An unexpected error occurred",
+        title: "Registration Failed",
+        description: (error as Error).message,
         variant: "destructive",
       })
+      return false
     }
   }
 

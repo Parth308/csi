@@ -29,7 +29,7 @@ interface RegistrationFormData {
 
 interface EventRegistrationFormProps {
   events: Event[]
-  onSubmit?: (formData: RegistrationFormData) => Promise<void>
+  onSubmit?: (formData: RegistrationFormData) => Promise<boolean>
 }
 
 // Constants
@@ -188,31 +188,20 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
     
     setIsSubmitting(true)
     try {
-      await onSubmit?.(formData)
-      setFormData(INITIAL_FORM_STATE)
-      toast({
-        title: "Success!",
-        description: "Your registration has been submitted successfully",
-      })
-    } catch (error) {
-      const errorMessage = (error as Error).message
-      if (errorMessage.includes('E11000') && errorMessage.includes('dup key')) {
-        toast({
-          title: "Already Registered",
-          description: "You have already registered for this event",
-          variant: "destructive",
-        })
-      } else {
-        toast({
-          title: "Registration Failed",
-          description: "An unexpected error occurred. Please try again.",
-          variant: "destructive",
-        })
+      console.log('Form submitting...')
+      const success = await onSubmit?.(formData)
+      console.log('Form submission result:', success)
+      
+      if (success) {
+        console.log('Resetting form...')
+        setFormData(INITIAL_FORM_STATE)
       }
+    } catch (error) {
+      console.error('Form submission error:', error)
     } finally {
       setIsSubmitting(false)
     }
-  }
+}
 
   return (
     <motion.div
