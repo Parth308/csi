@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AddEventForm } from "@/components/AddEventForm"
 import { useToast } from "@/hooks/use-toast"
-import { Loader2, PlusCircle, Home, LayoutDashboard, Calendar, ChevronRight } from 'lucide-react'
+import { PlusCircle, Home, LayoutDashboard, Calendar, ChevronRight } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import CSILoading from '@/components/CsiLoading'
 
