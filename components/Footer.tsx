@@ -105,17 +105,31 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-gray-600 mb-4 md:mb-0">
-            © {new Date().getFullYear()} Computer Society of India - SRMIST Delhi-NCR Campus. All rights reserved.
-          </p>
-          <div className="flex space-x-6">
-            <Link href="/privacy" className="text-sm text-gray-600 hover:text-primary transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-sm text-gray-600 hover:text-primary transition-colors">
-              Terms of Service
-            </Link>
+        <div className="mt-8 pt-8 border-t border-gray-200">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
+              <p className="text-sm text-gray-600 mb-2 md:mb-0">
+                © {new Date().getFullYear()} Computer Society of India - SRMIST Delhi-NCR Campus.
+              </p>
+              <div className="flex space-x-6 md:ml-6">
+                <Link href="/privacy" className="text-sm text-gray-600 hover:text-primary transition-colors">
+                  Privacy Policy
+                </Link>
+                <Link href="/terms" className="text-sm text-gray-600 hover:text-primary transition-colors">
+                  Terms of Service
+                </Link>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600">Made by </span>
+              <Link 
+                href="/coreTeam" 
+                className="text-sm text-primary hover:text-primary-dark underline transition-colors"
+              >
+                <b>Web Development Team</b>
+              </Link>
+              🤍
+            </div>
           </div>
         </div>
       </div>

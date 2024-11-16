@@ -258,6 +258,16 @@ export default function Team() {
 
   const displayedTeam = selectedYear === 2023 ? teamData.currentLeads : teamData.pastLeads
 
+  const leadershipRoles = ['President', 'Vice President', 'Executive', 'Co-Executive' , 'Former President', 'Former Vice President', 'Former Executive', 'Former Co-Executive']
+
+  const leadershipTeam = displayedTeam.filter(member => 
+    leadershipRoles.includes(member.subtitle.trim())
+  )
+
+  const otherTeamMembers = displayedTeam.filter(member => 
+    !leadershipRoles.includes(member.subtitle.trim())
+  )
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-r from-[#f9fcff] to-[#e6f5ff]">
       <NavBar activeSection="" scrollToSection={() => {}} />
@@ -332,21 +342,39 @@ export default function Team() {
               />
             </div>
           ) : (
-            <motion.div
-              layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto"
-            >
-              <AnimatePresence mode="wait">
-                {displayedTeam.map((member, index) => (
-                  <TeamMemberCard
-                    key={member.id}
-                    member={member}
-                    index={index}
-                    onClick={() => setSelectedMember(member)}
-                  />
-                ))}
-              </AnimatePresence>
-            </motion.div>
+            <>
+              <motion.div
+                layout
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-6xl mx-auto mb-12"
+              >
+                <AnimatePresence mode="wait">
+                  {leadershipTeam.map((member, index) => (
+                    <TeamMemberCard
+                      key={member.id}
+                      member={member}
+                      index={index}
+                      onClick={() => setSelectedMember(member)}
+                    />
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+
+              <motion.div
+                layout
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto"
+              >
+                <AnimatePresence mode="wait">
+                  {otherTeamMembers.map((member, index) => (
+                    <TeamMemberCard
+                      key={member.id}
+                      member={member}
+                      index={index}
+                      onClick={() => setSelectedMember(member)}
+                    />
+                  ))}
+                </AnimatePresence>
+              </motion.div>
+            </>
           )}
         </div>
       </main>

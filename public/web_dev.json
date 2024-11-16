@@ -1,0 +1,71 @@
+{
+  "WebDevTeam": {
+    "TeamLead": {
+      "Name": "Parth Mongia",
+      "Role": "Team Lead",
+      "LinkedIn": "https://linkedin.com/in/parth308",
+      "GitHub": "https://github.com/Parth308",
+      "Email": "pm2153@srmist.edu.in",
+      "Image": "/placeholder.svg?height=400&width=400"
+    },
+    "TeamMembers": [
+      
+      {
+        "Name": "Pulkit Gupta",
+        "Role": "Team Member",
+        "LinkedIn": "www.linkedin.com/in/pulkitgupta2408",
+        "GitHub": "https://github.com/pulkit1417",
+        "Email": "pg1736@srmist.edu.in",
+        "Image": "/placeholder.svg?height=400&width=400"
+      },
+      {
+        "Name": "Aaryan Pradhan",
+        "Role": "Team Member",
+        "LinkedIn": "www.linkedin.com/in/aaryanpradhan2611",
+        "GitHub": "https://github.com/aaryan4985",
+        "Email": "ap6630@srmist.edu.in ",
+        "Image": "/placeholder.svg?height=400&width=400"
+      },
+      {
+        "Name": "Shivanshi Srivastava",
+        "Role": "Team Member",
+        "LinkedIn": "https://www.linkedin.com/in/shivanshi-srivastava-78b8902a8",
+        "GitHub": "https://github.com/Shivanshi-02",
+        "Email": "ss2881@srmist.edu.in",
+        "Image": "/placeholder.svg?height=400&width=400"
+      },
+      {
+        "Name": "Saksham Mathur",
+        "Role": "Team Member",
+        "LinkedIn": "https://linkedin.com/in/sakshammathur",
+        "GitHub": "https://github.com/sakshammathur",
+        "Email": "saksham.mathur@webdevteam.com",
+        "Image": "/placeholder.svg?height=400&width=400"
+      },
+      {
+        "Name": "Sandeli Tiwari",
+        "Role": "Team Member",
+        "LinkedIn": "https://www.linkedin.com/in/sandeli-tiwari-8b1641277",
+        "GitHub": "https://github.com/sandeli28",
+        "Email": "st1502@srmist.edu.in",
+        "Image": "/placeholder.svg?height=400&width=400"
+      },
+      {
+        "Name": "Panya Kapoor",
+        "Role": "Team Member",
+        "LinkedIn": "https://www.linkedin.com/in/panya-kapoor-43178427b",
+        "GitHub": "https://github.com/panyakapoor1",
+        "Email": "pk2592@srmist.edu.in",
+        "Image": "/placeholder.svg?height=400&width=400"
+      },
+      {
+        "Name": "Sanjana Sonagara",
+        "Role": "Team Member",
+        "LinkedIn": "https://linkedin.com/in/sanjanasonagara",
+        "GitHub": "https://github.com/sanjanasonagara",
+        "Email": "sanjana.sonagara@webdevteam.com",
+        "Image": "/placeholder.svg?height=400&width=400"
+      }
+    ]
+  }
+}
