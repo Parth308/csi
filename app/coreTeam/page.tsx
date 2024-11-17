@@ -216,7 +216,7 @@ export default function WebDevTeam() {
               </span>
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              We&apos;re a a team of passionate developers dedicated to creating amazing web experiences.
+              We&apos;re a team of passionate developers dedicated to creating amazing web experiences.
             </p>
           </motion.div>
 
