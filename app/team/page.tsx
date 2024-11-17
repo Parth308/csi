@@ -214,8 +214,8 @@ const TeamMemberPopup = ({ member, onClose }: { member: TeamMember | null; onClo
             />
           </motion.div>
           <div className="text-center">
-            <h3 className="text-2xl font-bold text-blue-900">{member.title}</h3>
-            <p className="text-xl text-blue-700">{member.subtitle}</p>
+            <h3 className=" text-2xl font-bold text-blue-900 border rounded-full p-3 shadow-lg hover:shadow-2xl transition-all duration-300">{member.title}</h3>
+            <p className="text-xl text-blue-700 border rounded-full p-2 inline-block shadow-lg hover:shadow-2xl transition-all duration-300">{member.subtitle}</p>
           </div>
         </div>
         <div className="flex justify-center space-x-4 mt-6">

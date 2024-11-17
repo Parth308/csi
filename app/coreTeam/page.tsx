@@ -112,7 +112,7 @@ const MemberDetails: React.FC<{
         <div className="p-8">
           <div className="flex items-center space-x-4 mb-6">
             <div>
-              <h2 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
+              <h2 className="text-4xl font-bold mb-2 text-blue-900 ">
                 {member.Name}
               </h2>
               <div className="flex items-center space-x-3">
@@ -120,7 +120,7 @@ const MemberDetails: React.FC<{
                   <span className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
                     Team Lead
                   </span>
-                )}
+                 )}
                 <p className="text-xl text-blue-600 dark:text-blue-400">
                   {member.Role}
                 </p>
@@ -216,7 +216,7 @@ export default function WebDevTeam() {
               </span>
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              We&apos;re a group of passionate developers dedicated to creating amazing web experiences.
+              We&apos;re a a team of passionate developers dedicated to creating amazing web experiences.
             </p>
           </motion.div>
 

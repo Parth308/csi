@@ -46,7 +46,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="mt-4 text-sm text-gray-600">
-              Empowering technology enthusiasts and fostering innovation since 1965.
+              Empowering technology enthusiasts and fostering innovation since 1955.
             </p>
           </div>
           <div>
@@ -128,7 +128,7 @@ export default function Footer() {
               >
                 <b>Web Development Team</b>
               </Link>
-              🤍
+              🤍  
             </div>
           </div>
         </div>
