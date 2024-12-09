@@ -89,18 +89,18 @@ const MemberDetails: React.FC<{
     >
       <motion.div
         layoutId={`member-${member.Name}`}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-full overflow-hidden"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-5/12 h-auto overflow-hidden "
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative h-80 w-full">
           <Image 
-            src={member.Image} 
+            src={member.Image}
             alt={member.Name} 
             layout="fill" 
             objectFit="cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 " />
           <button
             onClick={onClose}
             className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors"
@@ -112,8 +112,8 @@ const MemberDetails: React.FC<{
         <div className="p-8">
           <div className="flex items-center space-x-4 mb-6">
             <div>
-              <h2 className="text-4xl font-bold mb-2 text-blue-900 ">
-                {member.Name}
+               <h2 className="text-4xl font-bold mb-2 text-blue-900 ">
+                {member.Name} 
               </h2>
               <div className="flex items-center space-x-3">
                 {isLead && (
@@ -127,7 +127,7 @@ const MemberDetails: React.FC<{
               </div>
             </div>
           </div>
-          
+
           <div className="flex space-x-6">
             <a
               href={member.GitHub}
