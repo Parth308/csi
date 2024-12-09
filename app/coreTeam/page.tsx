@@ -89,7 +89,7 @@ const MemberDetails: React.FC<{
     >
       <motion.div
         layoutId={`member-${member.Name}`}
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-5/12 h-auto overflow-hidden "
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-3xl w-full h-auto overflow-hidden "
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative h-80 w-full">
@@ -128,7 +128,7 @@ const MemberDetails: React.FC<{
             </div>
           </div>
 
-          <div className="flex space-x-6">
+          <div className="flex space-x-6 ">
             <a
               href={member.GitHub}
               target="_blank"
