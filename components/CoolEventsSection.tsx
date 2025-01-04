@@ -27,30 +27,37 @@ const itemVariants = {
 };
 
 const events = [
-  {
-    title: "Midnight Coding Marathon",
-    description: "Our annual 12-hour coding spree fueled by pizza and energy drinks. Last year's winner created a fully functional AI chatbot!",
-    image: "/api/placeholder/600/400",
-    tags: ["Coding", "Competition", "Fun"]
+   {
+    title: "Android Development Workshop",
+    description: "The participants learned how to build mobile applications through hands-on demonstrations and competitive tasks.",
+    image: "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998260/Evnt4_gfhqcw.png",
+    tags: ["Development","Programming","Workshop"]
   },
   {
     title: "Tech Treasure Hunt",
     description: "A campus-wide scavenger hunt using AR technology. Participants solved coding puzzles to unlock clues and navigate to the next location.",
-    image: "/api/placeholder/600/400",
+    image: "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998144/Evnt2_obvcnv.png",
     tags: ["AR", "Puzzle", "Adventure"]
+  },
+  {
+    title: "Midnight Coding Marathon",
+    description: "Our annual 12-hour coding spree fueled by pizza and energy drinks. Last year's winner created a fully functional AI chatbot!",
+    image: "https://res.cloudinary.com/dcajrxpot/image/upload/v1735997837/Evnt1_pypt7q.png",
+    tags: ["Coding", "Competition", "Fun"]
   },
   {
     title: "Retro Gaming Night",
     description: "We transformed our lab into an 80s arcade, complete with classic consoles and a game development challenge using vintage hardware.",
-    image: "/api/placeholder/600/400",
+    image: "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998233/Evnt3_ms3uab.png",
     tags: ["Gaming", "Retro", "Development"]
   },
   {
     title: "AI vs. Human Chess Tournament",
     description: "Our student-developed AI went head-to-head with chess champions. The nail-biting final match ended in a surprising draw!",
-    image: "/api/placeholder/600/400",
+    image: " https://res.cloudinary.com/dcajrxpot/image/upload/v1735999368/Evnt6_waf1fp.png",
     tags: ["AI", "Chess", "Competition"]
   }
+
 ];
 
 interface EventCardProps {
