@@ -31,7 +31,7 @@ export default function AboutSection() {
   const stats = [
     { icon: Users, label: "Members", value: "100+" },
     { icon: Book, label: "Chapters", value: "7+" },
-    { icon: Globe, label: "Countries", value: "15+" }
+    { icon: Globe, label: "States", value: "15+" }
   ];
 
   return (
