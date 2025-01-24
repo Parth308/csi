@@ -110,9 +110,9 @@ export default function FacultySection() {
               <div className="md:col-start-2">
                 <FacultyCard
                 name="Jitender Singh"
-                position="Faculty Advisor"
-                image="/placeholder.svg"
-                description="Expert in Artificial Intelligence and Machine Learning"
+                position="Associate Professor"
+                image="/jitendersir.png"
+                description="Jitender Singh is an Associate Professor at the Department of Computer Science and Engineering, SRM Institute of Science and Technology, Delhi-NCR Campus. He has a Master's degree in Computer Science and Engineering and has been teaching for over 10 years. He is passionate about teaching and research in the field of Computer Science."
                 />
               </div>
               </div>
@@ -147,8 +147,8 @@ const FacultyCard = ({ name, position, image, description }: FacultyCardProps) =
         <Image
           src={image}
           alt={name}
-          width={128}
-          height={128}
+          width={25560}
+          height={25560}
           className="rounded-full border-4 border-white dark:border-blue-700"
         />
       </div>
