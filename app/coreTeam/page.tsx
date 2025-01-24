@@ -1,46 +1,47 @@
 "use client"
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, Mail, X, Loader2 } from 'lucide-react';
-import Image from 'next/image';
-import { Card, CardContent } from '@/components/ui/card';
-import Footer from '@/components/Footer';
-import NavBar from '@/components/NavBar';
+import type React from "react"
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Github, Linkedin, Mail, X, Loader2 } from "lucide-react"
+import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card"
+import Footer from "@/components/Footer"
+import NavBar from "@/components/NavBar"
 
 interface TeamMember {
-  Name: string;
-  Role: string;
-  LinkedIn: string;
-  GitHub: string;
-  Email: string;
-  Image: string;
+  Name: string
+  Role: string
+  LinkedIn: string
+  GitHub: string
+  Email: string
+  Image: string
 }
 
 interface TeamData {
   WebDevTeam: {
-    TeamLead: TeamMember;
-    TeamMembers: TeamMember[];
-  };
+    TeamLead: TeamMember
+    TeamMembers: TeamMember[]
+    GuidedBy: TeamMember[]
+  }
 }
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
-};
+  exit: { opacity: 0, y: -20 },
+}
 
-const MemberCard: React.FC<{ 
-  member: TeamMember; 
-  onSelect: (member: TeamMember) => void;
-  isLead?: boolean;
-}> = ({ member, onSelect, isLead }) => {
+const MemberCard: React.FC<{
+  member: TeamMember
+  onSelect: (member: TeamMember) => void
+  isLead?: boolean
+  isGuide?: boolean
+}> = ({ member, onSelect, isLead, isGuide }) => {
   return (
     <motion.div
       layoutId={`member-${member.Name}`}
       onClick={() => onSelect(member)}
-      className={`group relative cursor-pointer ${
-        isLead ? 'sm:scale-110' : ''
-      }`}
+      className={`group relative cursor-pointer ${isLead ? "sm:scale-110" : ""}`}
       variants={fadeInUp}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
     >
@@ -48,10 +49,10 @@ const MemberCard: React.FC<{
         <CardContent className="p-0">
           <div className="relative h-72 w-full">
             <Image
-              src={member.Image}
+              src={member.Image || "/placeholder.svg"}
               alt={member.Name}
               layout="fill"
-              objectFit="cover"
+              objectFit="contain"
               className="transition-transform duration-300 group-hover:scale-105"
               priority={isLead}
             />
@@ -59,31 +60,28 @@ const MemberCard: React.FC<{
             <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
               <h3 className="text-2xl font-bold mb-1">{member.Name}</h3>
               <div className="flex items-center space-x-2">
-                {isLead && (
-                  <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-                    Team Lead
-                  </span>
-                )}
-                <p className="text-sm opacity-90">{member.Role}</p>
+                {isLead && <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Team Lead</span>}
+                {isGuide && <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Guided By</span>}
+                {!isLead && <p className="text-sm opacity-90">{member.Role}</p>}
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
     </motion.div>
-  );
-};
+  )
+}
 
-const MemberDetails: React.FC<{ 
-  member: TeamMember; 
-  onClose: () => void;
-  isLead?: boolean;
+const MemberDetails: React.FC<{
+  member: TeamMember
+  onClose: () => void
+  isLead?: boolean
 }> = ({ member, onClose, isLead }) => {
   return (
     <motion.div
-      initial={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
-      animate={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-      exit={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
+      initial={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
+      animate={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      exit={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
       onClick={onClose}
     >
@@ -93,13 +91,7 @@ const MemberDetails: React.FC<{
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative h-80 w-full">
-          <Image 
-            src={member.Image}
-            alt={member.Name} 
-            layout="fill" 
-            objectFit="cover"
-            priority
-          />
+          <Image src={member.Image || "/placeholder.svg"} alt={member.Name} layout="fill" objectFit="contain" priority />
           <div className="absolute inset-0 " />
           <button
             onClick={onClose}
@@ -112,18 +104,14 @@ const MemberDetails: React.FC<{
         <div className="p-8">
           <div className="flex items-center space-x-4 mb-6">
             <div>
-               <h2 className="text-4xl font-bold mb-2 text-blue-900 ">
-                {member.Name} 
-              </h2>
+              <h2 className="text-4xl font-bold mb-2 text-blue-900 ">{member.Name}</h2>
               <div className="flex items-center space-x-3">
                 {isLead && (
                   <span className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
-                    Team Lead
+                    {member.Role.includes("Lead") ? "Team Lead" : "Mentor"}
                   </span>
-                 )}
-                <p className="text-xl text-blue-600 dark:text-blue-400">
-                  {member.Role}
-                </p>
+                )}
+                {!isLead && <p className="text-xl text-blue-600 dark:text-blue-400">{member.Role}</p>}
               </div>
             </div>
           </div>
@@ -158,34 +146,34 @@ const MemberDetails: React.FC<{
         </div>
       </motion.div>
     </motion.div>
-  );
-};
+  )
+}
 
 export default function WebDevTeam() {
-  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [teamData, setTeamData] = useState<TeamData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [teamData, setTeamData] = useState<TeamData | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/web_dev.json');
+        const response = await fetch("/web_dev.json")
         if (!response.ok) {
-          throw new Error('Failed to fetch team data');
+          throw new Error("Failed to fetch team data")
         }
-        const data = await response.json();
-        setTeamData(data);
+        const data = await response.json()
+        setTeamData(data)
       } catch (error) {
-        setError('Failed to load team data. Please try again later.');
-        console.error('Error fetching team data:', error);
+        setError("Failed to load team data. Please try again later.")
+        console.error("Error fetching team data:", error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
@@ -196,11 +184,11 @@ export default function WebDevTeam() {
           animate={{
             backgroundImage: [
               "radial-gradient(circle at 20% 30%, #3b82f6 1px, transparent 1px)",
-              "radial-gradient(circle at 80% 70%, #3b82f6 1px, transparent 1px)"
+              "radial-gradient(circle at 80% 70%, #3b82f6 1px, transparent 1px)",
             ],
             backgroundSize: "50px 50px",
           }}
-          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 5, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
         />
 
         <div className="container mx-auto px-4 py-8 sm:py-12">
@@ -236,28 +224,60 @@ export default function WebDevTeam() {
               variants={{
                 animate: {
                   transition: {
-                    staggerChildren: 0.1
-                  }
-                }
+                    staggerChildren: 0.1,
+                  },
+                },
               }}
               className="space-y-16"
             >
+              {/* Guided By Section */}
+              {teamData.WebDevTeam.GuidedBy && teamData.WebDevTeam.GuidedBy.length > 0 && (
+                <div>
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center mb-8"
+                  >
+                    <h2 className="text-4xl font-bold mb-4">
+                      <span className="bg-gradient-to-r from-green-600 via-green-500 to-green-600 bg-clip-text text-transparent">
+                        Guided By
+                      </span>
+                    </h2>
+                  </motion.div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    {teamData.WebDevTeam.GuidedBy.map((member) => (
+                      <MemberCard key={member.Name} member={member} onSelect={setSelectedMember} isGuide />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+<motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center mb-8"
+                  >
+                    <h2 className="text-4xl font-bold mb-4">
+                      <span className="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 bg-clip-text text-transparent">
+                        Team
+                      </span>
+                    </h2>
+                  </motion.div>
+
+
+              {/* Team Lead Section */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 items-center">
                 <div className="sm:col-start-2">
-                  <MemberCard 
-                    member={teamData.WebDevTeam.TeamLead} 
-                    onSelect={setSelectedMember}
-                    isLead
-                  />
+                  <MemberCard member={teamData.WebDevTeam.TeamLead} onSelect={setSelectedMember} isLead />
                 </div>
               </div>
+
+              {/* Team Members Section */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {teamData.WebDevTeam.TeamMembers.map((member) => (
-                  <MemberCard 
-                    key={member.Name} 
-                    member={member} 
-                    onSelect={setSelectedMember}
-                  />
+                  <MemberCard key={member.Name} member={member} onSelect={setSelectedMember} />
                 ))}
               </div>
             </motion.div>
@@ -265,10 +285,13 @@ export default function WebDevTeam() {
 
           <AnimatePresence>
             {selectedMember && (
-              <MemberDetails 
-                member={selectedMember} 
+              <MemberDetails
+                member={selectedMember}
                 onClose={() => setSelectedMember(null)}
-                isLead={selectedMember.Name === teamData?.WebDevTeam.TeamLead.Name}
+                isLead={
+                  selectedMember.Name === teamData?.WebDevTeam.TeamLead.Name ||
+                  teamData?.WebDevTeam.GuidedBy.some((guide) => guide.Name === selectedMember.Name)
+                }
               />
             )}
           </AnimatePresence>
@@ -276,5 +299,6 @@ export default function WebDevTeam() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }
+

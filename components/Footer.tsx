@@ -121,14 +121,13 @@ export default function Footer() {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Made by </span>
+              <span className="text-sm text-gray-600">Made by ❤️ </span>
               <Link 
                 href="/coreTeam" 
                 className="text-sm text-primary hover:text-primary-dark underline transition-colors"
               >
-                <b>CSI TEAM [2024-2025]</b>
+                <b>Dev Team</b>
               </Link>
-              🤍  
             </div>
           </div>
         </div>
