@@ -50,12 +50,6 @@ const events = [
     description: "We transformed our lab into an 80s arcade, complete with classic consoles and a game development challenge using vintage hardware.",
     image: "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998233/Evnt3_ms3uab.png",
     tags: ["Gaming", "Retro", "Development"]
-  },
-  {
-    title: "AI vs. Human Chess Tournament",
-    description: "Our student-developed AI went head-to-head with chess champions. The nail-biting final match ended in a surprising draw!",
-    image: " https://res.cloudinary.com/dcajrxpot/image/upload/v1735999368/Evnt6_waf1fp.png",
-    tags: ["AI", "Chess", "Competition"]
   }
 
 ];
