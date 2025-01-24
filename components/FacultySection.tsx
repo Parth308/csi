@@ -105,26 +105,20 @@ export default function FacultySection() {
             />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <FacultyCard
-              name="Dr. Jane Smith"
-              position="Faculty Advisor"
-              image="/placeholder.svg"
-              description="Expert in Artificial Intelligence and Machine Learning"
-            />
-            <FacultyCard
-              name="Prof. John Doe"
-              position="Technical Mentor"
-              image="/placeholder.svg"
-              description="Specializes in Cybersecurity and Network Systems"
-            />
-            <FacultyCard
-              name="Dr. Emily Brown"
-              position="Research Coordinator"
-              image="/placeholder.svg"
-              description="Focuses on Data Science and Big Data Analytics"
-            />
-          </div>
+            <div className="flex justify-center items-center min-h-[50vh]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center mx-auto">
+              <div className="md:col-start-2">
+                <FacultyCard
+                name="Jitender Singh"
+                position="Faculty Advisor"
+                image="/placeholder.svg"
+                description="Expert in Artificial Intelligence and Machine Learning"
+                />
+              </div>
+              </div>
+            </div>
+
+
         </motion.div>
       </div>
     </section>
