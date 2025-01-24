@@ -212,7 +212,7 @@ export default function WebDevTeam() {
           >
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 bg-clip-text text-transparent">
-                Meet Our Web Dev Team
+                Meet Our Dev Team
               </span>
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">

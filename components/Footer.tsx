@@ -126,7 +126,7 @@ export default function Footer() {
                 href="/coreTeam" 
                 className="text-sm text-primary hover:text-primary-dark underline transition-colors"
               >
-                <b>Web Development Team</b>
+                <b>CSI TEAM [2024-2025]</b>
               </Link>
               🤍  
             </div>
