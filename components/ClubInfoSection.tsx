@@ -28,7 +28,7 @@ const itemVariants = {
 
 const stats = [
   { icon: Users, label: "Members", value: "200+", description: "A thriving community of tech enthusiasts" },
-  { icon: Calendar, label: "Events/Year", value: "54+", description: "Regular workshops, seminars, and competitions" },
+  { icon: Calendar, label: "Events/Year", value: "30+", description: "Regular workshops, seminars, and competitions" },
   { icon: Globe, label: "Network", value: "National", description: "Connected to CSI chapters worldwide" },
   { icon: BookOpen, label: "Resources", value: "100+", description: "Access to exclusive tech content and tutorials" }
 ];

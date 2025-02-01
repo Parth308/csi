@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Users, Book, Globe } from 'lucide-react';
+import { ArrowRight, Users, Book, Globe, Calendar } from 'lucide-react';
 
 export default function AboutSection() {
   const containerVariants = {
@@ -30,8 +30,8 @@ export default function AboutSection() {
 
   const stats = [
     { icon: Users, label: "Members", value: "100+" },
-    { icon: Book, label: "Chapters", value: "7+" },
-    { icon: Globe, label: "States", value: "15+" }
+    { icon: Calendar, label: "Events", value: "30+" },
+    { icon: Globe, label: "Teams", value: "7+" }
   ];
 
   return (

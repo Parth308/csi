@@ -109,7 +109,7 @@ export default function FacultySection() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center mx-auto">
               <div className="md:col-start-2">
                 <FacultyCard
-                name="Jitender Singh"
+                name="Dr.Jitender Singh"
                 position="Associate Professor"
                 image="/jitendersir.png"
                 description="Jitender Singh is an Associate Professor at the Department of Computer Science and Engineering, SRM Institute of Science and Technology, Delhi-NCR Campus. He has a Master's degree in Computer Science and Engineering and has been teaching for over 10 years. He is passionate about teaching and research in the field of Computer Science."
