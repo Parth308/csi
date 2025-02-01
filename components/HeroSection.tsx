@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { motion } from 'framer-motion'
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
@@ -36,25 +36,27 @@ export default function HeroSection() {
             className="relative mx-auto mb-12 w-48 h-48 md:w-56 md:h-56"
           >
             <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-200 via-sky-100 to-white animate-pulse" />
-            <Image 
-              src="/csi_logo.png" 
-              alt="CSI Logo Large" 
+            <Image
+              src="/csi_logo.png"
+              alt="CSI Logo Large"
               width={240}
               height={240}
-              className="relative rounded-full shadow-2xl hover:scale-105 transition-transform duration-500" 
+              className="relative rounded-full shadow-2xl hover:scale-105 transition-transform duration-500"
             />
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-500 via-blue-500 to-sky-500 leading-tight"
           >
-            Computer Society<br />of India
+            Computer Society
+            <br />
+            of India
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
@@ -75,5 +77,5 @@ export default function HeroSection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
