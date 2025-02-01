@@ -10,6 +10,12 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'CSI SRMIST',
   description: 'Computer Society of India - SRMIST Delhi-NCR Campus',
+  icons: [
+    {
+      url: '/favicon.ico',
+      sizes: 'any',
+    }
+  ],
 };
 
 export default function RootLayout({

@@ -79,7 +79,7 @@ const TimelineDot = ({ year, isActive, onClick, delay }: {
       transition={{ delay: delay + 0.2, duration: 0.5 }}
     >
       <span className={`text-sm sm:text-base font-bold ${isActive ? 'text-blue-600' : 'text-blue-400'}`}>
-        {year}
+      {year === 2024 ? 'Current' : year}
       </span>
     </motion.div>
   </motion.div>
@@ -236,12 +236,20 @@ const TeamMemberPopup = ({ member, onClose }: { member: TeamMember | null; onClo
 }
 
 export default function Team() {
-  const [selectedYear, setSelectedYear] = useState(2023)
-  const [teamData, setTeamData] = useState<{ currentLeads: TeamMember[], pastLeads: TeamMember[] }>({ currentLeads: [], pastLeads: [] })
+  const [selectedYear, setSelectedYear] = useState(2024)
+  const [teamData, setTeamData] = useState<{ 
+    currentLeads: TeamMember[], 
+    '2023Leads': TeamMember[],
+    '2022Leads': TeamMember[] 
+  }>({ 
+    currentLeads: [], 
+    '2023Leads': [], 
+    '2022Leads': [] 
+  })
   const [loading, setLoading] = useState(true)
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null)
 
-  const years = [2023, 2022]
+  const years = [2024, 2023, 2022]
 
   useEffect(() => {
     fetch('/data.json')
@@ -256,7 +264,11 @@ export default function Team() {
       })
   }, [])
 
-  const displayedTeam = selectedYear === 2023 ? teamData.currentLeads : teamData.pastLeads
+  const displayedTeam = selectedYear === 2024 
+  ? teamData.currentLeads 
+  : selectedYear === 2023 
+    ? teamData['2023Leads']
+    : teamData['2022Leads']
 
   const leadershipRoles = ['President', 'Vice President', 'Executive', 'Co-Executive' , 'Former President', 'Former Vice President', 'Former Executive', 'Former Co-Executive']
 
