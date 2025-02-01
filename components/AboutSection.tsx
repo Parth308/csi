@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Users, Book, Globe, Calendar } from 'lucide-react';
+import { ArrowRight, Users, Globe, Calendar } from 'lucide-react';
 
 export default function AboutSection() {
   const containerVariants = {
