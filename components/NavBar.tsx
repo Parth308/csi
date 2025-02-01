@@ -66,7 +66,7 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
             <NavLink href="/team" isActive={pathname === '/team'}>Team</NavLink>
             <Link href="/join-us">
               <button className="ml-4 bg-sky-500 hover:bg-sky-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
-                Join Us
+                Register
               </button>
             </Link>
           </nav>
