@@ -78,7 +78,15 @@ const events = [
   },
 ];
 
-const EventCard = ({ title, description, image, tags }: any) => (
+interface EventCardProps {
+  index: number;
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+}
+
+const EventCard = ({ title, description, image, tags }: EventCardProps) => (
   <motion.div
     variants={itemVariants}
     whileHover={{ y: -5 }}

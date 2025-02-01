@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Users, Globe, Calendar } from "lucide-react";
+import { ArrowRight, Users, Globe,Book } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
 export default function AboutSection() {
@@ -102,7 +102,7 @@ export default function AboutSection() {
                 </motion.a>
               </motion.div>
               <div className="grid grid-cols-3 gap-6 mt-8">
-                {stats.map((stat, index) => (
+                {stats.map((stat) => (
                   <motion.div
                     key={stat.label}
                     variants={itemVariants}
