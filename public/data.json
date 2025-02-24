@@ -124,20 +124,21 @@
             "subtitle": "PR & Social Co-Lead",
             "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1738392423/17._SURYANSH_PANDEY_RA2311003030301_.jpeg_ylywmo.jpg"
         },
-        {
+		{
             "id": "2024_19",
-            "title": "Shauryadeep Singh Bhadauriya",
-            "subtitle": "Social Media Manager",
-            "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839472/Itiswhatitis_-_shauryadeep_singh_iol4ii.jpg",
-            "linkedin": "https://www.linkedin.com/in/shauryadeep-singh-bhadauriya-4b08682b4"
-        },
-        {
-            "id": "2024_20",
             "title": "Manas Tiwari",
             "subtitle": "Document Manager",
             "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1738392464/7._MANAS_TIWARI_RA2311028030003_y3lzbx.jpg",
             "linkedin": "https://www.linkedin.com/in/manas-tiwari-89ba64320/"
+        },
+        {
+            "id": "2024_20",
+            "title": "Shauryadeep Singh Bhadauriya",
+            "subtitle": "Social Media Manager",
+            "imageUrl": "https://res.cloudinary.com/dwtqvcm5v/image/upload/v1719839472/Itiswhatitis_-_shauryadeep_singh_iol4ii.jpg",
+            "linkedin": "https://www.linkedin.com/in/shauryadeep-singh-bhadauriya-4b08682b4"
         }
+        
     ]
 	,"2023Leads": [
         {
