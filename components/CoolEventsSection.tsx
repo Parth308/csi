@@ -101,10 +101,10 @@ const events = [
   },
 ];
 
-interface EventImage {
-  src: string;
-  alt: string;
-}
+// interface EventImage {
+//   src: string;
+//   alt: string;
+// }
 
 interface EventDetailsCardProps {
   title: string;
