@@ -1,23 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Tag,
-  Calendar,
-  MapPin,
-  Clock,
-  X,
-} from "lucide-react";
+import { Tag, Calendar, MapPin, Clock, X } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import 'swiper/css/effect-fade';
-import React from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
+import "swiper/css/effect-fade";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -25,9 +15,6 @@ const containerVariants = {
     opacity: 1,
     transition: {
       duration: 1,
-      staggerChildren: 0.3,
-    },
-  },
       staggerChildren: 0.3,
     },
   },
@@ -61,22 +48,11 @@ const backgroundVariants = {
       ease: "easeInOut",
     },
   },
-      duration: 10,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  },
 };
 
 const events = [
   {
-  {
     title: "Android Development Workshop",
-    description:
-      "The participants learned how to build mobile applications through hands-on demonstrations and competitive tasks.",
-    image:
-      "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998260/Evnt4_gfhqcw.png",
-    tags: ["Development", "Programming", "Workshop"],
     description:
       "The participants learned how to build mobile applications through hands-on demonstrations and competitive tasks.",
     images: [
@@ -91,11 +67,6 @@ const events = [
     title: "Tech Treasure Hunt",
     description:
       "A campus-wide scavenger hunt using AR technology. Participants solved coding puzzles to unlock clues and navigate to the next location.",
-    image:
-      "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998144/Evnt2_obvcnv.png",
-    tags: ["AR", "Puzzle", "Adventure"],
-    description:
-      "A campus-wide scavenger hunt using AR technology. Participants solved coding puzzles to unlock clues and navigate to the next location.",
     images: [
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735997837/Evnt1_pypt7q.png",
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998260/Evnt4_gfhqcw.png",
@@ -107,12 +78,7 @@ const events = [
   {
     title: "Midnight Coding Marathon",
     description:
-      "Our annual 12-hour coding spree fueled by pizza and energy drinks. Last year's winner created a fully functional AI chatbot!",
-    image:
-      "https://res.cloudinary.com/dcajrxpot/image/upload/v1735997837/Evnt1_pypt7q.png",
-    tags: ["Coding", "Competition", "Fun"],
-    description:
-      "Our annual 12-hour coding spree is an electrifying marathon fueled by endless pizza slices, energy drinks, and unstoppable creativity. It’s a thrilling blend of innovation and adrenaline, where developers, designers, and tech enthusiasts push their limits to build groundbreaking projects within the tight time frame. Last year’s event was a showstopper, with the winning team crafting a fully functional AI chatbot — a seamless blend of intelligence and interaction that left everyone in awe. This year promises even fiercer competition, bolder ideas, and unforgettable moments. Let the countdown begin!",
+      "Our annual 12-hour coding spree is an electrifying marathon fueled by endless pizza slices, energy drinks, and unstoppable creativity. It's a thrilling blend of innovation and adrenaline, where developers, designers, and tech enthusiasts push their limits to build groundbreaking projects within the tight time frame. Last year's event was a showstopper, with the winning team crafting a fully functional AI chatbot — a seamless blend of intelligence and interaction that left everyone in awe. This year promises even fiercer competition, bolder ideas, and unforgettable moments. Let the countdown begin!",
     images: [
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998144/Evnt2_obvcnv.png",
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998260/Evnt4_gfhqcw.png",
@@ -125,26 +91,16 @@ const events = [
     title: "Retro Gaming Night",
     description:
       "We transformed our lab into an 80s arcade, complete with classic consoles and a game development challenge using vintage hardware.",
-    image:
-      "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998233/Evnt3_ms3uab.png",
-    tags: ["Gaming", "Retro", "Development"],
-  },
-];
-
-interface EventCardProps {
-  index: number;
-    description:
-      "We transformed our lab into an 80s arcade, complete with classic consoles and a game development challenge using vintage hardware.",
     images: [
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998233/Evnt3_ms3uab.png",
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998260/Evnt4_gfhqcw.png",
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735997837/Evnt1_pypt7q.png",
       "https://res.cloudinary.com/dcajrxpot/image/upload/v1735998144/Evnt2_obvcnv.png",
     ],
-
     tags: ["Gaming", "Retro", "Development"],
   },
 ];
+
 interface EventImage {
   src: string;
   alt: string;
@@ -156,45 +112,44 @@ interface EventDetailsCardProps {
   date?: string;
   location?: string;
   time?: string;
-  images?: EventImage[] | string[];
+  images?: string[];
   tags?: string[];
   setEventDetails: (show: boolean) => void;
 }
-type EventCardProps = {
+
+interface EventCardProps {
   title: string;
   description: string;
-  images?: string[];
+  images: string[];
   index: number;
   tags: string[];
-}
-  seteventDetails: (details: any) => void;
+  setEventDetails: (details: boolean) => void;
   setEventIndex: (index: number) => void;
-};
+}
 
-
-const handleClick = (seteventDetails: any, setEventIndex: any, index: any) => {
-  seteventDetails((prev: boolean) => !prev);
+const handleClick = (setEventDetails: (details: boolean) => void, setEventIndex: (index: number) => void, index: number) => {
+  setEventDetails(true);
   setEventIndex(index);
 };
 
-const EventCard = ({ title, description, image, tags }: EventCardProps) => (
 const EventCard = ({
   title,
   description,
   images = [],
   index,
   tags,
-  seteventDetails,
+  setEventDetails,
   setEventIndex,
 }: EventCardProps) => (
   <motion.div
+    onClick={() => handleClick(setEventDetails, setEventIndex, index)}
     variants={itemVariants}
     whileHover={{ y: -5 }}
-    className="bg-white dark:bg-blue-900/50 rounded-2xl border border-blue-50 dark:border-blue-800 overflow-hidden backdrop-blur-sm"
+    className="cursor-pointer bg-white dark:bg-blue-900/50 rounded-2xl border border-blue-50 dark:border-blue-800 overflow-hidden backdrop-blur-sm"
   >
     <div className="relative h-48">
       <Image
-        src={image}
+        src={images[0]}
         alt={title}
         fill
         className="object-cover transition-transform duration-300 group-hover:scale-110"
@@ -205,7 +160,12 @@ const EventCard = ({
       <h3 className="text-xl font-bold text-blue-600 dark:text-blue-300 mb-3">
         {title}
       </h3>
-      <p className="text-gray-600 dark:text-gray-300 mb-4">{description}</p>
+      <div className="relative max-h-20 overflow-hidden mb-4">
+        <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
+          {description}
+        </p>
+        <div className="absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-white dark:from-blue-900/50 to-transparent" />
+      </div>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag: string) => (
           <span
@@ -218,42 +178,6 @@ const EventCard = ({
       </div>
     </div>
   </motion.div>
-  onClick={() => handleClick(seteventDetails, setEventIndex, index)}
-  variants={itemVariants}
-  whileHover={{ y: -5 }}
-  className="cursor-pointer bg-white dark:bg-blue-900/50 rounded-2xl border border-blue-50 dark:border-blue-800 overflow-hidden backdrop-blur-sm"
->
-  <div className="relative h-48">
-    <Image
-      src={images[0]}
-      alt={title}
-      fill
-      className="object-cover transition-transform duration-300 group-hover:scale-110"
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-  </div>
-  <div className="p-6">
-    <h3 className="text-xl font-bold text-blue-600 dark:text-blue-300 mb-3">
-      {title}
-    </h3>
-    <div className="relative max-h-20 overflow-hidden mb-4">
-      <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
-        {description}
-      </p>
-      <div className="absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-white dark:from-blue-900/50 to-transparent" />
-    </div>
-    <div className="flex flex-wrap gap-2">
-      {tags.map((tag: string) => (
-        <span
-          key={tag}
-          className="px-3 py-1 text-sm bg-blue-50 dark:bg-blue-800/50 text-blue-600 dark:text-blue-300 rounded-full"
-        >
-          {tag}
-        </span>
-      ))}
-    </div>
-  </div>
-</motion.div>
 );
 
 const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
@@ -271,13 +195,10 @@ const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
 
   // Normalize images to always have the same structure
   const normalizedImages = images.map((img, index) => {
-    if (typeof img === "string") {
-      return {
-        src: img,
-        alt: `Event image ${index + 1}`,
-      };
-    }
-    return img;
+    return {
+      src: img,
+      alt: `Event image ${index + 1}`,
+    };
   });
 
   useEffect(() => {
@@ -481,11 +402,8 @@ const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
                 {/* Action buttons */}
                 <div className="mt-8 flex flex-wrap gap-3">
                   <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
-                  Share Event
-                  </button>
-                  {/* <button className="px-6 py-2 bg-white dark:bg-slate-700 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-600 rounded-lg font-medium hover:bg-slate-50 dark:hover:bg-slate-600 transition-all">
                     Share Event
-                  </button> */}
+                  </button>
                 </div>
               </motion.div>
             </div>
@@ -495,22 +413,20 @@ const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
     </AnimatePresence>
   );
 };
+
 export default function CoolEventsSection() {
-  const [eventDetails, seteventDetails] = useState(false);
-  const [EventIndex, setEventIndex] = useState(0);
+  const [eventDetails, setEventDetails] = useState(false);
+  const [eventIndex, setEventIndex] = useState(0);
+  
   return (
     <section className="pt-24 pb-40 bg-gradient-to-b from-white to-[#f0f9ff] dark:from-blue-900 dark:to-blue-950 relative overflow-hidden">
       <motion.div
-      <motion.div
         className="absolute inset-0"
-        initial="hidden"
-        whileInView="visible"
         initial="hidden"
         whileInView="visible"
         transition={{ duration: 1.5 }}
         viewport={{ once: true }}
       >
-        <motion.div
         <motion.div
           className="absolute top-40 -right-20 w-96 h-96 bg-blue-400 dark:bg-blue-600 rounded-full blur-3xl opacity-20"
           variants={backgroundVariants}
@@ -520,12 +436,9 @@ export default function CoolEventsSection() {
           className="absolute bottom-40 -left-20 w-96 h-96 bg-blue-300 dark:bg-blue-500 rounded-full blur-3xl opacity-20"
           variants={backgroundVariants}
           animate="animate"
-          variants={backgroundVariants}
-          animate="animate"
         />
       </motion.div>
 
-      <motion.div
       <motion.div
         className="container mx-auto px-4 relative"
         variants={containerVariants}
@@ -535,15 +448,11 @@ export default function CoolEventsSection() {
       >
         <motion.div className="text-center mb-24" variants={itemVariants}>
           <motion.h2
-        <motion.div className="text-center mb-24" variants={itemVariants}>
-          <motion.h2
             className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-200 bg-clip-text text-transparent mb-6"
-            variants={fadeInVariant}
             variants={fadeInVariant}
           >
             Cool Random Events
           </motion.h2>
-          <motion.div
           <motion.div
             className="w-32 h-1.5 bg-gradient-to-r from-blue-600 to-blue-400 mx-auto rounded-full"
             initial={{ width: 0 }}
@@ -553,21 +462,20 @@ export default function CoolEventsSection() {
           />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {events.map((event, index) => (
-            <EventCard key={event.title} {...event} index={index} />
             <EventCard
               key={event.title}
               {...event}
               index={index}
-              seteventDetails={seteventDetails}
+              setEventDetails={setEventDetails}
               setEventIndex={setEventIndex}
             />
           ))}
           {eventDetails && (
             <EventDetailsCard
-              {...events[EventIndex]}
-              setEventDetails={seteventDetails}
+              {...events[eventIndex]}
+              setEventDetails={setEventDetails}
             />
           )}
         </div>
@@ -575,4 +483,3 @@ export default function CoolEventsSection() {
     </section>
   );
 }
-
