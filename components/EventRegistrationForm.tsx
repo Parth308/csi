@@ -212,7 +212,7 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
       className="w-full px-4 sm:px-6 md:px-8"
     >
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-        <Card className="bg-blue-50 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg">
+        <Card className="bg-blue-50  p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg">
           <CardContent className="space-y-6 md:space-y-8">
             {/* Event Selection */}
             <div className="space-y-3 md:space-y-4">

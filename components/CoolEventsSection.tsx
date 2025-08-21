@@ -127,7 +127,11 @@ interface EventCardProps {
   setEventIndex: (index: number) => void;
 }
 
-const handleClick = (setEventDetails: (details: boolean) => void, setEventIndex: (index: number) => void, index: number) => {
+const handleClick = (
+  setEventDetails: (details: boolean) => void,
+  setEventIndex: (index: number) => void,
+  index: number
+) => {
   setEventDetails(true);
   setEventIndex(index);
 };
@@ -145,7 +149,7 @@ const EventCard = ({
     onClick={() => handleClick(setEventDetails, setEventIndex, index)}
     variants={itemVariants}
     whileHover={{ y: -5 }}
-    className="cursor-pointer bg-white dark:bg-blue-900/50 rounded-2xl border border-blue-50 dark:border-blue-800 overflow-hidden backdrop-blur-sm"
+    className="cursor-pointer bg-white dark:bg-[#04070F]/50 rounded-2xl border border-blue-50 dark:border-blue-800 overflow-hidden backdrop-blur-sm"
   >
     <div className="relative h-48">
       <Image
@@ -164,7 +168,7 @@ const EventCard = ({
         <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
           {description}
         </p>
-        <div className="absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-white dark:from-blue-900/50 to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-white dark:from-[#04070F]/50 to-transparent" />
       </div>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag: string) => (
@@ -417,9 +421,9 @@ const EventDetailsCard: React.FC<EventDetailsCardProps> = ({
 export default function CoolEventsSection() {
   const [eventDetails, setEventDetails] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
-  
+
   return (
-    <section className="pt-24 pb-40 bg-gradient-to-b from-white to-[#f0f9ff] dark:from-blue-900 dark:to-blue-950 relative overflow-hidden">
+    <section className="pt-24 pb-40 bg-gradient-to-b from-white to-[#f0f9ff] dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] relative overflow-hidden">
       <motion.div
         className="absolute inset-0"
         initial="hidden"
@@ -428,12 +432,12 @@ export default function CoolEventsSection() {
         viewport={{ once: true }}
       >
         <motion.div
-          className="absolute top-40 -right-20 w-96 h-96 bg-blue-400 dark:bg-blue-600 rounded-full blur-3xl opacity-20"
+          className="absolute top-40 -right-20 w-96 h-96 bg-blue-400 dark:bg-gradient-to-tl dark:from-cyan-950 dark:via-blue-900 dark:to-slate-950 rounded-full blur-3xl opacity-20"
           variants={backgroundVariants}
           animate="animate"
         />
         <motion.div
-          className="absolute bottom-40 -left-20 w-96 h-96 bg-blue-300 dark:bg-blue-500 rounded-full blur-3xl opacity-20"
+          className="absolute bottom-40 -left-20 w-96 h-96 bg-blue-300 dark:bg-[#0B1A2D] rounded-full blur-3xl opacity-20"
           variants={backgroundVariants}
           animate="animate"
         />

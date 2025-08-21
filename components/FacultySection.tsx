@@ -31,12 +31,12 @@ export default function FacultySection() {
         >
           <path
             d="M0 0L1440 0L1440 74C1440 74 1082.5 0 720 0C357.5 0 0 74 0 74L0 0Z"
-            className="fill-white dark:fill-blue-900"
+            className="fill-white  dark:fill-[#05050A]"
           />
         </svg>
       </div>
 
-      <div className="pt-24 pb-40 bg-gradient-to-b from-white to-[#f0f9ff] dark:from-blue-900 dark:to-blue-950 relative overflow-hidden">
+      <div className="pt-24 pb-40 bg-gradient-to-b from-white to-[#f0f9ff] dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] relative overflow-hidden">
         <motion.div
           className="absolute inset-0"
           initial={{ opacity: 0.5 }}
@@ -85,10 +85,10 @@ export default function FacultySection() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center mx-auto">
               <motion.div className="md:col-start-2" variants={itemVariants}>
                 <FacultyCard
-                name="Dr.Jitender Singh"
-                position="Associate Professor"
-                image="/jitendersir.png"
-                description="Jitender Singh is an Associate Professor at the Department of Computer Science and Engineering, SRM Institute of Science and Technology, Delhi-NCR Campus. He has a Master's degree in Computer Science and Engineering and has been teaching for over 10 years. He is passionate about teaching and research in the field of Computer Science."
+                  name="Dr.Jitender Singh"
+                  position="Associate Professor"
+                  image="/jitendersir.png"
+                  description="Jitender Singh is an Associate Professor at the Department of Computer Science and Engineering, SRM Institute of Science and Technology, Delhi-NCR Campus. He has a Master's degree in Computer Science and Engineering and has been teaching for over 10 years. He is passionate about teaching and research in the field of Computer Science."
                 />
               </motion.div>
             </div>
@@ -119,7 +119,7 @@ const FacultyCard = ({
     }}
     whileHover={{ y: -4 }}
     transition={{ duration: 0.2 }}
-    className="bg-white dark:bg-blue-900/50 p-8 rounded-2xl shadow-xl border border-blue-100 dark:border-blue-700 backdrop-blur-sm"
+    className="bg-white dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] p-8 rounded-2xl shadow-xl border border-blue-100 dark:border-[#0B1A2D] backdrop-blur-sm"
   >
     <div className="relative w-32 h-32 mx-auto mb-6">
       <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full blur-lg opacity-30" />

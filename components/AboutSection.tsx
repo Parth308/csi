@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Users, Globe,Book } from "lucide-react";
+import { ArrowRight, Users, Globe, Book } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 
 export default function AboutSection() {
@@ -42,7 +42,7 @@ export default function AboutSection() {
 
   return (
     <>
-      <div className="relative h-32 bg-white">
+      <div className="relative h-32 bg-white dark:bg-[#04070F]">
         <svg
           className="absolute bottom-0 w-full h-32"
           preserveAspectRatio="none"
@@ -52,12 +52,12 @@ export default function AboutSection() {
         >
           <path
             d="M0 74L1440 74L1440 0C1440 0 1082.5 74 720 74C357.5 74 0 0 0 0L0 74Z"
-            className="fill-[#f0f9ff] dark:fill-blue-950"
+            className="fill-[#f0f9ff] dark:fill-[#05050A]"
           />
         </svg>
       </div>
 
-      <section className="pt-24 pb-40 bg-gradient-to-b from-[#f0f9ff] to-white dark:from-blue-950 dark:to-blue-900 relative overflow-hidden">
+      <section className="pt-24 pb-40 bg-gradient-to-b from-[#f0f9ff] to-white dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] relative overflow-hidden">
         <motion.div
           className="container mx-auto px-4 relative"
           variants={containerVariants}
@@ -81,7 +81,7 @@ export default function AboutSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div variants={itemVariants}>
               <motion.div
-                className="bg-white dark:bg-blue-900/50 rounded-3xl p-10 shadow-xl border border-blue-100 dark:border-blue-700 backdrop-blur-sm"
+                className="bg-white dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] rounded-3xl p-10 shadow-xl border border-blue-100 dark:border-blue-900 backdrop-blur-sm"
                 variants={itemVariants}
               >
                 <p className="text-xl leading-relaxed text-gray-700 dark:text-gray-200 mb-8">
@@ -106,7 +106,7 @@ export default function AboutSection() {
                   <motion.div
                     key={stat.label}
                     variants={itemVariants}
-                    className="bg-white dark:bg-blue-900/50 p-6 rounded-2xl border border-blue-50 dark:border-blue-800 text-center"
+                    className="bg-white dark:bg-[#0B1A2D]/50 p-6 rounded-2xl border border-blue-50 dark:border-[#0B1A2D] text-center"
                     whileHover={{ y: shouldReduceMotion ? 0 : -5 }}
                   >
                     <stat.icon className="w-8 h-8 mb-3 mx-auto text-blue-500 dark:text-blue-300" />
@@ -130,11 +130,11 @@ export default function AboutSection() {
                 className="relative w-96 h-96"
               >
                 <motion.div
-                  className="absolute inset-2 bg-white dark:bg-blue-900 rounded-full shadow-2xl"
+                  className="absolute inset-2 bg-white dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] rounded-full shadow-2xl"
                   variants={itemVariants}
                 />
                 <motion.div
-                  className="absolute inset-8 overflow-hidden rounded-full bg-white dark:bg-blue-900"
+                  className="absolute inset-8 overflow-hidden rounded-full bg-white dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F]"
                   variants={itemVariants}
                 >
                   <Image

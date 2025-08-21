@@ -55,7 +55,7 @@ const stats = [
 
 export default function ClubInfoSection() {
   return (
-    <section className="pt-24 pb-40 bg-gradient-to-b from-[#f0f9ff] to-white dark:from-blue-950 dark:to-blue-900 relative overflow-hidden">
+    <section className="pt-24 pb-40 bg-gradient-to-b from-[#f0f9ff] to-white dark:bg-gradient-to-b dark:from-[#04070F] dark:via-[#0B1A2D] dark:to-[#05050A] relative overflow-hidden">
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0 }}
@@ -64,7 +64,7 @@ export default function ClubInfoSection() {
         viewport={{ once: true }}
       >
         <motion.div
-          className="absolute top-20 -left-20 w-96 h-96 bg-blue-400 dark:bg-blue-600 rounded-full blur-3xl opacity-20"
+          className="absolute top-20 -left-20 w-96 h-96 bg-blue-400 dark:bg-gradient-to-tl dark:from-cyan-950 dark:via-blue-900 dark:to-slate-950 rounded-full blur-3xl opacity-20"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.2, 0.3, 0.2],
@@ -76,7 +76,7 @@ export default function ClubInfoSection() {
           }}
         />
         <motion.div
-          className="absolute bottom-20 -right-20 w-96 h-96 bg-blue-300 dark:bg-blue-500 rounded-full blur-3xl opacity-20"
+          className="absolute bottom-20 -right-20 w-96 h-96 bg-blue-300 dark:bg-gradient-to-br dark:from-blue-950 dark:via-slate-900 dark:to-slate-950 rounded-full blur-3xl opacity-20"
           animate={{
             scale: [1, 1.1, 1],
             opacity: [0.2, 0.25, 0.2],
@@ -121,7 +121,7 @@ export default function ClubInfoSection() {
               key={stat.label}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="bg-white dark:bg-blue-900/50 p-8 rounded-2xl border border-blue-50 dark:border-blue-800 backdrop-blur-sm"
+              className="bg-white dark:bg-[#0B1A2D]/50 p-8 rounded-2xl border border-blue-50 dark:border-[#0B1A2D] backdrop-blur-sm"
             >
               <div className="flex flex-col items-center text-center">
                 <motion.div
