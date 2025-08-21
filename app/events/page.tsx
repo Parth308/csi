@@ -11,9 +11,8 @@ const Timeline = () => {
   const [autoScrollPaused, setAutoScrollPaused] = useState(false);
   const [userActive, setUserActive] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const timelineRef = useRef(null);
-  const autoScrollTimerRef = useRef(null);
-  const userActivityTimerRef = useRef(null);
+  const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const userActivityTimerRef = useRef<NodeJS.Timeout | null>(null);
   
   const currentData = timelineData[currentYear];
 
@@ -129,14 +128,18 @@ const Timeline = () => {
 
   // Keyboard navigation
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    interface KeyboardHandler {
+      (e: KeyboardEvent): void;
+    }
+
+    const handleKeyPress: KeyboardHandler = (e) => {
       if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        navigateTimeline('up');
+      e.preventDefault();
+      navigateTimeline('up');
       }
       if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        navigateTimeline('down');
+      e.preventDefault();
+      navigateTimeline('down');
       }
     };
 
@@ -321,6 +324,7 @@ const Timeline = () => {
                       No images available for this event
                     </div>
                   )}
+                  {userActive && (<div className='hidden'>User is active</div>)}
                 </div>
               </div>
             </div>
