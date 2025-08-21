@@ -1,4 +1,20 @@
-export const timelineData = [
+// Define proper TypeScript interfaces
+interface VideoData {
+  url: string;
+  title: string;
+}
+
+interface TimelineItem {
+  year: string;
+  title: string;
+  date: string;
+  description: string;
+  content: string;
+  images: string[];
+  video: VideoData | null; // Changed from empty string to null
+}
+
+export const timelineData: TimelineItem[] = [
 	{
 		year: "2024",
 		title: "Codeclash 3.0",
@@ -13,7 +29,7 @@ export const timelineData = [
         	"https://picsum.photos/300/200?random=3",
         	"https://picsum.photos/300/200?random=4"
 		],
-		video: "",
+		video: null, // Changed from empty string to null
 	},
 	{
 		year: "2024",
@@ -29,7 +45,7 @@ export const timelineData = [
             "https://picsum.photos/300/200?random=7",
             "https://picsum.photos/300/200?random=8"
         ],
-		video: "",
+		video: null,
 	},
 	{
 		year: "2024",
@@ -45,7 +61,7 @@ export const timelineData = [
             "https://picsum.photos/300/200?random=11",
             "https://picsum.photos/300/200?random=12"
         ],
-		video: "",
+		video: null,
 	},
 	{
 		year: "2024",
@@ -61,7 +77,7 @@ export const timelineData = [
             "https://picsum.photos/300/200?random=15",
             "https://picsum.photos/300/200?random=16"
         ],
-		video: "",
+		video: null,
 	},
 	{
 		year: "2024",
@@ -77,7 +93,7 @@ export const timelineData = [
             "https://picsum.photos/300/200?random=19",
             "https://picsum.photos/300/200?random=20"
         ],
-		video: "",
+		video: null,
 	},
 	{
 		year: "2024",
@@ -93,7 +109,7 @@ export const timelineData = [
             "https://picsum.photos/300/200?random=23",
             "https://picsum.photos/300/200?random=24"
         ],
-		video: "",
+		video: null,
 	},
 	{
 		year: "2025",
@@ -109,7 +125,7 @@ export const timelineData = [
             "https://picsum.photos/300/200?random=27",
             "https://picsum.photos/300/200?random=28"
         ],
-		video: "",
+		video: null,
 	},
 	{
 		year: "2025",
@@ -125,7 +141,7 @@ export const timelineData = [
             "https://picsum.photos/300/200?random=31",
             "https://picsum.photos/300/200?random=32"
         ],
-		video: "",
+		video: null,
 	},
 ];
 

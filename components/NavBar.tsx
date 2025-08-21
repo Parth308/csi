@@ -74,7 +74,6 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
               href="/#events" 
               isActive={pathname === '/' && activeSection === 'events'} 
               onClick={() => handleNavigation('events')}
-              className={activeSection === 'events' ? 'active' : ''}
             >
               Events
             </NavLink>
@@ -107,7 +106,6 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
               href="/#events" 
               isActive={pathname === '/' && activeSection === 'events'} 
               onClick={() => handleNavigation('events')}
-              className={activeSection === 'events' ? 'active' : ''}
             >
               Events
             </MobileNavLink>
@@ -131,9 +129,10 @@ interface NavLinkProps {
   children: React.ReactNode;
   isActive?: boolean;
   onClick?: () => void;
+  className?: string;
 }
 
-const NavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
+const NavLink = ({ href, children, isActive, onClick, className }: NavLinkProps) => (
   <Link 
     href={href} 
     className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
@@ -141,6 +140,7 @@ const NavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
         ? `text-sky-600 bg-sky-50/80` 
         : `text-sky-500 hover:text-sky-600 hover:bg-sky-50/50`
       }
+      ${className || ''}
     `}
     onClick={(e) => {
       if (onClick) {
@@ -153,14 +153,14 @@ const NavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
   </Link>
 )
 
-const MobileNavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
+const MobileNavLink = ({ href, children, isActive, onClick, className }: NavLinkProps) => (
   <Link 
     href={href} 
     className={`p-3 text-lg font-medium rounded-xl transition-colors ${
       isActive 
         ? 'text-sky-600 bg-sky-50' 
         : 'text-sky-500 hover:text-sky-600 hover:bg-sky-50/50'
-    }`}
+    } ${className || ''}`}
     onClick={(e) => {
       if (onClick) {
         e.preventDefault()

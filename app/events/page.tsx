@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronUp, ChevronDown, Play, Pause, Volume2, VolumeX, Maximize, MoreHorizontal, Menu, X, ChevronLeft } from 'lucide-react';
-import { timelineData } from './timelinedata.js';
+import timelineData from './timelineData';
 import Link from 'next/link';
 
 const Timeline = () => {
@@ -11,10 +11,9 @@ const Timeline = () => {
   const [autoScrollPaused, setAutoScrollPaused] = useState(false);
   const [userActive, setUserActive] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const timelineRef = useRef(null);
-  const autoScrollTimerRef = useRef(null);
-  const userActivityTimerRef = useRef(null);
-  
+  const autoScrollTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const userActivityTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const currentData = timelineData[currentYear];
 
   const handleYearClick = (index: number) => {
@@ -41,12 +40,12 @@ const Timeline = () => {
   const registerUserActivity = () => {
     setUserActive(true);
     setAutoScrollPaused(true);
-    
+
     // Clear any existing user activity timer
     if (userActivityTimerRef.current) {
       clearTimeout(userActivityTimerRef.current);
     }
-    
+
     // Set a new timer for inactivity detection (5 seconds)
     userActivityTimerRef.current = setTimeout(() => {
       setUserActive(false);
@@ -59,7 +58,7 @@ const Timeline = () => {
     if (autoScrollTimerRef.current) {
       clearTimeout(autoScrollTimerRef.current);
     }
-    
+
     // Set a new timer if auto-scroll is not paused
     if (!autoScrollPaused) {
       autoScrollTimerRef.current = setTimeout(() => {
@@ -76,7 +75,7 @@ const Timeline = () => {
   // Set up auto-scroll timer
   useEffect(() => {
     resetAutoScrollTimer();
-    
+
     // Clean up on unmount
     return () => {
       if (autoScrollTimerRef.current) {
@@ -100,7 +99,7 @@ const Timeline = () => {
     window.addEventListener('keydown', handleActivity);
     window.addEventListener('touchstart', handleActivity);
     window.addEventListener('scroll', handleActivity);
-    
+
     // Add resize listener to handle responsive layouts
     const handleResize = () => {
       // Auto-open sidebar on larger screens
@@ -108,7 +107,7 @@ const Timeline = () => {
         setSidebarOpen(true);
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     // Initialize sidebar state based on screen size
     handleResize();
@@ -129,7 +128,7 @@ const Timeline = () => {
 
   // Keyboard navigation
   useEffect(() => {
-    const handleKeyPress = (e) => {
+    const handleKeyPress = (e: KeyboardEvent): void => {
       if (e.key === 'ArrowUp') {
         e.preventDefault();
         navigateTimeline('up');
@@ -144,6 +143,7 @@ const Timeline = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [currentYear]);
 
+
   return (
     <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-gradient-radial from-[#000033] to-black text-white">
       {/* Back Button */}
@@ -153,47 +153,44 @@ const Timeline = () => {
           <span className="text-sm font-medium">Back to Home</span>
         </button>
       </Link>
-      
+
       {/* Mobile Sidebar Toggle */}
-      <button 
+      <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className="md:hidden fixed z-50 top-4 left-4 p-2 rounded-full bg-blue-900/80 text-cyan-300"
       >
         {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {userActive && <div className="hidden">User is active</div>}
       </button>
 
       <div className="flex h-full w-full overflow-hidden">
         {/* Left Timeline Sidebar - Responsive */}
-        <div 
-          className={`${
-            sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-          } fixed md:static z-40 w-full max-w-[18rem] md:max-w-[20rem] lg:w-80 bg-[#000033]/90 md:bg-[#000033]/80 border-r border-blue-900 
+        <div
+          className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+            } fixed md:static z-40 w-full max-w-[18rem] md:max-w-[20rem] lg:w-80 bg-[#000033]/90 md:bg-[#000033]/80 border-r border-blue-900 
             flex flex-col overflow-y-auto h-full transition-transform duration-300 ease-in-out`}
         >
           <div className="font-bold text-xl md:text-2xl text-center py-6 md:py-10 border-b border-blue-900 text-cyan-300">
             Timeline
           </div>
-          
+
           {/* Timeline Navigation */}
           <div className="flex-1 relative overflow-y-auto">
             <div className="absolute left-8 top-0 bottom-0 w-px bg-blue-800"></div>
-            
+
             {timelineData.map((item, index) => (
               <div
                 key={item.year}
                 onClick={() => handleYearClick(index)}
-                className={`relative cursor-pointer py-4 md:py-6 px-8 transition-all duration-300 ${
-                  currentYear === index ? 'bg-[#000044] shadow-lg shadow-blue-900/20' : 'hover:bg-[#000044]/50'
-                }`}
+                className={`relative cursor-pointer py-4 md:py-6 px-8 transition-all duration-300 ${currentYear === index ? 'bg-[#000044] shadow-lg shadow-blue-900/20' : 'hover:bg-[#000044]/50'
+                  }`}
               >
-                <div className={`absolute left-7 w-2 md:w-3 h-2 md:h-3 rounded-full border-2 transition-all ${
-                  currentYear === index ? 'bg-yellow-300 border-cyan-300' : 'bg-blue-600 border-blue-400'
-                }`}></div>
-                
+                <div className={`absolute left-7 w-2 md:w-3 h-2 md:h-3 rounded-full border-2 transition-all ${currentYear === index ? 'bg-yellow-300 border-cyan-300' : 'bg-blue-600 border-blue-400'
+                  }`}></div>
+
                 <div className="ml-6">
-                  <div className={`text-xl md:text-2xl font-bold transition-colors ${
-                    currentYear === index ? 'text-cyan-300' : 'text-blue-400'
-                  }`}>
+                  <div className={`text-xl md:text-2xl font-bold transition-colors ${currentYear === index ? 'text-cyan-300' : 'text-blue-400'
+                    }`}>
                     {item.year}
                   </div>
                 </div>
@@ -245,6 +242,7 @@ const Timeline = () => {
                   </p>
                 </div>
 
+                {/* Video Section - Only render if video exists and has content */}
                 {currentData.video && (
                   <div className="bg-black rounded-lg overflow-hidden shadow-2xl shadow-cyan-900/20">
                     <div className="aspect-video relative">
@@ -255,11 +253,11 @@ const Timeline = () => {
                         allow="autoplay; fullscreen; picture-in-picture"
                         allowFullScreen
                       />
-                      
+
                       {/* Video Controls Overlay */}
                       <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 flex items-center justify-between text-white">
                         <div className="flex items-center space-x-1 sm:space-x-2">
-                          <button 
+                          <button
                             onClick={() => setIsVideoPlaying(!isVideoPlaying)}
                             className="p-1 hover:bg-blue-900/50 rounded"
                           >
@@ -267,9 +265,9 @@ const Timeline = () => {
                           </button>
                           <span className="text-xs sm:text-sm">0:00 / 0:27</span>
                         </div>
-                        
+
                         <div className="flex items-center space-x-1 sm:space-x-2">
-                          <button 
+                          <button
                             onClick={() => setIsVideoMuted(!isVideoMuted)}
                             className="p-1 hover:bg-blue-900/50 rounded"
                           >
@@ -284,7 +282,7 @@ const Timeline = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="p-4 bg-black">
                       <h3 className="text-cyan-300 font-medium">{currentData.video.title}</h3>
                     </div>
@@ -303,7 +301,7 @@ const Timeline = () => {
                 {/* Image Gallery */}
                 <div className="space-y-4">
                   <h3 className="text-xl font-semibold text-cyan-300">Event Gallery</h3>
-                  
+
                   {currentData.images && Array.isArray(currentData.images) && currentData.images.length > 0 ? (
                     <div className="grid grid-cols-2 gap-4">
                       {currentData.images.map((image, index) => (
