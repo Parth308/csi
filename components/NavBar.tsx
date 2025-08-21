@@ -135,6 +135,7 @@ export default function NavBar({
               href="/#events"
               isActive={pathname === "/" && activeSection === "events"}
               onClick={() => handleNavigation("events")}
+
             >
               Events
             </NavLink>
@@ -167,6 +168,7 @@ export default function NavBar({
           }`}
         >
           <nav className="flex flex-col space-y-2 mt-16">
+
             <MobileNavLink
               href="/"
               isActive={pathname === "/" && activeSection === "home"}
@@ -192,6 +194,7 @@ export default function NavBar({
               href="/#events"
               isActive={pathname === "/" && activeSection === "events"}
               onClick={() => handleNavigation("events")}
+
             >
               Events
             </MobileNavLink>
@@ -218,17 +221,20 @@ interface NavLinkProps {
   children: React.ReactNode;
   isActive?: boolean;
   onClick?: () => void;
+  className?: string;
 }
 
-const NavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
-  <Link
-    href={href}
+
+const NavLink = ({ href, children, isActive, onClick, className }: NavLinkProps) => (
+  <Link 
+    href={href} 
     className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
       ${
         isActive
           ? `text-sky-600 bg-sky-50/80 dark:bg-sky-800 dark:text-sky-300`
           : `text-sky-500 hover:text-sky-600 hover:bg-sky-50/50 dark:hover:bg-sky-800/50  dark:hover:text-sky-300 `
       }
+      ${className || ''}
     `}
     onClick={(e) => {
       if (onClick) {
@@ -241,14 +247,15 @@ const NavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
   </Link>
 );
 
-const MobileNavLink = ({ href, children, isActive, onClick }: NavLinkProps) => (
-  <Link
-    href={href}
+
+const MobileNavLink = ({ href, children, isActive, onClick, className }: NavLinkProps) => (
+  <Link 
+    href={href} 
     className={`p-3 text-lg font-medium rounded-xl transition-colors ${
-      isActive
-        ? "text-sky-600 bg-sky-50"
-        : "text-sky-500 hover:text-sky-600 hover:bg-sky-50/50"
-    }`}
+      isActive 
+        ? 'text-sky-600 bg-sky-50' 
+        : 'text-sky-500 hover:text-sky-600 hover:bg-sky-50/50'
+    } ${className || ''}`}
     onClick={(e) => {
       if (onClick) {
         e.preventDefault();
