@@ -22,14 +22,14 @@ export default function NavBar({
 
   const handleNavigation = (sectionId: string) => {
     // Special case for events - always go to events page
-    if (sectionId === 'events') {
-      window.location.href = '/events';
+    if (sectionId === "events") {
+      window.location.href = "/events";
       setIsOpen(false);
       return;
     }
 
     // Handle other navigation cases
-    if (pathname === '/') {
+    if (pathname === "/") {
       if (scrollToSection) {
         scrollToSection(sectionId as "home" | "about" | "faculty" | "events");
       }
@@ -69,17 +69,17 @@ export default function NavBar({
   }, []);
   const [isDark, setIsDark] = useState<string>(savedTheme ?? "dark");
 
-// Example: toggling dark mode
-useEffect(() => {
-  if (isDark === "dark") {
-    document.documentElement.classList.add("dark");
-  } else {
-    document.documentElement.classList.remove("dark");
-  }
-}, [isDark]);
+  // Example: toggling dark mode
+  useEffect(() => {
+    if (isDark === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
 
   return (
-    <header className="fixed w-full bg-white dark:backdrop-blur-md dark:bg-[#141426]/70 border-b dark:border-white/5 shadow-lg py-2 z-50">
+    <header className="fixed w-full bg-white dark:bg-[#141426]/90 border-b dark:border-white/5 shadow-lg py-2 z-50">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center space-x-3 group">
@@ -149,7 +149,6 @@ useEffect(() => {
               href="/#events"
               isActive={pathname === "/" && activeSection === "events"}
               onClick={() => handleNavigation("events")}
-
             >
               Events
             </NavLink>
@@ -165,7 +164,7 @@ useEffect(() => {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden relative z-50 w-10 h-10 flex items-center justify-center rounded-full bg-sky-50 text-sky-500 hover:bg-sky-100 transition-colors"
+            className="md:hidden relative z-50 w-10 h-10 flex items-center justify-center rounded-full dark:bg-[#0B1A2D] bg-sky-50 text-sky-500 hover:bg-sky-100 transition-colors"
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -177,12 +176,11 @@ useEffect(() => {
           onClick={() => setIsOpen(false)}
         />
         <div
-          className={`fixed inset-y-0 right-0 w-[300px] bg-white shadow-2xl p-6 transform transition-transform duration-300 ease-out md:hidden ${
+          className={`fixed inset-y-0 right-0 w-[300px] bg-white/95 dark:backdrop-blur-md dark:bg-[#141426]/70 backdrop-blur-xl  shadow-2xl p-6 transform transition-transform duration-300 ease-out md:hidden ${
             isOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
           <nav className="flex flex-col space-y-2 mt-16">
-
             <MobileNavLink
               href="/"
               isActive={pathname === "/" && activeSection === "home"}
@@ -208,7 +206,6 @@ useEffect(() => {
               href="/#events"
               isActive={pathname === "/" && activeSection === "events"}
               onClick={() => handleNavigation("events")}
-
             >
               Events
             </MobileNavLink>
@@ -223,6 +220,32 @@ useEffect(() => {
                 </button>
               </Link>
             </div>
+            <button
+              onClick={() => handleClick()}
+              className="h-10 w-10 rounded-lg p-2"
+            >
+              {isDark == "dark" ? (
+                <svg
+                  className="fill-yellow-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="fill-violet-700"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+              )}
+            </button>
           </nav>
         </div>
       </div>
@@ -238,19 +261,22 @@ interface NavLinkProps {
   className?: string;
 }
 
- 
-
-
-const NavLink = ({ href, children, isActive, onClick, className }: NavLinkProps) => (
-  <Link 
-    href={href} 
+const NavLink = ({
+  href,
+  children,
+  isActive,
+  onClick,
+  className,
+}: NavLinkProps) => (
+  <Link
+    href={href}
     className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
       ${
         isActive
           ? `text-sky-600 bg-sky-50/80 dark:bg-sky-800 dark:text-sky-300`
           : `text-sky-500 hover:text-sky-600 hover:bg-sky-50/50 dark:hover:bg-sky-800/50  dark:hover:text-sky-300 `
       }
-      ${className || ''}
+      ${className || ""}
     `}
     onClick={(e) => {
       if (onClick) {
@@ -263,15 +289,20 @@ const NavLink = ({ href, children, isActive, onClick, className }: NavLinkProps)
   </Link>
 );
 
-
-const MobileNavLink = ({ href, children, isActive, onClick, className }: NavLinkProps) => (
-  <Link 
-    href={href} 
+const MobileNavLink = ({
+  href,
+  children,
+  isActive,
+  onClick,
+  className,
+}: NavLinkProps) => (
+  <Link
+    href={href}
     className={`p-3 text-lg font-medium rounded-xl transition-colors ${
-      isActive 
-        ? 'text-sky-600 bg-sky-50' 
-        : 'text-sky-500 hover:text-sky-600 hover:bg-sky-50/50'
-    } ${className || ''}`}
+      isActive
+        ? `text-sky-600 bg-sky-50/80 dark:bg-sky-800 dark:text-sky-300`
+        : `text-sky-500 hover:text-sky-600 hover:bg-sky-50/50 dark:hover:bg-sky-800/50  dark:hover:text-sky-300 `
+    } ${className || ""}`}
     onClick={(e) => {
       if (onClick) {
         e.preventDefault();
