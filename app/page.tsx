@@ -6,10 +6,12 @@ import HeroSection from '@/components/HeroSection'
 import AboutSection from '@/components/AboutSection'
 import FacultySection from '@/components/FacultySection'
 import ClubInfoSection from '@/components/ClubInfoSection'
-import EventsSection from '@/components/EventsSection'
-import CoolEventsSection from '@/components/CoolEventsSection'
+// import EventsSection from '@/components/EventsSection'
+import { useRouter } from 'next/navigation'
+// import CoolEventsSection from '@/components/CoolEventsSection'
 
 export default function LandingPage() {
+  const router = useRouter()
   const [activeSection, setActiveSection] = useState('home')
   const sectionRefs: { [key in 'home' | 'about' | 'faculty' | 'events']: React.RefObject<HTMLDivElement> } = {
     home: useRef<HTMLDivElement>(null),
@@ -34,6 +36,11 @@ export default function LandingPage() {
   }, [sectionRefs])
 
   const scrollToSection = (sectionId: 'home' | 'about' | 'faculty' | 'events') => {
+    if (sectionId === 'events') {
+      router.push('/events')
+      return
+    }
+    
     const section = sectionRefs[sectionId]?.current
     if (section) {
       const start = window.pageYOffset
@@ -78,8 +85,8 @@ export default function LandingPage() {
         <div ref={sectionRefs.about}><AboutSection /></div>
         <div ref={sectionRefs.faculty}><FacultySection /></div>
         <ClubInfoSection />
-        <div ref={sectionRefs.events}><EventsSection /></div>
-        <CoolEventsSection />
+        {/* <div ref={sectionRefs.events}><EventsSection /></div> */}
+        {/* <CoolEventsSection /> */}
       </main>
       <Footer />
     </div>

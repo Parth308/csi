@@ -25,7 +25,15 @@ export default function NavBar({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNavigation = (sectionId: string) => {
-    if (pathname === "/") {
+    // Special case for events - always go to events page
+    if (sectionId === 'events') {
+      window.location.href = '/events';
+      setIsOpen(false);
+      return;
+    }
+
+    // Handle other navigation cases
+    if (pathname === '/') {
       if (scrollToSection) {
         scrollToSection(sectionId as "home" | "about" | "faculty" | "events");
       }
