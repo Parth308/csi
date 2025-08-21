@@ -11,15 +11,11 @@ interface NavBarProps {
   scrollToSection?: (
     sectionId: "home" | "about" | "faculty" | "events"
   ) => void;
-  isDark: string;
-  setIsDark: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function NavBar({
   activeSection,
   scrollToSection,
-  isDark,
-  setIsDark,
 }: NavBarProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -63,6 +59,24 @@ export default function NavBar({
       return newTheme;
     });
   };
+
+  let savedTheme;
+  useEffect(() => {
+    savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setIsDark(savedTheme);
+    }
+  }, []);
+  const [isDark, setIsDark] = useState<string>(savedTheme ?? "dark");
+
+// Example: toggling dark mode
+useEffect(() => {
+  if (isDark === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}, [isDark]);
 
   return (
     <header className="fixed w-full bg-white dark:backdrop-blur-md dark:bg-[#141426]/70 border-b dark:border-white/5 shadow-lg py-2 z-50">
@@ -223,6 +237,8 @@ interface NavLinkProps {
   onClick?: () => void;
   className?: string;
 }
+
+ 
 
 
 const NavLink = ({ href, children, isActive, onClick, className }: NavLinkProps) => (
