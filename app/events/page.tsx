@@ -345,11 +345,11 @@ const Timeline = () => {
       <style jsx global>{`
         @keyframes infinite-scroll {
           from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
+          to { transform: translateX(-100%); }
         }
 
         .animate-infinite-scroll {
-          animation: infinite-scroll 40s linear infinite;
+          animation: infinite-scroll 10s linear infinite;
           min-width: 100%;
         }
 
