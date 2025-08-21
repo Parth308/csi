@@ -92,24 +92,14 @@ export default function JoinUs() {
       return false;
     }
   };
-  let savedTheme;
-  useEffect(() => {
-    savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setIsDark(savedTheme);
-    }
-  }, []);
-  const [isDark, setIsDark] = useState<string>(savedTheme ?? "dark");
 
   return (
     <ToastProvider>
       <div
-        className={` min-h-screen flex flex-col bg-white  text-gray-900 relative ${
-          isDark === "dark" ? "dark" : ""
-        }`}
+        className={` min-h-screen flex flex-col bg-white  text-gray-900 relative `}
       >
         <div className="absolute top-0 w-full h-[100%] dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] bg-gradient-to-b from-white to-[#f0f9ff]  z-0" />
-        <NavBar isDark={isDark} setIsDark={setIsDark} activeSection={""} />
+        <NavBar activeSection={""} />
         <CircuitLottie />
         <main className="flex-grow pt-20 relative z-1">
           <div className="container mx-auto px-4 py-12">
@@ -117,12 +107,12 @@ export default function JoinUs() {
               Join Us
             </h1>
             <AnimatePresence mode="wait">
-              {events.length < 0 ? ( 
-              <EventRegistrationForm
-                key="form"
-                events={events}
-                onSubmit={handleSubmit}
-              />
+              {events.length < 0 ? (
+                <EventRegistrationForm
+                  key="form"
+                  events={events}
+                  onSubmit={handleSubmit}
+                />
               ) : (
                 <ClosedRegistrationMessage key="closed" />
               )}

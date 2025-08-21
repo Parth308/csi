@@ -68,18 +68,18 @@ export default function LandingPage() {
     t--
     return -c / 2 * (t * (t - 2) - 1) + b
   }
-   let savedTheme;
-  useEffect(() => {
-    savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setIsDark(savedTheme);
-    }
-  }, []);
-  const [isDark, setIsDark] = useState<string>(savedTheme ?? "dark");
+  //  let savedTheme;
+  // useEffect(() => {
+  //   savedTheme = localStorage.getItem("theme");
+  //   if (savedTheme) {
+  //     setIsDark(savedTheme);
+  //   }
+  // }, []);
+  // const [isDark, setIsDark] = useState<string>(savedTheme ?? "dark");
 
   return (
-    <div className={`min-h-screen bg-gray-900 text-blue-100 ${isDark === "dark" ? "dark" : ""} `}>
-      <NavBar isDark={isDark} setIsDark={setIsDark} activeSection={activeSection} scrollToSection={scrollToSection} />
+    <div className={`min-h-screen bg-gray-900 text-blue-100  `}>
+      <NavBar activeSection={activeSection} scrollToSection={scrollToSection} />
       <main>
         <div ref={sectionRefs.home}><HeroSection /></div>
         <div ref={sectionRefs.about}><AboutSection /></div>
