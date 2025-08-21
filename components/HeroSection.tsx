@@ -5,22 +5,41 @@ import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-sky-50/50 via-white to-white">
-      {/* Background Shapes */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          transition={{ duration: 1 }}
-          className="absolute -top-1/2 -left-1/2 w-full h-full bg-sky-100 rounded-full blur-3xl"
-        />
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-blue-100 rounded-full blur-3xl"
-        />
-      </div>
+   <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-sky-50/50 via-white to-white  dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] ">
+  {/* Background Shapes */}
+  <div className="absolute inset-0 overflow-hidden">
+    
+    {/* Top-left glow */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.55 }}
+      transition={{ duration: 1 }}
+      className="absolute -top-1/2 -left-1/2 w-full h-full 
+      bg-sky-100 
+      dark:bg-gradient-to-br dark:from-blue-950 dark:via-slate-900 dark:to-slate-950 
+      rounded-full blur-[140px]"
+    />
+
+    {/* Bottom-right glow */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.45 }}
+      transition={{ duration: 1, delay: 0.2 }}
+      className="absolute -bottom-1/2 -right-1/2 w-full h-full 
+      bg-blue-100 
+      dark:bg-gradient-to-tl dark:from-cyan-950 dark:via-blue-900 dark:to-slate-950
+      rounded-full blur-[140px]"
+    />
+
+    {/* Subtle central glow */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.2 }}
+      transition={{ duration: 1.4, delay: 0.4 }}
+      className="absolute inset-0 
+      dark:bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.12),transparent_70%)]"
+    />
+  </div>
 
       <div className="container mx-auto px-6 pt-32 pb-20 relative">
         <motion.div
@@ -35,7 +54,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="relative mx-auto mb-12 w-48 h-48 md:w-56 md:h-56"
           >
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-200 via-sky-100 to-white animate-pulse" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-sky-200 via-sky-100 to-white dark:bg-gradient-to-b dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] animate-pulse" />
             <Image
               src="/csi_logo.png"
               alt="CSI Logo Large"
@@ -49,7 +68,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-500 via-blue-500 to-sky-500 leading-tight"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sky-500 via-blue-500 to-sky-500 dark:from-white dark:via-sky-300 dark:to-white leading-tight"
           >
             Computer Society
             <br />
@@ -60,7 +79,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-xl md:text-2xl mb-12 text-sky-600/80 font-medium"
+            className="text-xl md:text-2xl mb-12 text-sky-600/80 dark:text-white/80 font-medium"
           >
             Empowering the Future of Technology
           </motion.p>

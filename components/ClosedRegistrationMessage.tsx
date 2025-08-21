@@ -32,7 +32,7 @@ export default function ClosedRegistrationMessage() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full"
+        className="bg-white dark:bg-[#0B1A2D] rounded-lg shadow-lg p-8 max-w-md w-full"
       >
         <div className="flex justify-center mb-6">
           <div className="bg-blue-500 rounded-full p-3">
