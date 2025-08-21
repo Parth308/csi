@@ -177,13 +177,13 @@ const Timeline = () => {
             Timeline
           </div>
           
-          {/* Timeline Navigation */}
+          {/* Timeline Navigation - Updated to show date instead of year */}
           <div className="flex-1 relative overflow-y-auto">
             <div className="absolute left-8 top-0 bottom-0 w-px bg-blue-800"></div>
             
             {timelineData.map((item, index) => (
               <div
-                key={item.year}
+                key={item.date}
                 onClick={() => handleYearClick(index)}
                 className={`relative cursor-pointer py-4 md:py-6 px-8 transition-all duration-300 ${
                   currentYear === index ? 'bg-[#000044] shadow-lg shadow-blue-900/20' : 'hover:bg-[#000044]/50'
@@ -194,17 +194,22 @@ const Timeline = () => {
                 }`}></div>
                 
                 <div className="ml-6">
-                  <div className={`text-xl md:text-2xl font-bold transition-colors ${
+                  <div className={`text-sm md:text-base font-bold transition-colors ${
                     currentYear === index ? 'text-cyan-300' : 'text-blue-400'
                   }`}>
-                    {item.year}
+                    {item.date}
+                  </div>
+                  <div className={`text-sm transition-colors ${
+                    currentYear === index ? 'text-white' : 'text-blue-300'
+                  }`}>
+                    {item.title}
                   </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Timeline Controls */}
+          {/* Timeline Controls - No changes needed */}
           <div className="py-6 md:py-10 border-t border-blue-900">
             <div className="flex justify-center space-x-4">
               <button
@@ -228,105 +233,110 @@ const Timeline = () => {
         {/* Main Content Area */}
         <div className="flex-1 bg-gradient-to-b from-[#05050A]/80 via-[#0B1A2D] to-[#04070F] overflow-y-auto w-full">
           <div className="max-w-6xl mx-auto p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16 pt-14 md:pt-8">
-            {/* Year Display */}
+            {/* Date Display - Updated to show date instead of year */}
             <div className="text-right mb-4 md:mb-8">
-              <div className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-800 to-white leading-none">
-                {currentData.year}
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-800 to-white leading-none">
+                {currentData.date}
               </div>
             </div>
 
-            {/* Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-start">
-              {/* Left Column - Text Content */}
-              <div className="space-y-6 md:space-y-8">
-                <div>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cyan-300 mb-2 md:mb-4">
-                    {currentData.title}
-                  </h2>
-                  <p className="text-blue-200 text-base md:text-lg mb-4 md:mb-6">
-                    {currentData.description}
-                  </p>
-                </div>
-
-                {currentData.video && (
-                  <div className="bg-black rounded-lg overflow-hidden shadow-2xl shadow-cyan-900/20">
-                    <div className="aspect-video relative">
-                      <iframe
-                        src={currentData.video.url}
-                        className="w-full h-full"
-                        frameBorder="0"
-                        allow="autoplay; fullscreen; picture-in-picture"
-                        allowFullScreen
-                      />
-                      
-                      {/* Video Controls Overlay */}
-                      <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 flex items-center justify-between text-white">
-                        <div className="flex items-center space-x-1 sm:space-x-2">
-                          <button 
-                            onClick={() => setIsVideoPlaying(!isVideoPlaying)}
-                            className="p-1 hover:bg-blue-900/50 rounded"
-                          >
-                            {isVideoPlaying ? <Pause className="w-3 h-3 sm:w-4 sm:h-4" /> : <Play className="w-3 h-3 sm:w-4 sm:h-4" />}
-                          </button>
-                          <span className="text-xs sm:text-sm">0:00 / 0:27</span>
-                        </div>
-                        
-                        <div className="flex items-center space-x-1 sm:space-x-2">
-                          <button 
-                            onClick={() => setIsVideoMuted(!isVideoMuted)}
-                            className="p-1 hover:bg-blue-900/50 rounded"
-                          >
-                            {isVideoMuted ? <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" /> : <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />}
-                          </button>
-                          <button className="p-1 hover:bg-blue-900/50 rounded">
-                            <Maximize className="w-4 h-4" />
-                          </button>
-                          <button className="p-1 hover:bg-blue-900/50 rounded">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 bg-black">
-                      <h3 className="text-cyan-300 font-medium">{currentData.video.title}</h3>
-                    </div>
-                  </div>
-                )}
+            {/* Content in single column layout - Restructured to place content below description */}
+            <div className="space-y-6 md:space-y-8">
+              {/* Title and Description */}
+              <div>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-cyan-300 mb-2 md:mb-4">
+                  {currentData.title}
+                </h2>
+                <p className="text-blue-200 text-base md:text-lg mb-4 md:mb-6">
+                  {currentData.description}
+                </p>
+              </div>
+              
+              {/* Content section - Moved below description */}
+              <div className="bg-blue-900/20 p-6 rounded-lg border border-blue-800">
+                <p className="text-blue-100 leading-relaxed">
+                  {currentData.content}
+                </p>
               </div>
 
-              {/* Right Column - Images and Additional Content */}
-              <div className="space-y-8">
-                <div className="bg-blue-900/20 p-6 rounded-lg border border-blue-800">
-                  <p className="text-blue-100 leading-relaxed">
-                    {currentData.content}
-                  </p>
-                </div>
-
-                {/* Image Gallery */}
-                <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-cyan-300">Event Gallery</h3>
+              {/* Video Section */}
+              {currentData.video && (
+                <div className="bg-black rounded-lg overflow-hidden shadow-2xl shadow-cyan-900/20">
+                  <div className="aspect-video relative">
+                    <iframe
+                      src={currentData.video.url}
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      allowFullScreen
+                    />
+                    
+                    {/* Video Controls Overlay */}
+                    <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 flex items-center justify-between text-white">
+                      <div className="flex items-center space-x-1 sm:space-x-2">
+                        <button 
+                          onClick={() => setIsVideoPlaying(!isVideoPlaying)}
+                          className="p-1 hover:bg-blue-900/50 rounded"
+                        >
+                          {isVideoPlaying ? <Pause className="w-3 h-3 sm:w-4 sm:h-4" /> : <Play className="w-3 h-3 sm:w-4 sm:h-4" />}
+                        </button>
+                        <span className="text-xs sm:text-sm">0:00 / 0:27</span>
+                      </div>
+                      
+                      <div className="flex items-center space-x-1 sm:space-x-2">
+                        <button 
+                          onClick={() => setIsVideoMuted(!isVideoMuted)}
+                          className="p-1 hover:bg-blue-900/50 rounded"
+                        >
+                          {isVideoMuted ? <VolumeX className="w-3 h-3 sm:w-4 sm:h-4" /> : <Volume2 className="w-3 h-3 sm:w-4 sm:h-4" />}
+                        </button>
+                        <button className="p-1 hover:bg-blue-900/50 rounded">
+                          <Maximize className="w-4 h-4" />
+                        </button>
+                        <button className="p-1 hover:bg-blue-900/50 rounded">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                   
-                  {currentData.images && Array.isArray(currentData.images) && currentData.images.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-black">
+                    <h3 className="text-cyan-300 font-medium">{currentData.video.title}</h3>
+                  </div>
+                </div>
+              )}
+
+              {/* Infinite Image Gallery - replacing the existing Image Gallery section */}
+              {currentData.images && Array.isArray(currentData.images) && currentData.images.length > 0 && (
+                <div className="mt-8 overflow-hidden">
+                  <div className="relative w-full py-4">
+                    {/* First set of images */}
+                    <div className="flex animate-infinite-scroll space-x-4">
                       {currentData.images.map((image, index) => (
-                        <div key={index} className="aspect-square bg-blue-900/10 rounded-lg overflow-hidden shadow-lg hover:shadow-cyan-900/30 transition-shadow border border-blue-800/50">
+                        <div key={`original-${index}`} className="flex-shrink-0">
                           <img
                             src={image}
                             alt={`${currentData.title} - Image ${index + 1}`}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            className="h-48 md:h-60 w-auto object-cover rounded-md"
+                          />
+                        </div>
+                      ))}
+                      
+                      {/* Duplicate set for seamless scrolling */}
+                      {currentData.images.map((image, index) => (
+                        <div key={`duplicate-${index}`} className="flex-shrink-0">
+                          <img
+                            src={image}
+                            alt={`${currentData.title} - Image ${index + 1}`}
+                            className="h-48 md:h-60 w-auto object-cover rounded-md"
                           />
                         </div>
                       ))}
                     </div>
-                  ) : (
-                    <div className="text-center py-8 text-blue-300">
-                      No images available for this event
-                    </div>
-                  )}
-                  {userActive && (<div className='hidden'>User is active</div>)}
+                  </div>
                 </div>
-              </div>
+              )}
+              {userActive && (<div className='hidden'>User is active</div>)}
             </div>
           </div>
         </div>
