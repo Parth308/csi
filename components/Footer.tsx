@@ -28,7 +28,7 @@ const SocialIcon = ({ href, icon }: SocialIconProps) => (
 
 export default function Footer() {
   return (
-    <footer className="bg-white py-12">
+    <footer className="bg-gray-950 text-gray-400 py-8">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="text-center md:text-left">
@@ -130,6 +130,9 @@ export default function Footer() {
               </Link>
             </div>
           </div>
+        </div>
+        <div className="text-center mt-8">
+          <p>© 2025 Computer Society of India - NITK Chapter. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -16,6 +16,14 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
   const [isOpen, setIsOpen] = useState(false)
 
   const handleNavigation = (sectionId: string) => {
+    // Special case for events - always go to events page
+    if (sectionId === 'events') {
+      window.location.href = '/events';
+      setIsOpen(false);
+      return;
+    }
+
+    // Handle other navigation cases
     if (pathname === '/') {
       if (scrollToSection) {
         scrollToSection(sectionId as 'home' | 'about' | 'faculty' | 'events');
@@ -62,7 +70,14 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
             <NavLink href="/" isActive={pathname === '/' && activeSection === 'home'} onClick={() => handleNavigation('home')}>Home</NavLink>
             <NavLink href="/#about" isActive={pathname === '/' && activeSection === 'about'} onClick={() => handleNavigation('about')}>About</NavLink>
             <NavLink href="/#faculty" isActive={pathname === '/' && activeSection === 'faculty'} onClick={() => handleNavigation('faculty')}>Faculty</NavLink>
-            <NavLink href="/#events" isActive={pathname === '/' && activeSection === 'events'} onClick={() => handleNavigation('events')}>Events</NavLink>
+            <NavLink 
+              href="/#events" 
+              isActive={pathname === '/' && activeSection === 'events'} 
+              onClick={() => handleNavigation('events')}
+              className={activeSection === 'events' ? 'active' : ''}
+            >
+              Events
+            </NavLink>
             <NavLink href="/team" isActive={pathname === '/team'}>Team</NavLink>
             <Link href="/join-us">
               <button className="ml-4 bg-sky-500 hover:bg-sky-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
@@ -88,7 +103,14 @@ export default function NavBar({ activeSection, scrollToSection }: NavBarProps) 
             <MobileNavLink href="/" isActive={pathname === '/' && activeSection === 'home'} onClick={() => handleNavigation('home')}>Home</MobileNavLink>
             <MobileNavLink href="/#about" isActive={pathname === '/' && activeSection === 'about'} onClick={() => handleNavigation('about')}>About</MobileNavLink>
             <MobileNavLink href="/#faculty" isActive={pathname === '/' && activeSection === 'faculty'} onClick={() => handleNavigation('faculty')}>Faculty</MobileNavLink>
-            <MobileNavLink href="/#events" isActive={pathname === '/' && activeSection === 'events'} onClick={() => handleNavigation('events')}>Events</MobileNavLink>
+            <MobileNavLink 
+              href="/#events" 
+              isActive={pathname === '/' && activeSection === 'events'} 
+              onClick={() => handleNavigation('events')}
+              className={activeSection === 'events' ? 'active' : ''}
+            >
+              Events
+            </MobileNavLink>
             <MobileNavLink href="/team" isActive={pathname === '/team'}>Team</MobileNavLink>
             <div className="pt-4">
               <Link href="/join-us" onClick={() => setIsOpen(false)}>
