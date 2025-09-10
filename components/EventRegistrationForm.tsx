@@ -172,6 +172,20 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
   const currentEvent = events.find(event => event._id === formData.event)
   const teamSize = currentEvent?.teamSize || 1
 
+  // Set default event to the first available open event
+  useEffect(() => {
+    if (events.length > 0 && !formData.event) {
+      const firstOpenEvent = events.find(event => event.isOpen)
+      if (firstOpenEvent) {
+        setFormData(prev => ({
+          ...prev,
+          event: firstOpenEvent._id,
+          members: getInitialMembers(firstOpenEvent.teamSize)
+        }))
+      }
+    }
+  }, [events, formData.event])
+
   // Update members array when event changes
   useEffect(() => {
     if (formData.event) {
@@ -276,6 +290,15 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
     }
   }
 
+  // Get open events for the dropdown
+  const openEvents = events.filter(event => event.isOpen)
+  
+  // Get the selected event's display name
+  const selectedEvent = events.find(e => e._id === formData.event)
+  const eventDisplayName = selectedEvent 
+    ? `${selectedEvent.name} (${selectedEvent.teamSize} member${selectedEvent.teamSize > 1 ? 's' : ''})`
+    : "Select Event"
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -296,12 +319,10 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
                 id="event"
                 label="Select Event"
                 icon={Calendar}
-                options={events
-                  .filter(event => event.isOpen)
-                  .map((event) => ({
-                    value: event._id,
-                    label: `${event.name} (${event.teamSize} member${event.teamSize > 1 ? 's' : ''})`,
-                  }))}
+                options={openEvents.map((event) => ({
+                  value: event._id,
+                  label: `${event.name} (${event.teamSize} member${event.teamSize > 1 ? 's' : ''})`,
+                }))}
                 value={formData.event}
                 onChange={(value) => setFormData({ members: getInitialMembers(1), event: value })}
               />

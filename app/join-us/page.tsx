@@ -115,7 +115,7 @@ export default function JoinUs() {
         <main className="flex-grow pt-20 relative z-1">
           <div className="container mx-auto px-4 py-12">
             <h1 className="text-4xl font-bold text-center mb-8 text-blue-400">
-              Join Us
+              Registeration
             </h1>
             <AnimatePresence mode="wait">
               {events.length > 0 ? (
