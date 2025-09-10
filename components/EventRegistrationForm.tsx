@@ -298,7 +298,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       transition={{ duration: 0.5 }}
       className="w-full px-2 sm:px-3 md:px-4 lg:px-6 min-h-screen py-3 sm:py-4"
     >
-      <form onSubmit={handleSubmit} className="max-w-5xl mx-auto">
+      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
         <Card className="bg-white dark:bg-blue-900/20 border-0 md:border md:border-gray-200 md:dark:border-blue-800 shadow-lg dark:shadow-cyan-900/20 rounded-xl overflow-hidden">
           <CardContent className="p-2 sm:p-3 md:p-4 lg:p-6 space-y-4 sm:space-y-6">
             {/* Event Selection */}
