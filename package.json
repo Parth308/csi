@@ -19,6 +19,7 @@
     "@radix-ui/react-switch": "^1.1.1",
     "@radix-ui/react-toast": "^1.2.2",
     "@types/bcryptjs": "^2.4.6",
+    "@vercel/analytics": "^1.5.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
