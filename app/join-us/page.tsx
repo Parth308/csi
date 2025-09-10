@@ -106,7 +106,6 @@ export default function JoinUs() {
       toast({
         title: "Registration Failed",
         description: (error as Error).message,
-        variant: "destructive",
       });
       return false;
     }
