@@ -266,7 +266,7 @@ export default function AdminDashboard() {
         <div className="flex flex-col h-full">
           <Link href="/admin">
             <div className="flex items-center justify-center h-16 bg-blue-600">
-              <span className="text-2xl font-semibold text-white">CSI</span>
+              <span className="text-2xl font-semibold text-white">CSI ADMIN</span>
             </div>
           </Link>
           <nav className="flex-1 px-2 py-4 space-y-2">
@@ -293,7 +293,7 @@ export default function AdminDashboard() {
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-white shadow-sm z-10">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <div className="max-w-7xl  py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <Link href={`/admin`}>
             <h1 className="text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
             </Link>

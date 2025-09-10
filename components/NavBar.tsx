@@ -216,7 +216,7 @@ export default function NavBar({
             <div className="pt-4">
               <Link href="/join-us" onClick={() => setIsOpen(false)}>
                 <button className="w-full bg-sky-500 hover:bg-sky-600 text-white py-3 rounded-full text-sm font-medium transition-all duration-300 hover:shadow-lg active:scale-95">
-                  Join Us
+                  Register
                 </button>
               </Link>
             </div>
