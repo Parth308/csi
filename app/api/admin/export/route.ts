@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Add member data for each member
-      const memberData: { [key: string]: any } = {}
+      const memberData: Record<string, string | undefined> = {}
       reg.members.forEach((member: Member, index: number) => {
         const memberNum = index + 1
         memberData[`Member ${memberNum} Name`] = member.name

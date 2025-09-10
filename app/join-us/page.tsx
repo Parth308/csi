@@ -19,6 +19,11 @@ interface Event {
   teamSize: number;
 }
 
+// Define the API response structure
+interface EventsApiResponse {
+  events: Event[];
+}
+
 // Updated form data interface for team registration
 interface MemberData {
   name: string;
@@ -43,12 +48,12 @@ export default function JoinUs() {
       try {
         const response = await fetch("/api/admin/events");
         if (!response.ok) throw new Error("Failed to fetch events");
-        const data = await response.json();
+        const data: EventsApiResponse = await response.json();
         // Filter for open events and ensure teamSize exists
         setEvents(
           data.events
-            .filter((event: Event) => event.isOpen)
-            .map((event: any) => ({
+            .filter((event) => event.isOpen)
+            .map((event) => ({
               ...event,
               teamSize: event.teamSize || 1, // Default to 1 if not set
             }))

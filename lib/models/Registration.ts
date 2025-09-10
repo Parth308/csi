@@ -16,7 +16,7 @@ const RegistrationSchema = new mongoose.Schema({
   members: {
     type: [MemberSchema],
     validate: {
-      validator: function (arr: any[]) {
+      validator: function (arr: mongoose.Types.Array<unknown>) {
         return arr.length >= 1; // At least one member required
       },
       message: 'At least one member is required.',

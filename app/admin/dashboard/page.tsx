@@ -26,7 +26,7 @@ import {
   Line,
   Legend
 } from 'recharts'
-import { Download, Users, Calendar, TrendingUp, Home, LayoutDashboard, ChevronLeft, ChevronRight, User } from 'lucide-react'
+import { Download, Users, Calendar, Home, LayoutDashboard, ChevronLeft, ChevronRight, User } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { DateRange } from "react-day-picker"
