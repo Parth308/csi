@@ -6,6 +6,7 @@ import * as xlsx from 'xlsx'
 interface Member {
   name: string
   registrationNumber: string
+  section: string
   officialEmail: string
   phoneNumber: string
   year: string
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
         const memberNum = index + 1
         memberData[`Member ${memberNum} Name`] = member.name
         memberData[`Member ${memberNum} Reg Number`] = member.registrationNumber
+        memberData[`Member ${memberNum} Section`] = member.section
         memberData[`Member ${memberNum} Email`] = member.officialEmail
         memberData[`Member ${memberNum} Phone`] = member.phoneNumber
         memberData[`Member ${memberNum} Year`] = member.year

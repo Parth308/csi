@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 const MemberSchema = new mongoose.Schema({
   name: { type: String, required: true },
   registrationNumber: { type: String, required: true },
+  section: { type: String },
   year: { type: String, required: true },
   branch: { type: String, required: true },
   officialEmail: { type: String, required: true },

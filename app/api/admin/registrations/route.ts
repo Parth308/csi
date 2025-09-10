@@ -38,8 +38,8 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields for each member
     for (const member of members) {
-      const { name, registrationNumber, year, branch, officialEmail, phoneNumber } = member;
-      if (!name || !registrationNumber || !year || !branch || !officialEmail || !phoneNumber) {
+      const { name, registrationNumber, section, year, branch, officialEmail, phoneNumber } = member;
+      if (!name || !registrationNumber || !section || !year || !branch || !officialEmail || !phoneNumber) {
         return NextResponse.json(
           { error: 'All fields are required for each member' },
           { status: 400 }
@@ -67,6 +67,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log('Creating registration with members:', members, 'for event:', event);
     // Create new registration
     const registration = await Registration.create({
       members,

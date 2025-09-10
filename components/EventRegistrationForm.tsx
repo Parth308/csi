@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { UserIcon, HashIcon, GraduationCapIcon, UserSquare, Mail, Phone, Calendar, Loader2 } from "lucide-react"
+import { UserIcon, HashIcon, GraduationCapIcon, UserSquare, Mail, Phone, Calendar, Loader2, Users } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 // Types
@@ -24,6 +24,7 @@ interface Event {
 interface MemberData {
   name: string
   registrationNumber: string
+  section: string
   year: string
   branch: string
   officialEmail: string
@@ -60,6 +61,18 @@ const ACADEMIC_OPTIONS = {
     { value: "BBA", label: "BBA" },
     { value: "MBA", label: "MBA" },
     { value: "Others", label: "Others" },
+  ],
+  sections: [
+    { value: "A", label: "A" },
+    { value: "B", label: "B" },
+    { value: "C", label: "C" },
+    { value: "D", label: "D" },
+    { value: "E", label: "E" },
+    { value: "F", label: "F" },
+    { value: "G", label: "G" },
+    { value: "H", label: "H" },
+    { value: "I", label: "I" },
+    { value: "J", label: "J" },
   ],
 }
 
@@ -139,6 +152,7 @@ const getInitialMembers = (count: number): MemberData[] =>
   Array(count).fill(null).map(() => ({
     name: "",
     registrationNumber: "",
+    section: "",
     year: "",
     branch: "",
     officialEmail: "",
@@ -201,6 +215,7 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
       if (
         !member.name ||
         !member.registrationNumber ||
+        !member.section ||
         !member.year ||
         !member.branch ||
         !member.officialEmail ||
@@ -326,6 +341,14 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
                         placeholder="RA2011003010000"
                         value={member.registrationNumber}
                         onChange={(value) => handleMemberChange(index, "registrationNumber", value)}
+                      />
+                      <SelectField
+                        id={`member-${index}-section`}
+                        label="Section"
+                        icon={Users}
+                        options={ACADEMIC_OPTIONS.sections}
+                        value={member.section}
+                        onChange={(value) => handleMemberChange(index, "section", value)}
                       />
                       <SelectField
                         id={`member-${index}-year`}
