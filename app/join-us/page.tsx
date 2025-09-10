@@ -8,23 +8,29 @@ import EventRegistrationForm from "@/components/EventRegistrationForm";
 import ClosedRegistrationMessage from "@/components/ClosedRegistrationMessage";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastProvider } from "@/components/ui/toast";
-import { CircuitLottie } from "@/components/ui/CircuitLottie";
 import { useToast } from "@/hooks/use-toast";
 
+// Updated Event interface to include teamSize
 interface Event {
   _id: string;
   name: string;
   date: string;
   isOpen: boolean;
+  teamSize: number;
 }
 
-interface RegistrationFormData {
+// Updated form data interface for team registration
+interface MemberData {
   name: string;
   registrationNumber: string;
   year: string;
   branch: string;
   officialEmail: string;
   phoneNumber: string;
+}
+
+interface RegistrationFormData {
+  members: MemberData[];
   event: string;
 }
 
@@ -38,7 +44,15 @@ export default function JoinUs() {
         const response = await fetch("/api/admin/events");
         if (!response.ok) throw new Error("Failed to fetch events");
         const data = await response.json();
-        setEvents(data.events.filter((event: Event) => event.isOpen));
+        // Filter for open events and ensure teamSize exists
+        setEvents(
+          data.events
+            .filter((event: Event) => event.isOpen)
+            .map((event: any) => ({
+              ...event,
+              teamSize: event.teamSize || 1, // Default to 1 if not set
+            }))
+        );
       } catch (error) {
         console.error("Error fetching events:", error);
         toast({
@@ -51,7 +65,6 @@ export default function JoinUs() {
 
     fetchEvents();
   }, [toast]);
-
 
   const handleSubmit = async (
     formData: RegistrationFormData
@@ -96,10 +109,8 @@ export default function JoinUs() {
 
   return (
     <ToastProvider>
-      <div
-        className={` min-h-screen flex flex-col bg-white  text-gray-900 relative `}
-      >
-        <div className="absolute top-0 w-full h-[100%] dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] bg-gradient-to-b from-white to-[#f0f9ff]  z-0" />
+      <div className="min-h-screen flex flex-col bg-white text-gray-900 relative">
+        <div className="absolute top-0 w-full h-[100%] dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] bg-gradient-to-b from-white to-[#f0f9ff] z-0" />
         <NavBar activeSection={""} />
         <main className="flex-grow pt-20 relative z-1">
           <div className="container mx-auto px-4 py-12">

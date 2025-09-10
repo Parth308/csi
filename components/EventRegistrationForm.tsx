@@ -18,41 +18,29 @@ interface Event {
   name: string
   date: string
   isOpen: boolean
+  teamSize: number
 }
 
-interface RegistrationFormData {
+interface MemberData {
   name: string
   registrationNumber: string
   year: string
   branch: string
   officialEmail: string
   phoneNumber: string
+}
+
+interface RegistrationFormData {
+  members: MemberData[]
   event: string
 }
 
 interface EventRegistrationFormProps {
   events: Event[]
-  onSubmit?: (formData: RegistrationFormData) => Promise<boolean>
+  onSubmit?: (formData: { members: MemberData[]; event: string }) => Promise<boolean>
 }
 
 // Constants
-const FORM_SECTIONS = {
-  EVENT: "Event Selection",
-  PERSONAL: "Personal Information",
-  ACADEMIC: "Academic Details",
-  CONTACT: "Contact Information",
-} as const
-
-const INITIAL_FORM_STATE: RegistrationFormData = {
-  name: "",
-  registrationNumber: "",
-  year: "",
-  branch: "",
-  officialEmail: "",
-  phoneNumber: "",
-  event: "",
-}
-
 const ACADEMIC_OPTIONS = {
   years: [
     { value: "first", label: "First Year" },
@@ -61,11 +49,17 @@ const ACADEMIC_OPTIONS = {
     { value: "fourth", label: "Fourth Year" },
   ],
   branches: [
-    { value: "CSE", label: "Computer Science Engineering" },
-    { value: "ECE", label: "Electronics & Communication Engineering" },
-    { value: "EEE", label: "Electrical & Electronics Engineering" },
-    { value: "MECH", label: "Mechanical Engineering" },
-    { value: "CIVIL", label: "Civil Engineering" },
+    { value: "CSE", label: "CSE-CORE" },
+    { value: "ECE", label: "ECE" },
+    { value: "AIML", label: "AIML" },
+    { value: "CC", label: "Cloud Computing" },
+    { value: "CYBER", label: "Cyber Security" },
+    { value: "DS", label: "Data Science" },
+    { value: "CSBS", label: "CSBS" },
+    { value: "BCA", label: "BCA" },
+    { value: "BBA", label: "BBA" },
+    { value: "MBA", label: "MBA" },
+    { value: "Others", label: "Others" },
   ],
 }
 
@@ -100,7 +94,6 @@ const InputField = ({ id, label, icon: Icon, type = "text", placeholder, value, 
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className="pl-10 py-2.5 md:py-3 bg-gray-50 dark:bg-blue-900/20 border-gray-300 dark:border-blue-800 rounded-md text-gray-900 dark:text-cyan-100 placeholder:text-gray-500 dark:placeholder:text-blue-400 text-sm md:text-base focus:ring-2 focus:ring-blue-500 dark:focus:ring-cyan-400 focus:border-blue-500 dark:focus:border-cyan-400"
-        required
       />
     </div>
   </div>
@@ -141,46 +134,105 @@ const SelectField = ({ id, label, icon: Icon, options, value, onChange }: Select
   </div>
 )
 
+// Helper function to create initial member data
+const getInitialMembers = (count: number): MemberData[] => 
+  Array(count).fill(null).map(() => ({
+    name: "",
+    registrationNumber: "",
+    year: "",
+    branch: "",
+    officialEmail: "",
+    phoneNumber: "",
+  }))
+
 // Main Component
 export default function EventRegistrationForm({ events, onSubmit }: EventRegistrationFormProps) {
-  const [formData, setFormData] = useState<RegistrationFormData>(INITIAL_FORM_STATE)
+  const [formData, setFormData] = useState<RegistrationFormData>({
+    members: getInitialMembers(1),
+    event: "",
+  })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
-  
+  // Get current event details
+  const currentEvent = events.find(event => event._id === formData.event)
+  const teamSize = currentEvent?.teamSize || 1
 
-  const handleChange = (field: keyof RegistrationFormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  // Update members array when event changes
+  useEffect(() => {
+    if (formData.event) {
+      const newTeamSize = events.find(e => e._id === formData.event)?.teamSize || 1
+      setFormData(prev => ({
+        ...prev,
+        members: getInitialMembers(newTeamSize)
+      }))
+    }
+  }, [formData.event, events])
+
+  const handleMemberChange = (
+    memberIndex: number,
+    field: keyof MemberData,
+    value: string
+  ) => {
+    setFormData((prev) => {
+      const updatedMembers = [...prev.members];
+      updatedMembers[memberIndex] = {
+        ...updatedMembers[memberIndex],
+        [field]: value,
+      };
+      return { ...prev, members: updatedMembers };
+    });
+  };
 
   const validateForm = () => {
-    if (Object.values(formData).some((value) => !value)) {
+    // Check if event is selected
+    if (!formData.event) {
       toast({
-        title: "Missing Fields",
-        description: "Please fill in all required fields",
+        title: "Missing Event",
+        description: "Please select an event",
         variant: "destructive",
-      })
-      return false
+      });
+      return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(formData.officialEmail)) {
-      toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address",
-        variant: "destructive",
-      })
-      return false
-    }
+    // Validate each member
+    for (let i = 0; i < formData.members.length; i++) {
+      const member = formData.members[i];
+      if (
+        !member.name ||
+        !member.registrationNumber ||
+        !member.year ||
+        !member.branch ||
+        !member.officialEmail ||
+        !member.phoneNumber
+      ) {
+        toast({
+          title: "Missing Fields",
+          description: `Please fill in all required fields for Member ${i + 1}`,
+          variant: "destructive",
+        });
+        return false;
+      }
 
-    const phoneRegex = /^\d{10}$/
-    if (!phoneRegex.test(formData.phoneNumber)) {
-      toast({
-        title: "Invalid Phone",
-        description: "Please enter a valid 10-digit phone number",
-        variant: "destructive",
-      })
-      return false
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(member.officialEmail)) {
+        toast({
+          title: "Invalid Email",
+          description: `Please enter a valid email address for Member ${i + 1}`,
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      const phoneRegex = /^\d{10}$/
+      if (!phoneRegex.test(member.phoneNumber)) {
+        toast({
+          title: "Invalid Phone",
+          description: `Please enter a valid 10-digit phone number for Member ${i + 1}`,
+          variant: "destructive",
+        });
+        return false;
+      }
     }
 
     return true
@@ -195,10 +247,12 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
     try {
       const success = await onSubmit?.(formData)
 
-
       if (success) {
-        console.log("Resetting form...")
-        setFormData(INITIAL_FORM_STATE)
+        // Reset form but keep the selected event
+        setFormData({
+          members: getInitialMembers(teamSize),
+          event: formData.event
+        })
       }
     } catch (error) {
       console.error("Form submission error:", error)
@@ -215,120 +269,120 @@ export default function EventRegistrationForm({ events, onSubmit }: EventRegistr
       transition={{ duration: 0.5 }}
       className="w-full px-4 sm:px-6 md:px-8 min-h-screen"
     >
-
-
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto pb-8">
         <Card className="bg-white dark:bg-blue-900/20 border-gray-200 dark:border-blue-800 p-4 sm:p-6 md:p-8 rounded-xl md:rounded-2xl shadow-lg dark:shadow-cyan-900/20">
           <CardContent className="space-y-6 md:space-y-8">
             {/* Event Selection */}
             <div className="space-y-3 md:space-y-4">
               <h3 className="text-xl md:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
-                {FORM_SECTIONS.EVENT}
+                Event Selection
               </h3>
               <SelectField
                 id="event"
                 label="Select Event"
                 icon={Calendar}
-                options={events.map((event) => ({
-                  value: event._id,
-                  label: `${event.name}`,
-                }))}
+                options={events
+                  .filter(event => event.isOpen)
+                  .map((event) => ({
+                    value: event._id,
+                    label: `${event.name} (${event.teamSize} member${event.teamSize > 1 ? 's' : ''})`,
+                  }))}
                 value={formData.event}
-                onChange={(value) => handleChange("event", value)}
+                onChange={(value) => setFormData({ members: getInitialMembers(1), event: value })}
               />
-            </div>
-
-            {/* Personal Information */}
-            <div className="space-y-3 md:space-y-4">
-              <h3 className="text-xl md:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
-                {FORM_SECTIONS.PERSONAL}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <InputField
-                  id="name"
-                  label="Full Name"
-                  icon={UserIcon}
-                  placeholder="John Doe"
-                  value={formData.name}
-                  onChange={(value) => handleChange("name", value)}
-                />
-                <InputField
-                  id="registrationNumber"
-                  label="Registration Number"
-                  icon={HashIcon}
-                  placeholder="RA2011003010000"
-                  value={formData.registrationNumber}
-                  onChange={(value) => handleChange("registrationNumber", value)}
-                />
-              </div>
-            </div>
-
-            {/* Academic Details */}
-            <div className="space-y-3 md:space-y-4">
-              <h3 className="text-xl md:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
-                {FORM_SECTIONS.ACADEMIC}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <SelectField
-                  id="year"
-                  label="Current Year"
-                  icon={GraduationCapIcon}
-                  options={ACADEMIC_OPTIONS.years}
-                  value={formData.year}
-                  onChange={(value) => handleChange("year", value)}
-                />
-                <SelectField
-                  id="branch"
-                  label="Branch"
-                  icon={UserSquare}
-                  options={ACADEMIC_OPTIONS.branches}
-                  value={formData.branch}
-                  onChange={(value) => handleChange("branch", value)}
-                />
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div className="space-y-3 md:space-y-4">
-              <h3 className="text-xl md:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
-                {FORM_SECTIONS.CONTACT}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <InputField
-                  id="officialEmail"
-                  label="Official Email"
-                  icon={Mail}
-                  type="email"
-                  placeholder="john@srmist.edu.in"
-                  value={formData.officialEmail}
-                  onChange={(value) => handleChange("officialEmail", value)}
-                />
-                <InputField
-                  id="phoneNumber"
-                  label="Phone Number"
-                  icon={Phone}
-                  type="tel"
-                  placeholder="1234567890"
-                  value={formData.phoneNumber}
-                  onChange={(value) => handleChange("phoneNumber", value)}
-                />
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-4 md:py-6 text-base md:text-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-700 text-white dark:text-cyan-100 rounded-md transition-colors duration-200 mt-6 md:mt-8 disabled:opacity-50 disabled:cursor-not-allowed border border-blue-500 dark:border-blue-700 hover:border-blue-600 dark:hover:border-cyan-400"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Registering...
-                </>
-              ) : (
-                "Register"
+              
+              {currentEvent && (
+                <div className="text-sm text-gray-600 dark:text-cyan-400 mt-2">
+                  This event requires {teamSize} member{teamSize > 1 ? 's' : ''}
+                </div>
               )}
-            </Button>
+            </div>
+
+            {/* Members Information */}
+            {formData.event && (
+              <div className="space-y-6">
+                <h3 className="text-xl md:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
+                  Team Members Information
+                </h3>
+                
+                {formData.members.map((member, index) => (
+                  <div key={index} className="space-y-4 p-4 bg-gray-50 dark:bg-blue-900/10 rounded-lg border border-gray-200 dark:border-blue-800">
+                    <h4 className="text-lg text-gray-800 dark:text-cyan-300 font-medium">
+                      Member {index + 1}
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                      <InputField
+                        id={`member-${index}-name`}
+                        label="Full Name"
+                        icon={UserIcon}
+                        placeholder="John Doe"
+                        value={member.name}
+                        onChange={(value) => handleMemberChange(index, "name", value)}
+                      />
+                      <InputField
+                        id={`member-${index}-registrationNumber`}
+                        label="Registration Number"
+                        icon={HashIcon}
+                        placeholder="RA2011003010000"
+                        value={member.registrationNumber}
+                        onChange={(value) => handleMemberChange(index, "registrationNumber", value)}
+                      />
+                      <SelectField
+                        id={`member-${index}-year`}
+                        label="Current Year"
+                        icon={GraduationCapIcon}
+                        options={ACADEMIC_OPTIONS.years}
+                        value={member.year}
+                        onChange={(value) => handleMemberChange(index, "year", value)}
+                      />
+                      <SelectField
+                        id={`member-${index}-branch`}
+                        label="Branch"
+                        icon={UserSquare}
+                        options={ACADEMIC_OPTIONS.branches}
+                        value={member.branch}
+                        onChange={(value) => handleMemberChange(index, "branch", value)}
+                      />
+                      <InputField
+                        id={`member-${index}-officialEmail`}
+                        label="Official Email"
+                        icon={Mail}
+                        type="email"
+                        placeholder="john@srmist.edu.in"
+                        value={member.officialEmail}
+                        onChange={(value) => handleMemberChange(index, "officialEmail", value)}
+                      />
+                      <InputField
+                        id={`member-${index}-phoneNumber`}
+                        label="Phone Number"
+                        icon={Phone}
+                        type="tel"
+                        placeholder="1234567890"
+                        value={member.phoneNumber}
+                        onChange={(value) => handleMemberChange(index, "phoneNumber", value)}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {formData.event && (
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 md:py-6 text-base md:text-lg bg-blue-600 hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-700 text-white dark:text-cyan-100 rounded-md transition-colors duration-200 mt-6 md:mt-8 disabled:opacity-50 disabled:cursor-not-allowed border border-blue-500 dark:border-blue-700 hover:border-blue-600 dark:hover:border-cyan-400"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Registering...
+                  </>
+                ) : (
+                  `Register Team (${teamSize} member${teamSize > 1 ? 's' : ''})`
+                )}
+              </Button>
+            )}
           </CardContent>
         </Card>
       </form>

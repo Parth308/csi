@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { AddEventForm } from "@/components/AddEventForm"
 import { useToast } from "@/hooks/use-toast"
-import { PlusCircle, Home, LayoutDashboard, Calendar, ChevronRight } from 'lucide-react'
+import { PlusCircle, Home, LayoutDashboard, Calendar, ChevronRight, Users } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import CSILoading from '@/components/CsiLoading'
 
@@ -25,6 +25,7 @@ interface Event {
   name: string
   date: string
   isOpen: boolean
+  teamSize: number
 }
 
 export default function EventsPage() {
@@ -179,17 +180,26 @@ export default function EventsPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[300px] text-gray-900">Event Name</TableHead>
+                        <TableHead className="w-[250px] text-gray-900">Event Name</TableHead>
                         <TableHead className="text-gray-900">Date</TableHead>
+                        <TableHead className="text-gray-900">Team Size</TableHead>
                         <TableHead className="text-gray-900">Status</TableHead>
-                        <TableHead className=" text-gray-900">Actions</TableHead>
+                        <TableHead className="text-gray-900">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {events.map((event) => (
                         <TableRow key={event._id}>
                           <TableCell className="font-medium text-gray-900">{event.name}</TableCell>
-                          <TableCell className="text-gray-900">{new Date(event.date).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-gray-900">
+                            {new Date(event.date).toLocaleDateString()}
+                          </TableCell>
+                          <TableCell className="text-gray-900">
+                            <div className="flex items-center">
+                              <Users className="mr-2 h-4 w-4 text-gray-500" />
+                              {event.teamSize} {event.teamSize === 1 ? 'member' : 'members'}
+                            </div>
+                          </TableCell>
                           <TableCell className="text-gray-900">
                             {event.isOpen ? (
                               <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
@@ -203,14 +213,14 @@ export default function EventsPage() {
                           </TableCell>
                           <TableCell className='text-gray-900'>
                             <Button
-                            variant="outline"
-                            size="sm"
-                            className={`rounded-full ${event.isOpen ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
-                            onClick={() => toggleEventRegistration(event._id, event.isOpen)}
+                              variant="outline"
+                              size="sm"
+                              className={`rounded-full ${event.isOpen ? 'bg-red-100 text-red-800 hover:bg-red-200' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}
+                              onClick={() => toggleEventRegistration(event._id, event.isOpen)}
                             >
                               {event.isOpen ? 'Close Registration' : 'Open Registration'}
-                              </Button>
-                              </TableCell>
+                            </Button>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>

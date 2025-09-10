@@ -1,24 +1,18 @@
+// app/api/register/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Registration from '@/lib/models/Registration';
+import Event from '@/lib/models/Event';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { 
-      name, 
-      registrationNumber, 
-      year,
-      branch,
-      officialEmail, 
-      phoneNumber, 
-      event 
-    } = body;
+    const { members, event } = body;
 
-    // Validate required fields
-    if (!name || !registrationNumber || !year || !branch || !officialEmail || !phoneNumber || !event) {
+    if (!members || !Array.isArray(members) || members.length === 0 || !event) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: 'Members array and event are required' },
         { status: 400 }
       );
     }
@@ -26,30 +20,56 @@ export async function POST(request: NextRequest) {
     // Connect to database
     await connectToDatabase();
 
-    // Check for existing registration
+    // Get event details to validate team size
+    const eventDoc = await Event.findById(event);
+    if (!eventDoc) {
+      return NextResponse.json(
+        { error: 'Event not found' },
+        { status: 404 }
+      );
+    }
+
+    if (members.length !== eventDoc.teamSize) {
+      return NextResponse.json(
+        { error: `This event requires exactly ${eventDoc.teamSize} members` },
+        { status: 400 }
+      );
+    }
+
+    // Validate required fields for each member
+    for (const member of members) {
+      const { name, registrationNumber, year, branch, officialEmail, phoneNumber } = member;
+      if (!name || !registrationNumber || !year || !branch || !officialEmail || !phoneNumber) {
+        return NextResponse.json(
+          { error: 'All fields are required for each member' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Check for existing registration for any member
+    const existingConditions = members.map(member => ({
+      $or: [
+        { 'members.registrationNumber': member.registrationNumber },
+        { 'members.officialEmail': member.officialEmail }
+      ]
+    }));
+
     const existingRegistration = await Registration.findOne({
       event,
-      $or: [
-        { registrationNumber },
-        { officialEmail }
-      ]
+      $or: existingConditions
     });
 
     if (existingRegistration) {
       return NextResponse.json(
-        { error: 'You have already registered for this event with this email or registration number' },
+        { error: 'One or more members have already registered for this event' },
         { status: 400 }
       );
     }
 
     // Create new registration
     const registration = await Registration.create({
-      name,
-      registrationNumber,
-      year,
-      branch,
-      officialEmail,
-      phoneNumber,
+      members,
       event
     });
 
@@ -57,7 +77,7 @@ export async function POST(request: NextRequest) {
       { message: 'Registration successful', registration },
       { status: 201 }
     );
-    } catch (error) {
+  } catch (error) {
     console.error('Error creating registration:', error);
     return NextResponse.json(
       { error: (error instanceof Error) ? error.message : 'Internal server error' },
@@ -70,6 +90,7 @@ export async function GET() {
   try {
     await connectToDatabase();
     const registrations = await Registration.find()
+      .populate('event')
       .sort({ createdAt: -1 })
       .limit(100);
 

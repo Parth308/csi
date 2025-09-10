@@ -1,5 +1,16 @@
+// app/api/admin/export/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 import * as xlsx from 'xlsx'
+
+interface Member {
+  name: string
+  registrationNumber: string
+  officialEmail: string
+  phoneNumber: string
+  year: string
+  branch: string
+}
 
 interface Event {
   _id: string;
@@ -7,10 +18,8 @@ interface Event {
 }
 
 interface Registration {
-  name: string;
-  registrationNumber: string;
-  officialEmail: string;
-  phoneNumber: string;
+  _id: string;
+  members: Member[];
   event: string | { _id: string; name: string };
   createdAt: string;
 }
@@ -30,14 +39,31 @@ export async function POST(request: NextRequest) {
       return eventData.name
     }
 
-    const worksheet = xlsx.utils.json_to_sheet(registrations.map((reg: Registration) => ({
-      Name: reg.name,
-      'Registration Number': reg.registrationNumber,
-      Email: reg.officialEmail,
-      'Phone Number': reg.phoneNumber,
-      Event: getEventName(reg.event),
-      'Registration Date': new Date(reg.createdAt).toLocaleDateString()
-    })))
+    // Transform registrations to have all members in one row
+    const transformedRegistrations = registrations.map((reg: Registration) => {
+      const baseData = {
+        'Team ID': reg._id,
+        'Event': getEventName(reg.event),
+        'Registration Date': new Date(reg.createdAt).toLocaleDateString(),
+        'Team Size': reg.members.length
+      }
+
+      // Add member data for each member
+      const memberData: { [key: string]: any } = {}
+      reg.members.forEach((member: Member, index: number) => {
+        const memberNum = index + 1
+        memberData[`Member ${memberNum} Name`] = member.name
+        memberData[`Member ${memberNum} Reg Number`] = member.registrationNumber
+        memberData[`Member ${memberNum} Email`] = member.officialEmail
+        memberData[`Member ${memberNum} Phone`] = member.phoneNumber
+        memberData[`Member ${memberNum} Year`] = member.year
+        memberData[`Member ${memberNum} Branch`] = member.branch
+      })
+
+      return { ...baseData, ...memberData }
+    })
+
+    const worksheet = xlsx.utils.json_to_sheet(transformedRegistrations)
 
     // Add worksheet to workbook
     xlsx.utils.book_append_sheet(workbook, worksheet, 'Registrations')

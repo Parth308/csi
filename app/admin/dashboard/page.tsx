@@ -26,7 +26,7 @@ import {
   Line,
   Legend
 } from 'recharts'
-import { Download, Users, Calendar, TrendingUp, Home, LayoutDashboard, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Download, Users, Calendar, TrendingUp, Home, LayoutDashboard, ChevronLeft, ChevronRight, User } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { DateRange } from "react-day-picker"
@@ -35,12 +35,19 @@ import { AddEventForm } from "@/components/AddEventForm"
 import { useToast } from "@/hooks/use-toast"
 import CSILoading from '@/components/CsiLoading'
 
-interface Registration {
-  _id: string
+// Updated interfaces to support team registrations
+interface Member {
   name: string
   registrationNumber: string
   officialEmail: string
   phoneNumber: string
+  year: string
+  branch: string
+}
+
+interface Registration {
+  _id: string
+  members: Member[]
   event: string | { _id: string; name: string }
   createdAt: string
 }
@@ -50,6 +57,7 @@ interface Event {
   name: string
   date: string
   isOpen: boolean
+  teamSize: number
 }
 
 export default function AdminDashboard() {
@@ -58,10 +66,12 @@ export default function AdminDashboard() {
   const [events, setEvents] = useState<Event[]>([])
   const [stats, setStats] = useState<{
     totalRegistrations: number
+    totalTeams: number
     registrationsByEvent: { name: string; value: number }[]
     registrationTrend: { date: string; count: number }[]
   }>({
     totalRegistrations: 0,
+    totalTeams: 0,
     registrationsByEvent: [],
     registrationTrend: []
   })
@@ -113,7 +123,6 @@ export default function AdminDashboard() {
         
         // Calculate statistics
         const eventCounts = registrationsData.registrations.reduce((acc: Record<string, number>, reg: Registration) => {
-          // const eventId = typeof reg.event === 'string' ? reg.event : reg.event._id
           const eventName = typeof reg.event === 'string' 
             ? (eventMap[reg.event]?.name || reg.event)
             : reg.event.name
@@ -128,8 +137,14 @@ export default function AdminDashboard() {
           return acc
         }, {})
 
+        // Calculate total members
+        const totalMembers = registrationsData.registrations.reduce((total: number, reg: Registration) => {
+          return total + reg.members.length
+        }, 0)
+
         setStats({
-          totalRegistrations: registrationsData.registrations.length,
+          totalRegistrations: totalMembers,
+          totalTeams: registrationsData.registrations.length,
           registrationsByEvent: Object.entries(eventCounts).map(([name, value]) => ({
             name,
             value: value as number,
@@ -263,7 +278,6 @@ export default function AdminDashboard() {
               <Calendar className="mr-3 h-5 w-5" />
               Events
             </Link>
-            
           </nav>
           <div className="p-4 border-t border-gray-200">
             <Button variant="outline" className="w-full justify-start text-gray-900" asChild>
@@ -322,12 +336,22 @@ export default function AdminDashboard() {
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-gray-900">Total Registrations</CardTitle>
+                      <CardTitle className="text-sm font-medium text-gray-900">Total Participants</CardTitle>
                       <Users className="h-4 w-4 text-gray-600" />
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-gray-900">{stats.totalRegistrations}</div>
-                      <p className="text-xs text-gray-600">In selected date range</p>
+                      <p className="text-xs text-gray-600">Across all teams</p>
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium text-gray-900">Total Teams</CardTitle>
+                      <User className="h-4 w-4 text-muted-foreground text-gray-600" />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold text-gray-900">{stats.totalTeams}</div>
+                      <p className="text-xs text-muted-foreground text-gray-600">Registered teams</p>
                     </CardContent>
                   </Card>
                   <Card>
@@ -342,27 +366,16 @@ export default function AdminDashboard() {
                   </Card>
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-gray-900">Most Popular Event</CardTitle>
-                      <TrendingUp className="h-4 w-4 text-muted-foreground text-gray-600" />
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold text-gray-900">
-                        {stats.registrationsByEvent.length > 0 ? stats.registrationsByEvent[0].name : 'N/A'}
-                      </div>
-                      <p className="text-xs text-muted-foreground text-gray-600">Highest registration count</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-gray-900">Average Daily Registrations</CardTitle>
+                      <CardTitle className="text-sm font-medium text-gray-900">Avg. Team Size</CardTitle>
                       <Users className="h-4 w-4 text-muted-foreground text-gray-600" />
                     </CardHeader>
                     <CardContent>
                       <div className="text-2xl font-bold text-gray-900">
-                        {(stats.totalRegistrations / 
-                          (stats.registrationTrend.length || 1)).toFixed(2)}
+                        {stats.totalTeams > 0 
+                          ? (stats.totalRegistrations / stats.totalTeams).toFixed(1) 
+                          : '0.0'}
                       </div>
-                      <p className="text-xs text-muted-foreground text-gray-600">Per day in selected range</p>
+                      <p className="text-xs text-muted-foreground text-gray-600">Members per team</p>
                     </CardContent>
                   </Card>
                 </div>
@@ -450,6 +463,7 @@ export default function AdminDashboard() {
                         <TableRow>
                           <TableHead className="text-gray-900">Event Name</TableHead>
                           <TableHead className="text-gray-900">Date</TableHead>
+                          <TableHead className="text-gray-900">Team Size</TableHead>
                           <TableHead className="text-gray-900">Status</TableHead>
                           <TableHead className="text-gray-900">Action</TableHead>
                         </TableRow>
@@ -459,6 +473,7 @@ export default function AdminDashboard() {
                           <TableRow key={event._id}>
                             <TableCell className="text-gray-900">{event.name}</TableCell>
                             <TableCell className="text-gray-900">{new Date(event.date).toLocaleDateString()}</TableCell>
+                            <TableCell className="text-gray-900">{event.teamSize} {event.teamSize === 1 ? 'member' : 'members'}</TableCell>
                             <TableCell className="text-gray-900">
                               {event.isOpen ? (
                                 <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
@@ -474,7 +489,7 @@ export default function AdminDashboard() {
                               <Button
                               variant="outline"
                               size="sm"
-                              className={`rounded-full ${event.isOpen ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`}
+                              className={`rounded-full ${event.isOpen ? 'bg-red-100 text-red-800 hover:bg-red-200' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}
                               onClick={() => toggleEventRegistration(event._id, event.isOpen)}
                               >
                                 {event.isOpen ? 'Close Registration' : 'Open Registration'}
@@ -500,9 +515,8 @@ export default function AdminDashboard() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="text-gray-900">Name</TableHead>
-                          <TableHead className="text-gray-900">Registration Number</TableHead>
-                          <TableHead className="text-gray-900">Email</TableHead>
+                          <TableHead className="text-gray-900">Team Leader</TableHead>
+                          <TableHead className="text-gray-900">Team Size</TableHead>
                           <TableHead className="text-gray-900">Event</TableHead>
                           <TableHead className="text-gray-900">Date</TableHead>
                         </TableRow>
@@ -510,9 +524,8 @@ export default function AdminDashboard() {
                       <TableBody>
                         {currentItems.map((registration) => (
                           <TableRow key={registration._id}>
-                            <TableCell className="text-gray-900">{registration.name}</TableCell>
-                            <TableCell className="text-gray-900">{registration.registrationNumber}</TableCell>
-                            <TableCell className="text-gray-900">{registration.officialEmail}</TableCell>
+                            <TableCell className="text-gray-900">{registration.members[0]?.name || 'N/A'}</TableCell>
+                            <TableCell className="text-gray-900">{registration.members.length} member{registration.members.length > 1 ? 's' : ''}</TableCell>
                             <TableCell className="text-gray-900">{getEventName(registration.event)}</TableCell>
                             <TableCell className="text-gray-900">
                               {new Date(registration.createdAt).toLocaleDateString()}
