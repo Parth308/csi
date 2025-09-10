@@ -52,6 +52,7 @@ export default function JoinUs() {
     fetchEvents();
   }, [toast]);
 
+
   const handleSubmit = async (
     formData: RegistrationFormData
   ): Promise<boolean> => {
@@ -100,14 +101,13 @@ export default function JoinUs() {
       >
         <div className="absolute top-0 w-full h-[100%] dark:from-[#05050A] dark:via-[#0B1A2D] dark:to-[#04070F] bg-gradient-to-b from-white to-[#f0f9ff]  z-0" />
         <NavBar activeSection={""} />
-        <CircuitLottie />
         <main className="flex-grow pt-20 relative z-1">
           <div className="container mx-auto px-4 py-12">
             <h1 className="text-4xl font-bold text-center mb-8 text-blue-400">
               Join Us
             </h1>
             <AnimatePresence mode="wait">
-              {events.length < 0 ? (
+              {events.length > 0 ? (
                 <EventRegistrationForm
                   key="form"
                   events={events}
