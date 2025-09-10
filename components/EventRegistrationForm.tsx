@@ -215,7 +215,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       toast({
         title: "Missing Event",
         description: "Please select an event",
-        variant: "destructive",
       })
       return false
     }
@@ -235,7 +234,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         toast({
           title: "Missing Fields",
           description: `Please fill in all required fields for Member ${i + 1}`,
-          variant: "destructive",
         })
         return false
       }
@@ -245,7 +243,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         toast({
           title: "Invalid Email",
           description: `Please enter a valid email address for Member ${i + 1}`,
-          variant: "destructive",
         })
         return false
       }
@@ -255,7 +252,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         toast({
           title: "Invalid Phone",
           description: `Please enter a valid 10-digit phone number for Member ${i + 1}`,
-          variant: "destructive",
         })
         return false
       }
