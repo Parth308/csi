@@ -184,7 +184,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="text-center mt-8">
-          <p>© 2025 Computer Society of India - NITK Chapter. All rights reserved.</p>
+          <p>© 2025 Computer Society of India - Delhi-NCR Chapter. All rights reserved.</p>
         </div>
       </div>
     </footer>
