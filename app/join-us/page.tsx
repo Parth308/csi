@@ -9,33 +9,8 @@ import ClosedRegistrationMessage from "@/components/ClosedRegistrationMessage";
 import { Toaster } from "@/components/ui/toaster";
 import { ToastProvider } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
+import { Event, EventsApiResponse, RegistrationFormData } from "@/types/events";
 
-interface Event {
-  _id: string;
-  name: string;
-  date: string;
-  isOpen: boolean;
-  teamSize: number;
-}
-
-interface EventsApiResponse {
-  events: Event[];
-}
-
-interface MemberData {
-  name: string;
-  registrationNumber: string;
-  section: string;
-  year: string;
-  branch: string;
-  officialEmail: string;
-  phoneNumber: string;
-}
-
-interface RegistrationFormData {
-  members: MemberData[];
-  event: string;
-}
 
 export default function JoinUs() {
   const [events, setEvents] = useState<Event[]>([]);

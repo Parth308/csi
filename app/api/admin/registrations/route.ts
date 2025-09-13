@@ -1,9 +1,30 @@
-// app/api/register/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import Registration from '@/lib/models/Registration';
 import Event from '@/lib/models/Event';
+
+// Define interfaces for better typing
+interface Member {
+  name: string;
+  registrationNumber: string;
+  section: string;
+  year: string;
+  branch: string;
+  officialEmail: string;
+  phoneNumber: string;
+}
+
+// Define the structure for answers
+interface QuestionAnswer {
+  questionId: string;  // or number, depending on your implementation
+  answer: string | string[] | boolean;  // adjust based on your question types
+}
+
+interface Participant extends Member {
+  selectedTeams: string[];
+  commonAnswers?: QuestionAnswer[];
+  teamAnswers?: QuestionAnswer[];
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,7 +63,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let registrationData: any = {
+    const registrationData: {
+      event: string;
+      eventType: string;
+      members?: Member[];
+      participant?: Participant;
+    } = {
       event: eventId,
       eventType: eventType,
     };
@@ -75,7 +101,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Check for existing registration for any member
-      const existingConditions = members.map(member => ({
+      const existingConditions = members.map((member) => ({
         $or: [
           { 'members.registrationNumber': member.registrationNumber },
           { 'members.officialEmail': member.officialEmail }
@@ -106,7 +132,18 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const { name, registrationNumber, section, year, branch, officialEmail, phoneNumber, selectedTeams, commonAnswers, teamAnswers } = participant;
+      const {
+        name,
+        registrationNumber,
+        section,
+        year,
+        branch,
+        officialEmail,
+        phoneNumber,
+        selectedTeams,
+        commonAnswers,
+        teamAnswers
+      } = participant;
 
       // Validate required participant fields
       if (!name || !registrationNumber || !section || !year || !branch || !officialEmail || !phoneNumber) {
@@ -133,7 +170,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Validate selected teams exist in event
-      const validTeamIds = eventDoc.teams.map((team: any) => team.id);
+      const validTeamIds = eventDoc.teams.map((team: { id: string }) => team.id);
       for (const teamId of selectedTeams) {
         if (!validTeamIds.includes(teamId)) {
           return NextResponse.json(

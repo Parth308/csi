@@ -34,30 +34,53 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AddEventForm } from "@/components/AddEventForm"
 import { useToast } from "@/hooks/use-toast"
 import CSILoading from '@/components/CsiLoading'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-// Updated interfaces to support team registrations
+// Updated interfaces to match the models
 interface Member {
   name: string
   registrationNumber: string
-  officialEmail: string
-  phoneNumber: string
+  section?: string
   year: string
   branch: string
+  officialEmail: string
+  phoneNumber: string
+}
+
+interface Participant {
+  name: string
+  registrationNumber: string
+  section?: string
+  year: string
+  branch: string
+  officialEmail: string
+  phoneNumber: string
+  selectedTeams?: string[]
 }
 
 interface Registration {
   _id: string
+  eventType: 'team_registration' | 'recruitment'
   members: Member[]
-  event: string | { _id: string; name: string }
+  participant?: Participant
+  event: string | { _id: string; name: string; eventType: string }
   createdAt: string
+  status: 'pending' | 'approved' | 'rejected'
 }
 
 interface Event {
-  _id: string
+  _id?: string
   name: string
   date: string
   isOpen: boolean
-  teamSize: number
+  eventType: 'team_registration' | 'recruitment'
+  teamSize?: number
 }
 
 export default function AdminDashboard() {
@@ -85,6 +108,8 @@ export default function AdminDashboard() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
   const { toast } = useToast()
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false)
+  const [selectedExportEvent, setSelectedExportEvent] = useState<string>('')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -117,7 +142,9 @@ export default function AdminDashboard() {
         setEvents(eventsData.events)
 
         const eventMap = eventsData.events.reduce((acc: Record<string, Event>, event: Event) => {
-          acc[event._id] = event
+          if (event._id) {
+            acc[event._id] = event
+          }
           return acc
         }, {})
         
@@ -139,7 +166,11 @@ export default function AdminDashboard() {
 
         // Calculate total members
         const totalMembers = registrationsData.registrations.reduce((total: number, reg: Registration) => {
-          return total + reg.members.length
+          if (reg.eventType === 'team_registration') {
+            return total + reg.members.length
+          } else {
+            return total + (reg.participant ? 1 : 0)
+          }
         }, 0)
 
         setStats({
@@ -165,25 +196,43 @@ export default function AdminDashboard() {
     fetchData()
   }, [dateRange, status])
 
-  const downloadExcel = async () => {
+  const downloadExcel = async (eventId: string) => {
     try {
+      setIsExportDialogOpen(false)
       const response = await fetch('/api/admin/export', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ registrations, events }),
+        body: JSON.stringify({ eventId, registrations, events }),
       })
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to export data')
+      }
+      
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'registrations.xlsx'
+      a.download = `${events.find(e => e._id === eventId)?.name.replace(/\s+/g, '_')}_registrations.xlsx` || 'registrations.xlsx'
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      
+      toast({
+        title: "Export Successful",
+        description: "Registrations exported successfully!",
+      })
     } catch (error) {
       console.error('Error downloading Excel:', error)
+      toast({
+        title: "Export Failed",
+        description: (error as Error).message,
+        variant: "destructive",
+      })
     }
   }
 
@@ -253,6 +302,14 @@ export default function AdminDashboard() {
       return event?.name || eventData
     }
     return eventData.name
+  }
+
+  const getEventType = (eventData: Registration['event']) => {
+    if (typeof eventData === 'string') {
+      const event = events.find(e => e._id === eventData)
+      return event?.eventType || 'team_registration'
+    }
+    return eventData.eventType || 'team_registration'
   }
 
   return (
@@ -336,7 +393,7 @@ export default function AdminDashboard() {
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-gray-900">Total Participants</CardTitle>
+                      <CardTitle className="text-sm font-medium text-gray-900">Total Individual Participants</CardTitle>
                       <Users className="h-4 w-4 text-gray-600" />
                     </CardHeader>
                     <CardContent>
@@ -490,7 +547,7 @@ export default function AdminDashboard() {
                               variant="outline"
                               size="sm"
                               className={`rounded-full ${event.isOpen ? 'bg-red-100 text-red-800 hover:bg-red-200' : 'bg-green-100 text-green-800 hover:bg-green-200'}`}
-                              onClick={() => toggleEventRegistration(event._id, event.isOpen)}
+                              onClick={() => event._id ? toggleEventRegistration(event._id, event.isOpen) : null}
                               >
                                 {event.isOpen ? 'Close Registration' : 'Open Registration'}
                                 </Button>
@@ -506,32 +563,105 @@ export default function AdminDashboard() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-gray-900">Recent Registrations</CardTitle>
-                    <Button onClick={downloadExcel} variant="outline" size="sm">
-                      <Download className="mr-2 h-4 w-4 text-gray-900" />
-                      <div className="text-gray-900">Download</div>
-                    </Button>
+                    <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          <Download className="mr-2 h-4 w-4 text-gray-900" />
+                          <div className="text-gray-900">Download</div>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className='bg-white text-black'>
+                        <DialogHeader>
+                          <DialogTitle>Select Event to Export</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <Select value={selectedExportEvent} onValueChange={setSelectedExportEvent}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select an event" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {events.map((event) => (
+                                <SelectItem key={event._id} value={event._id || ''} className='bg-white text-black'>
+                                  {event.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <div className="flex justify-end space-x-2">
+                            <Button variant="outline" onClick={() => setIsExportDialogOpen(false)}>
+                              Cancel
+                            </Button>
+                            <Button 
+                              onClick={() => downloadExcel(selectedExportEvent)}
+                              disabled={!selectedExportEvent}
+                            >
+                              Export
+                            </Button>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </CardHeader>
                   <CardContent>
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="text-gray-900">Team Leader</TableHead>
-                          <TableHead className="text-gray-900">Team Size</TableHead>
+                          <TableHead className="text-gray-900">Primary Contact</TableHead>
+                          <TableHead className="text-gray-900">Type</TableHead>
+                          <TableHead className="text-gray-900">Participants</TableHead>
                           <TableHead className="text-gray-900">Event</TableHead>
+                          <TableHead className="text-gray-900">Status</TableHead>
                           <TableHead className="text-gray-900">Date</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {currentItems.map((registration) => (
-                          <TableRow key={registration._id}>
-                            <TableCell className="text-gray-900">{registration.members[0]?.name || 'N/A'}</TableCell>
-                            <TableCell className="text-gray-900">{registration.members.length} member{registration.members.length > 1 ? 's' : ''}</TableCell>
-                            <TableCell className="text-gray-900">{getEventName(registration.event)}</TableCell>
-                            <TableCell className="text-gray-900">
-                              {new Date(registration.createdAt).toLocaleDateString()}
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {currentItems.map((registration) => {
+                          const isTeamRegistration = registration.eventType === 'team_registration' || 
+                                                    getEventType(registration.event) === 'team_registration'
+                          
+                          const primaryContact = isTeamRegistration 
+                            ? registration.members[0] 
+                            : registration.participant
+                            
+                          const participantCount = isTeamRegistration 
+                            ? registration.members.length 
+                            : 1
+
+                          return (
+                            <TableRow key={registration._id}>
+                              <TableCell className="text-gray-900">
+                                <div className="font-medium">{primaryContact?.name || 'N/A'}</div>
+                                <div className="text-sm text-gray-500">
+                                  {primaryContact?.registrationNumber || ''}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-gray-900">
+                                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                                  {isTeamRegistration ? 'Team' : 'Individual'}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-gray-900">
+                                {participantCount} {participantCount === 1 ? 'member' : 'members'}
+                              </TableCell>
+                              <TableCell className="text-gray-900">
+                                {getEventName(registration.event)}
+                              </TableCell>
+                              <TableCell className="text-gray-900">
+                                <span className={cn(
+                                  "px-2 py-1 rounded-full text-xs font-medium",
+                                  registration.status === 'approved' && "bg-green-100 text-green-800",
+                                  registration.status === 'rejected' && "bg-red-100 text-red-800",
+                                  registration.status === 'pending' && "bg-yellow-100 text-yellow-800"
+                                )}>
+                                  {registration.status.charAt(0).toUpperCase() + registration.status.slice(1)}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-gray-900">
+                                {new Date(registration.createdAt).toLocaleDateString()}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        })}
                       </TableBody>
                     </Table>
                     <div className="flex items-center justify-between mt-4">

@@ -27,6 +27,8 @@ import {
   PartyPopper
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { Event, RegistrationFormData } from "@/types/events";
+
 
 // Types
 interface Question {
@@ -40,25 +42,7 @@ interface Question {
   placeholder?: string
 }
 
-interface Team {
-  id: string
-  name: string
-  description?: string
-  maxMembers?: number
-  questions: Question[]
-}
 
-interface Event {
-  _id: string
-  name: string
-  date: string
-  isOpen: boolean
-  eventType: 'team_registration' | 'recruitment'
-  teamSize?: number
-  teams?: Team[]
-  commonQuestions?: Question[]
-  allowMultipleTeamSelection?: boolean
-}
 
 interface MemberData {
   name: string
@@ -91,12 +75,7 @@ interface ParticipantData {
   }[]
 }
 
-interface RegistrationFormData {
-  eventType: 'team_registration' | 'recruitment'
-  members?: MemberData[]
-  participant?: ParticipantData
-  eventId: string
-}
+
 
 interface EventRegistrationFormProps {
   events: Event[]
@@ -350,7 +329,7 @@ const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onR
       </Button>
     </div>
     <div className="text-xs text-gray-500 dark:text-blue-400 bg-gray-50 dark:bg-blue-900/20 p-3 rounded-lg">
-      If you don't receive a confirmation email within 15 minutes, please check your spam folder or contact support.
+      If you don&apos;t receive a confirmation email within 15 minutes, please check your spam folder or contact support.
     </div>
   </motion.div>
 )
@@ -446,7 +425,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
     })
   }
 
-  const handleParticipantChange = (field: keyof ParticipantData, value: any) => {
+  const handleParticipantChange = <T extends keyof ParticipantData>(field: T, value: ParticipantData[T]) => {
     if (!formData.participant) return
     setFormData((prev) => ({
       ...prev,
@@ -643,7 +622,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         ) || []
 
         for (const team of selectedTeams) {
-          for (const question of team.questions) {
+          for (const question of team.questions || []) {
             if (question.required) {
               const teamAnswers = formData.participant.teamAnswers.find(ta => ta.teamId === team.id)
               const answer = teamAnswers?.answers.find(a => a.questionId === question.id)
@@ -988,7 +967,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                       Question {index + 1}
                     </div>
                     <QuestionField
-                      question={question}
+                      question={{ ...question, type: question.type || 'text', required: question.required || false }}
                       answer={existingAnswer?.answer || ''}
                       onChange={(answer) => handleCommonAnswerChange(question.id, answer)}
                     />
@@ -1079,7 +1058,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                   </h4>
                 </div>
                 <div className="space-y-4">
-                  {team.questions.map((question, index) => {
+                  {(team.questions || []).map((question, index) => {
                     const teamAnswers = formData.participant!.teamAnswers.find(ta => ta.teamId === team.id)
                     const existingAnswer = teamAnswers?.answers.find(a => a.questionId === question.id)
                     return (
@@ -1088,7 +1067,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                           Question {index + 1}
                         </div>
                         <QuestionField
-                          question={question}
+                          question={{ ...question, type: question.type || 'text', required: question.required || false }}
                           answer={existingAnswer?.answer || ''}
                           onChange={(answer) => handleTeamAnswerChange(team.id, question.id, answer)}
                         />

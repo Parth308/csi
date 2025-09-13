@@ -49,6 +49,8 @@ interface AddEventFormProps {
   editingEvent?: Event
 }
 
+type EventValue = string | boolean | number | Team[] | Question[] | undefined
+
 export function AddEventForm({ onEventAdded, editingEvent }: AddEventFormProps) {
   const [formData, setFormData] = useState<Event>({
     name: '',
@@ -77,7 +79,7 @@ export function AddEventForm({ onEventAdded, editingEvent }: AddEventFormProps) 
     }
   }, [editingEvent])
 
-  const handleInputChange = (field: keyof Event, value: any) => {
+  const handleInputChange = (field: keyof Event, value: EventValue) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -783,7 +785,7 @@ function QuestionForm({ question, onSave, onCancel }: QuestionFormProps) {
                 <Label htmlFor="questionType" className="text-black">Question Type</Label>
                 <Select
                   value={formData.type}
-                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, type: value }))}
+                  onValueChange={(value: Question['type']) => setFormData(prev => ({ ...prev, type: value }))}
                 >
                   <SelectTrigger className="text-black">
                     <SelectValue />

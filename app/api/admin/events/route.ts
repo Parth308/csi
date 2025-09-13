@@ -59,7 +59,25 @@ export async function POST(request: NextRequest) {
 
     await connectToDatabase()
     
-    const eventData: any = {
+    interface CommonQuestion {
+  question: string;
+  type: 'text' | 'textarea' | 'select' | 'checkbox'; // or whatever types you support
+  required?: boolean;
+  options?: string[]; // optional, for select/checkbox
+}
+
+interface EventData {
+  name: string;
+  date: string | Date;
+  eventType: 'team_registration' | 'recruitment';
+  isOpen: boolean;
+  teamSize?: number;
+  teams?: { id: string; name: string }[];
+  commonQuestions?: CommonQuestion[]; // ✅ Better typed
+  allowMultipleTeamSelection?: boolean;
+}
+
+    const eventData: EventData = {
       name,
       date,
       eventType,

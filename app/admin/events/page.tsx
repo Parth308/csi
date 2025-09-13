@@ -37,11 +37,11 @@ interface Team {
   name: string
   description?: string
   maxMembers?: number
-  questions?: Question[]
+  questions: Question[]
 }
 
 interface Event {
-  _id: string
+  _id?: string
   name: string
   date: string
   isOpen: boolean
@@ -356,7 +356,7 @@ export default function EventsPage() {
                                     variant="outline"
                                     size="sm"
                                     className={`${event.isOpen ? 'bg-red-50 text-red-700 hover:bg-red-100' : 'bg-green-50 text-green-700 hover:bg-green-100'} border-gray-300`}
-                                    onClick={() => toggleEventRegistration(event._id, event.isOpen)}
+                                    onClick={() => event._id && toggleEventRegistration(event._id, event.isOpen)}
                                     title={event.isOpen ? 'Close Registration' : 'Open Registration'}
                                   >
                                     {event.isOpen ? 'Close' : 'Open'}
@@ -365,7 +365,7 @@ export default function EventsPage() {
                                     variant="ghost"
                                     size="sm"
                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                    onClick={() => deleteEvent(event._id)}
+                                    onClick={() => event._id && deleteEvent(event._id)}
                                     title="Delete Event"
                                   >
                                     <Trash2 className="h-4 w-4" />
