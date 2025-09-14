@@ -379,7 +379,7 @@ const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onR
       </Button>
     </div>
     <div className="text-xs text-gray-500 dark:text-blue-400 bg-gray-50 dark:bg-blue-900/20 p-3 rounded-lg">
-      If you don't receive a confirmation email within 15 minutes, please check your spam folder or contact support.
+      If you d&apos;ont receive a confirmation email within 15 minutes, please check your spam folder or contact support.
     </div>
   </motion.div>
 )
