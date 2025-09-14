@@ -1,9 +1,9 @@
 // types/events.ts
 export interface Question {
-  id: string; // keep `id` (used in EventRegistrationForm)
-  type?: "mcq" | "text" | "textarea" | "number"; // optional for backend
+  id: string;
+  type: "mcq" | "text" | "textarea" | "number";
   question: string;
-  required?: boolean;
+  required: boolean; // Changed from boolean | undefined to boolean
   options?: string[];
   maxLength?: number;
   minLength?: number;
@@ -11,7 +11,7 @@ export interface Question {
 }
 
 export interface Team {
-  id: string; // keep `id`
+  id: string;
   name: string;
   description?: string;
   maxMembers?: number;
@@ -19,7 +19,7 @@ export interface Team {
 }
 
 export interface Event {
-  _id: string; // backend sends `_id`
+  _id: string;
   name: string;
   date: string;
   isOpen: boolean;

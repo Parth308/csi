@@ -10,25 +10,71 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { 
-  UserIcon, 
-  HashIcon, 
-  GraduationCapIcon, 
-  UserSquare, 
-  Mail, 
-  Phone, 
-  Calendar, 
-  Loader2, 
-  Users, 
+import {
+  UserIcon,
+  HashIcon,
+  GraduationCapIcon,
+  UserSquare,
+  Mail,
+  Phone,
+  Calendar,
+  Loader2,
+  Users,
   ChevronRight,
   ChevronLeft,
   CheckCircle,
   RefreshCw,
-  PartyPopper
+  PartyPopper,
+  Save
 } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-import { Event, RegistrationFormData } from "@/types/events";
 
+// --- Updated Storage functions using localStorage ---
+const STORAGE_KEY = 'eventRegistrationForm'
+
+// Helper function to safely save to localStorage
+const saveFormData = (data: RegistrationFormData & { currentStep: number }) => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      console.log('Form data saved to localStorage');
+    }
+  } catch (error) {
+    console.error('Failed to save form data to localStorage:', error);
+    // Optionally, show a user-friendly message or handle the error differently
+  }
+};
+
+// Helper function to safely load from localStorage
+const loadFormData = (): (RegistrationFormData & { currentStep: number }) | null => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const data = window.localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        const parsedData = JSON.parse(data);
+        console.log('Form data loaded from localStorage');
+        return parsedData;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load form data from localStorage:', error);
+    // Optionally, clear potentially corrupted data
+    // clearFormData();
+  }
+  return null;
+};
+
+// Helper function to safely clear from localStorage
+const clearFormData = () => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem(STORAGE_KEY);
+      console.log('Form data cleared from localStorage');
+    }
+  } catch (error) {
+    console.error('Failed to clear form data from localStorage:', error);
+  }
+};
+// --- End of Updated Storage functions ---
 
 // Types
 interface Question {
@@ -41,9 +87,22 @@ interface Question {
   minLength?: number
   placeholder?: string
 }
-
-
-
+interface Event {
+  _id: string
+  name: string
+  eventType: 'team_registration' | 'recruitment'
+  teamSize?: number
+  isOpen: boolean
+  allowMultipleTeamSelection?: boolean
+  commonQuestions?: Question[]
+  teams?: {
+    id: string
+    name: string
+    description?: string
+    maxMembers?: number
+    questions?: Question[]
+  }[]
+}
 interface MemberData {
   name: string
   registrationNumber: string
@@ -53,12 +112,10 @@ interface MemberData {
   officialEmail: string
   phoneNumber: string
 }
-
 interface Answer {
   questionId: string
   answer: string | number | string[]
 }
-
 interface ParticipantData {
   name: string
   registrationNumber: string
@@ -74,14 +131,16 @@ interface ParticipantData {
     answers: Answer[]
   }[]
 }
-
-
-
+interface RegistrationFormData {
+  eventType: 'team_registration' | 'recruitment'
+  eventId: string
+  members?: MemberData[]
+  participant?: ParticipantData
+}
 interface EventRegistrationFormProps {
   events: Event[]
   onSubmit?: (formData: RegistrationFormData) => Promise<boolean>
 }
-
 // Constants
 const ACADEMIC_OPTIONS = {
   years: [
@@ -116,14 +175,12 @@ const ACADEMIC_OPTIONS = {
     { value: "J", label: "J" },
   ],
 }
-
 // Form Field Components
 interface FieldProps {
   id: string
   label: string
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
 }
-
 interface InputFieldProps extends FieldProps {
   type?: string
   placeholder?: string
@@ -131,7 +188,6 @@ interface InputFieldProps extends FieldProps {
   onChange: (value: string) => void
   required?: boolean
 }
-
 const InputField = ({ id, label, icon: Icon, type = "text", placeholder, value, onChange, required = false }: InputFieldProps) => (
   <div className="w-full">
     <Label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-cyan-300 mb-1 block">
@@ -154,14 +210,12 @@ const InputField = ({ id, label, icon: Icon, type = "text", placeholder, value, 
     </div>
   </div>
 )
-
 interface SelectFieldProps extends FieldProps {
   options: { value: string; label: string }[]
   value: string
   onChange: (value: string) => void
   required?: boolean
 }
-
 const SelectField = ({ id, label, icon: Icon, options, value, onChange, required = false }: SelectFieldProps) => (
   <div className="w-full">
     <Label htmlFor={id} className="text-sm font-medium text-gray-700 dark:text-cyan-300 mb-1 block">
@@ -190,14 +244,12 @@ const SelectField = ({ id, label, icon: Icon, options, value, onChange, required
     </div>
   </div>
 )
-
 // Question Component
 interface QuestionFieldProps {
   question: Question
   answer: string | number | string[]
   onChange: (answer: string | number | string[]) => void
 }
-
 const QuestionField = ({ question, answer, onChange }: QuestionFieldProps) => {
   const handleChange = (value: string | string[]) => {
     if (question.type === 'number') {
@@ -206,7 +258,6 @@ const QuestionField = ({ question, answer, onChange }: QuestionFieldProps) => {
       onChange(value)
     }
   }
-
   switch (question.type) {
     case 'mcq':
       return (
@@ -295,7 +346,6 @@ const QuestionField = ({ question, answer, onChange }: QuestionFieldProps) => {
       )
   }
 }
-
 // Success Message Component
 const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onRegisterAgain: () => void }) => (
   <motion.div
@@ -315,7 +365,7 @@ const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onR
         Registration Successful!
       </h2>
       <p className="text-gray-600 dark:text-blue-300 max-w-md mx-auto">
-        Your registration for <span className="font-semibold">{eventName}</span> has been submitted successfully. 
+        Your registration for <span className="font-semibold">{eventName}</span> has been submitted successfully.
         You will receive a confirmation email shortly.
       </p>
     </div>
@@ -329,11 +379,10 @@ const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onR
       </Button>
     </div>
     <div className="text-xs text-gray-500 dark:text-blue-400 bg-gray-50 dark:bg-blue-900/20 p-3 rounded-lg">
-      If you don&apos;t receive a confirmation email within 15 minutes, please check your spam folder or contact support.
+      If you don't receive a confirmation email within 15 minutes, please check your spam folder or contact support.
     </div>
   </motion.div>
 )
-
 // Helper functions
 const getInitialMembers = (count: number): MemberData[] =>
   Array(count)
@@ -347,7 +396,6 @@ const getInitialMembers = (count: number): MemberData[] =>
       officialEmail: "",
       phoneNumber: "",
     }))
-
 const getInitialParticipant = (): ParticipantData => ({
   name: "",
   registrationNumber: "",
@@ -360,59 +408,90 @@ const getInitialParticipant = (): ParticipantData => ({
   commonAnswers: [],
   teamAnswers: []
 })
-
 // Main Component
 export default function EventRegistrationForm({ events = [], onSubmit }: EventRegistrationFormProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState<RegistrationFormData>({
-    eventType: 'team_registration',
-    members: getInitialMembers(1),
-    participant: getInitialParticipant(),
+    eventType: 'team_registration', // Default, will be overwritten
+    members: undefined,
+    participant: undefined,
     eventId: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
-  const { toast } = useToast()
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Get current event details
   const currentEvent = events.find((event) => event._id === formData.eventId)
-
-  // Set default event to the first available open event
+  
+  // Handles initial load from localStorage OR sets a default event
   useEffect(() => {
-    if (events.length > 0 && !formData.eventId) {
-      const firstOpenEvent = events.find((event) => event.isOpen)
-      if (firstOpenEvent) {
-        setFormData((prev) => ({
-          ...prev,
-          eventId: firstOpenEvent._id,
-          eventType: firstOpenEvent.eventType,
-          members: firstOpenEvent.eventType === 'team_registration' ? getInitialMembers(firstOpenEvent.teamSize || 1) : undefined,
-          participant: firstOpenEvent.eventType === 'recruitment' ? getInitialParticipant() : undefined,
-        }))
-      }
+    // Guard against running before events are loaded or already initialized
+    if (isInitialized || !events || events.length === 0) {
+      return;
     }
-  }, [events, formData.eventId])
 
-  // Update form data when event changes
-  useEffect(() => {
-    if (formData.eventId) {
-      const selectedEvent = events.find((e) => e._id === formData.eventId)
-      if (selectedEvent) {
-        setFormData((prev) => ({
-          ...prev,
-          eventType: selectedEvent.eventType,
-          members: selectedEvent.eventType === 'team_registration' ? getInitialMembers(selectedEvent.teamSize || 1) : undefined,
-          participant: selectedEvent.eventType === 'recruitment' ? getInitialParticipant() : undefined,
-        }))
-        setCurrentStep(0)
+    const savedData = loadFormData();
+    if (savedData) {
+      // Check if the event from saved data still exists and is open
+      const savedEvent = events.find(e => e._id === savedData.eventId && e.isOpen);
+      if (savedEvent) {
+        console.log("Restoring previous form session for:", savedEvent.name);
+        setFormData(savedData);
+        setCurrentStep(savedData.currentStep);
+        setIsInitialized(true);
+        return; // Exit after successful restore
       }
+      // If saved data is for an event that is no longer valid, clear it
+      clearFormData();
     }
-  }, [formData.eventId, events])
+
+    // If no valid saved data, set the first available open event as the default
+    const firstOpenEvent = events.find(event => event.isOpen);
+    if (firstOpenEvent) {
+      console.log("Setting default event:", firstOpenEvent.name);
+      setFormData({
+        eventId: firstOpenEvent._id,
+        eventType: firstOpenEvent.eventType,
+        members: firstOpenEvent.eventType === 'team_registration' ? getInitialMembers(firstOpenEvent.teamSize || 1) : undefined,
+        participant: firstOpenEvent.eventType === 'recruitment' ? getInitialParticipant() : undefined,
+      });
+    }
+    setCurrentStep(0); // Start at the first step
+    setIsInitialized(true); // Mark as initialized to prevent this effect from re-running
+  }, [events, isInitialized]);
+  
+  // Auto-save form data whenever it changes
+  useEffect(() => {
+    if (formData.eventId && !showSuccess && isInitialized) {
+      const dataToSave = {
+        ...formData,
+        currentStep
+      }
+      saveFormData(dataToSave)
+      setLastSaved(new Date())
+    }
+  }, [formData, currentStep, showSuccess, isInitialized])
 
   const handleEventChange = (eventId: string) => {
-    setFormData(prev => ({ ...prev, eventId: eventId }))
-  }
+    // Do nothing if the same event is selected
+    if (eventId === formData.eventId) return;
 
+    const selectedEvent = events.find(e => e._id === eventId);
+    if (selectedEvent) {
+      console.log("User selected new event. Resetting form state for:", selectedEvent.name);
+      // When a user explicitly changes the event, reset the form state for that new event
+      setFormData({
+        eventId: selectedEvent._id,
+        eventType: selectedEvent.eventType,
+        members: selectedEvent.eventType === 'team_registration' ? getInitialMembers(selectedEvent.teamSize || 1) : undefined,
+        participant: selectedEvent.eventType === 'recruitment' ? getInitialParticipant() : undefined,
+      });
+      setCurrentStep(0); // Go back to the first step for the new form
+    }
+  };
+  
   const handleMemberChange = (memberIndex: number, field: keyof MemberData, value: string) => {
     if (!formData.members) return
     setFormData((prev) => {
@@ -424,7 +503,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       return { ...prev, members: updatedMembers }
     })
   }
-
   const handleParticipantChange = <T extends keyof ParticipantData>(field: T, value: ParticipantData[T]) => {
     if (!formData.participant) return
     setFormData((prev) => ({
@@ -435,7 +513,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       },
     }))
   }
-
   const handleTeamSelection = (teamId: string, selected: boolean) => {
     if (!formData.participant || !currentEvent) return
     setFormData((prev) => {
@@ -459,7 +536,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       }
     })
   }
-
   const handleCommonAnswerChange = (questionId: string, answer: string | number | string[]) => {
     if (!formData.participant) return
     setFormData((prev) => {
@@ -474,7 +550,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       }
     })
   }
-
   const handleTeamAnswerChange = (teamId: string, questionId: string, answer: string | number | string[]) => {
     if (!formData.participant) return
     setFormData((prev) => {
@@ -496,21 +571,14 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       }
     })
   }
-
   const validateCurrentStep = (): boolean => {
     if (!currentEvent) {
-      toast({
-        title: "No Event Selected",
-        description: "Please select an event to continue",
-      })
       return false
     }
-
     if (currentStep === 0) {
       // Event selection step
       return true
     }
-
     if (formData.eventType === 'team_registration') {
       if (!formData.members) return false
       // Validate current member
@@ -526,34 +594,19 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           !member.officialEmail ||
           !member.phoneNumber
         ) {
-          toast({
-            title: "Missing Fields",
-            description: `Please fill in all required fields for Member ${memberIndex + 1}`,
-          })
           return false
         }
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(member.officialEmail)) {
-          toast({
-            title: "Invalid Email",
-            description: `Please enter a valid email address for Member ${memberIndex + 1}`,
-          })
           return false
         }
-
         const phoneRegex = /^\d{10}$/
         if (!phoneRegex.test(member.phoneNumber)) {
-          toast({
-            title: "Invalid Phone",
-            description: `Please enter a valid 10-digit phone number for Member ${memberIndex + 1}`,
-          })
           return false
         }
       }
     } else if (formData.eventType === 'recruitment') {
       if (!formData.participant) return false
-
       if (currentStep === 1) {
         // Personal info step
         const participant = formData.participant
@@ -566,28 +619,14 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           !participant.officialEmail ||
           !participant.phoneNumber
         ) {
-          toast({
-            title: "Missing Fields",
-            description: "Please fill in all required personal information",
-          })
           return false
         }
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(participant.officialEmail)) {
-          toast({
-            title: "Invalid Email",
-            description: "Please enter a valid email address",
-          })
           return false
         }
-
         const phoneRegex = /^\d{10}$/
         if (!phoneRegex.test(participant.phoneNumber)) {
-          toast({
-            title: "Invalid Phone",
-            description: "Please enter a valid 10-digit phone number",
-          })
           return false
         }
       } else if (currentStep === 2 && currentEvent.commonQuestions && currentEvent.commonQuestions.length > 0) {
@@ -596,10 +635,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           if (question.required) {
             const answer = formData.participant.commonAnswers.find(a => a.questionId === question.id)
             if (!answer || answer.answer === '' || (Array.isArray(answer.answer) && answer.answer.length === 0)) {
-              toast({
-                title: "Missing Answer",
-                description: `Please answer the required question: "${question.question}"`,
-              })
               return false
             }
           }
@@ -607,30 +642,21 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       } else if (currentStep === getTeamSelectionStepIndex()) {
         // Team selection step
         if (formData.participant.selectedTeams.length === 0) {
-          toast({
-            title: "No Teams Selected",
-            description: "Please select at least one team",
-          })
           return false
         }
       } else if (currentStep === getTeamQuestionsStepIndex()) {
         // Team-specific questions step
-        const selectedTeams = currentEvent.teams?.filter(team => 
-          formData.participant!.selectedTeams.includes(team.id) && 
-          team.questions && 
+        const selectedTeams = currentEvent.teams?.filter(team =>
+          formData.participant!.selectedTeams.includes(team.id) &&
+          team.questions &&
           team.questions.length > 0
         ) || []
-
         for (const team of selectedTeams) {
           for (const question of team.questions || []) {
             if (question.required) {
               const teamAnswers = formData.participant.teamAnswers.find(ta => ta.teamId === team.id)
               const answer = teamAnswers?.answers.find(a => a.questionId === question.id)
               if (!answer || answer.answer === '' || (Array.isArray(answer.answer) && answer.answer.length === 0)) {
-                toast({
-                  title: "Missing Answer",
-                  description: `Please answer the required question for ${team.name}: "${question.question}"`,
-                })
                 return false
               }
             }
@@ -640,22 +666,18 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
     }
     return true
   }
-
   const getTeamSelectionStepIndex = (): number => {
     if (!currentEvent || formData.eventType !== 'recruitment') return -1
     let stepIndex = 2 // Event selection + personal info
     if (currentEvent.commonQuestions && currentEvent.commonQuestions.length > 0) stepIndex++
     return stepIndex
   }
-
   const getTeamQuestionsStepIndex = (): number => {
     if (!currentEvent || formData.eventType !== 'recruitment') return -1
     return getTeamSelectionStepIndex() + 1
   }
-
   const getTotalSteps = (): number => {
     if (!currentEvent) return 1
-
     if (currentEvent.eventType === 'team_registration') {
       return 1 + (currentEvent.teamSize || 1) // Event selection + members
     } else {
@@ -672,18 +694,17 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       return steps
     }
   }
-
   const handleNext = () => {
     if (validateCurrentStep()) {
       setCurrentStep(prev => Math.min(prev + 1, getTotalSteps() - 1))
     }
   }
-
   const handlePrevious = () => {
     setCurrentStep(prev => Math.max(prev - 1, 0))
   }
-
   const handleRegisterAgain = () => {
+    // Clear saved form data
+    clearFormData()
     setShowSuccess(false)
     setFormData({
       eventType: currentEvent?.eventType || 'team_registration',
@@ -692,27 +713,26 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       eventId: formData.eventId,
     })
     setCurrentStep(0)
+    setLastSaved(null)
   }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateCurrentStep()) return
-
     setIsSubmitting(true)
     try {
       const submitData: RegistrationFormData = {
         eventType: formData.eventType,
         eventId: formData.eventId,
       }
-
       if (formData.eventType === 'team_registration' && formData.members) {
         submitData.members = formData.members
       } else if (formData.eventType === 'recruitment' && formData.participant) {
         submitData.participant = formData.participant
       }
-
       const success = await onSubmit?.(submitData)
       if (success) {
+        // Clear saved form data after successful submission
+        clearFormData()
         setShowSuccess(true)
       }
     } catch (error) {
@@ -721,14 +741,11 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       setIsSubmitting(false)
     }
   }
-
   const renderStepContent = () => {
     if (showSuccess) {
       return <SuccessMessage eventName={currentEvent?.name || "Event"} onRegisterAgain={handleRegisterAgain} />
     }
-
     if (!currentEvent) return null
-
     if (currentStep === 0) {
       // Event Selection
       return (
@@ -766,13 +783,11 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         </div>
       )
     }
-
     if (formData.eventType === 'team_registration' && formData.members) {
       // Team Registration - Member Information
       const memberIndex = currentStep - 1
       const member = formData.members[memberIndex]
       if (!member) return null
-
       return (
         <div className="space-y-4">
           <h3 className="text-lg sm:text-xl lg:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
@@ -859,7 +874,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         </div>
       )
     }
-
     if (formData.eventType === 'recruitment' && formData.participant) {
       if (currentStep === 1) {
         // Personal Information
@@ -950,7 +964,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           </div>
         )
       }
-
       if (currentStep === 2 && currentEvent.commonQuestions && currentEvent.commonQuestions.length > 0) {
         // Common Questions
         return (
@@ -978,7 +991,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           </div>
         )
       }
-
       const teamSelectionStep = getTeamSelectionStepIndex()
       if (currentStep === teamSelectionStep) {
         // Team Selection
@@ -1031,20 +1043,17 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           </div>
         )
       }
-
       const teamQuestionsStep = getTeamQuestionsStepIndex()
       if (currentStep === teamQuestionsStep && formData.participant.selectedTeams.length > 0) {
         // Team-specific Questions
-        const selectedTeams = currentEvent.teams?.filter(team => 
-          formData.participant!.selectedTeams.includes(team.id) && 
-          team.questions && 
+        const selectedTeams = currentEvent.teams?.filter(team =>
+          formData.participant!.selectedTeams.includes(team.id) &&
+          team.questions &&
           team.questions.length > 0
         ) || []
-
         if (selectedTeams.length === 0) {
           return null
         }
-
         return (
           <div className="space-y-6">
             <h3 className="text-lg sm:text-xl lg:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
@@ -1081,15 +1090,12 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         )
       }
     }
-
     return null
   }
-
   // Get open events for the dropdown
   const openEvents = events.filter((event) => event.isOpen)
   const totalSteps = getTotalSteps()
   const isLastStep = currentStep === totalSteps - 1
-
   if (openEvents.length === 0) {
     return (
       <div className="w-full px-4 py-8 text-center">
@@ -1099,7 +1105,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       </div>
     )
   }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -1111,6 +1116,13 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
         <Card className="bg-white dark:bg-blue-900/20 border-0 md:border md:border-gray-200 md:dark:border-blue-800 shadow-lg dark:shadow-cyan-900/20 rounded-xl overflow-hidden">
           <CardContent className="p-2 sm:p-3 md:p-4 lg:p-6 space-y-4 sm:space-y-6">
+            {/* Auto-save indicator */}
+            {lastSaved && !showSuccess && (
+              <div className="flex items-center justify-end text-xs text-gray-500 dark:text-blue-400">
+                <Save className="w-3 h-3 mr-1" />
+                <span>Auto-saved at {lastSaved.toLocaleTimeString()}</span>
+              </div>
+            )}
             {/* Progress Indicator */}
             {totalSteps > 1 && !showSuccess && (
               <div className="flex items-center justify-between mb-8">
@@ -1118,10 +1130,10 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                   {Array.from({ length: totalSteps }, (_, index) => (
                     <React.Fragment key={index}>
                       <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-colors ${
-                        index < currentStep 
-                          ? 'bg-green-500 text-white' 
-                          : index === currentStep 
-                          ? 'bg-blue-500 text-white' 
+                        index < currentStep
+                          ? 'bg-green-500 text-white'
+                          : index === currentStep
+                          ? 'bg-blue-500 text-white'
                           : 'bg-gray-300 dark:bg-blue-800 text-gray-600 dark:text-blue-400'
                       }`}>
                         {index < currentStep ? <CheckCircle className="w-4 h-4" /> : index + 1}
@@ -1139,7 +1151,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                 </div>
               </div>
             )}
-
             {/* Step Content */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -1153,7 +1164,6 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                 {renderStepContent()}
               </motion.div>
             </AnimatePresence>
-
             {/* Navigation Buttons */}
             {!showSuccess && (
               <div className="flex justify-between pt-6 border-t border-gray-200 dark:border-blue-800">
