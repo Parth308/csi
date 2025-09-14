@@ -27,54 +27,7 @@ import {
   PartyPopper,
   Save
 } from "lucide-react"
-
-// --- Updated Storage functions using localStorage ---
-const STORAGE_KEY = 'eventRegistrationForm'
-
-// Helper function to safely save to localStorage
-const saveFormData = (data: RegistrationFormData & { currentStep: number }) => {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      console.log('Form data saved to localStorage');
-    }
-  } catch (error) {
-    console.error('Failed to save form data to localStorage:', error);
-    // Optionally, show a user-friendly message or handle the error differently
-  }
-};
-
-// Helper function to safely load from localStorage
-const loadFormData = (): (RegistrationFormData & { currentStep: number }) | null => {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const data = window.localStorage.getItem(STORAGE_KEY);
-      if (data) {
-        const parsedData = JSON.parse(data);
-        console.log('Form data loaded from localStorage');
-        return parsedData;
-      }
-    }
-  } catch (error) {
-    console.error('Failed to load form data from localStorage:', error);
-    // Optionally, clear potentially corrupted data
-    // clearFormData();
-  }
-  return null;
-};
-
-// Helper function to safely clear from localStorage
-const clearFormData = () => {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.removeItem(STORAGE_KEY);
-      console.log('Form data cleared from localStorage');
-    }
-  } catch (error) {
-    console.error('Failed to clear form data from localStorage:', error);
-  }
-};
-// --- End of Updated Storage functions ---
+import { useToast } from "@/hooks/use-toast"
 
 // Types
 interface Question {
@@ -141,6 +94,7 @@ interface EventRegistrationFormProps {
   events: Event[]
   onSubmit?: (formData: RegistrationFormData) => Promise<boolean>
 }
+
 // Constants
 const ACADEMIC_OPTIONS = {
   years: [
@@ -175,6 +129,7 @@ const ACADEMIC_OPTIONS = {
     { value: "J", label: "J" },
   ],
 }
+
 // Form Field Components
 interface FieldProps {
   id: string
@@ -244,6 +199,7 @@ const SelectField = ({ id, label, icon: Icon, options, value, onChange, required
     </div>
   </div>
 )
+
 // Question Component
 interface QuestionFieldProps {
   question: Question
@@ -346,6 +302,7 @@ const QuestionField = ({ question, answer, onChange }: QuestionFieldProps) => {
       )
   }
 }
+
 // Success Message Component
 const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onRegisterAgain: () => void }) => (
   <motion.div
@@ -379,10 +336,11 @@ const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onR
       </Button>
     </div>
     <div className="text-xs text-gray-500 dark:text-blue-400 bg-gray-50 dark:bg-blue-900/20 p-3 rounded-lg">
-      If you d&apos;ont receive a confirmation email within 15 minutes, please check your spam folder or contact support.
+      If you do not receive a confirmation email within 15 minutes, please check your spam folder or contact support.
     </div>
   </motion.div>
 )
+
 // Helper functions
 const getInitialMembers = (count: number): MemberData[] =>
   Array(count)
@@ -396,6 +354,7 @@ const getInitialMembers = (count: number): MemberData[] =>
       officialEmail: "",
       phoneNumber: "",
     }))
+
 const getInitialParticipant = (): ParticipantData => ({
   name: "",
   registrationNumber: "",
@@ -408,6 +367,7 @@ const getInitialParticipant = (): ParticipantData => ({
   commonAnswers: [],
   teamAnswers: []
 })
+
 // Main Component
 export default function EventRegistrationForm({ events = [], onSubmit }: EventRegistrationFormProps) {
   const [currentStep, setCurrentStep] = useState(0)
@@ -421,6 +381,67 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
   const [showSuccess, setShowSuccess] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [isInitialized, setIsInitialized] = useState(false);
+  const { toast } = useToast()
+
+  // --- Updated Storage functions using localStorage ---
+  const STORAGE_KEY = 'eventRegistrationForm'
+
+  // Helper function to safely save to localStorage
+  const saveFormData = (data: RegistrationFormData & { currentStep: number }) => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        console.log('Form data saved to localStorage');
+      }
+    } catch (error) {
+      console.error('Failed to save form data to localStorage:', error);
+      toast({
+        title: "Auto-save Failed",
+        description: "Could not save your progress automatically. Your data might be lost on refresh."
+      });
+    }
+  };
+
+  // Helper function to safely load from localStorage
+  const loadFormData = (): (RegistrationFormData & { currentStep: number }) | null => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const data = window.localStorage.getItem(STORAGE_KEY);
+        if (data) {
+          const parsedData = JSON.parse(data);
+          console.log('Form data loaded from localStorage');
+          toast({
+            title: "Session Restored",
+            description: "Your previous form progress has been restored.",
+          });
+          return parsedData;
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load form data from localStorage:', error);
+      toast({
+        title: "Restore Failed",
+        description: "Could not restore your previous session. Starting fresh.",
+      });
+    }
+    return null;
+  };
+
+  // Helper function to safely clear from localStorage
+  const clearFormData = () => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.removeItem(STORAGE_KEY);
+        console.log('Form data cleared from localStorage');
+      }
+    } catch (error) {
+      console.error('Failed to clear form data from localStorage:', error);
+      toast({
+        title: "Clear Failed",
+        description: "Could not clear saved data. You might see old data on next visit."
+      });
+    }
+  };
 
   // Get current event details
   const currentEvent = events.find((event) => event._id === formData.eventId)
@@ -445,6 +466,10 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       }
       // If saved data is for an event that is no longer valid, clear it
       clearFormData();
+      toast({
+        title: "Event No Longer Available",
+        description: "Your saved progress was for an event that is no longer open. Starting fresh."
+      });
     }
 
     // If no valid saved data, set the first available open event as the default
@@ -489,6 +514,10 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         participant: selectedEvent.eventType === 'recruitment' ? getInitialParticipant() : undefined,
       });
       setCurrentStep(0); // Go back to the first step for the new form
+      toast({
+        title: "Event Changed",
+        description: `Switched to ${selectedEvent.name}. Form has been reset.`,
+      });
     }
   };
   
@@ -503,6 +532,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       return { ...prev, members: updatedMembers }
     })
   }
+
   const handleParticipantChange = <T extends keyof ParticipantData>(field: T, value: ParticipantData[T]) => {
     if (!formData.participant) return
     setFormData((prev) => ({
@@ -513,6 +543,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       },
     }))
   }
+
   const handleTeamSelection = (teamId: string, selected: boolean) => {
     if (!formData.participant || !currentEvent) return
     setFormData((prev) => {
@@ -535,7 +566,17 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         },
       }
     })
+
+    // Show feedback for team selection
+    const team = currentEvent.teams?.find(t => t.id === teamId);
+    if (team) {
+      toast({
+        title: selected ? "Team Selected" : "Team Deselected",
+        description: `${team.name} has been ${selected ? 'added to' : 'removed from'} your selection.`,
+      });
+    }
   }
+
   const handleCommonAnswerChange = (questionId: string, answer: string | number | string[]) => {
     if (!formData.participant) return
     setFormData((prev) => {
@@ -550,6 +591,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       }
     })
   }
+
   const handleTeamAnswerChange = (teamId: string, questionId: string, answer: string | number | string[]) => {
     if (!formData.participant) return
     setFormData((prev) => {
@@ -571,63 +613,94 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       }
     })
   }
-  const validateCurrentStep = (): boolean => {
+
+  const validateCurrentStep = (): { isValid: boolean; error?: string } => {
     if (!currentEvent) {
-      return false
+      return { isValid: false, error: "No event selected" }
     }
+    
     if (currentStep === 0) {
       // Event selection step
-      return true
+      return { isValid: true }
     }
+    
     if (formData.eventType === 'team_registration') {
-      if (!formData.members) return false
+      if (!formData.members) return { isValid: false, error: "Member data not found" }
+      
       // Validate current member
       const memberIndex = currentStep - 1
       if (memberIndex >= 0 && memberIndex < formData.members.length) {
         const member = formData.members[memberIndex]
-        if (
-          !member.name ||
-          !member.registrationNumber ||
-          !member.section ||
-          !member.year ||
-          !member.branch ||
-          !member.officialEmail ||
-          !member.phoneNumber
-        ) {
-          return false
+        
+        if (!member.name.trim()) {
+          return { isValid: false, error: "Name is required" }
         }
+        if (!member.registrationNumber.trim()) {
+          return { isValid: false, error: "Registration number is required" }
+        }
+        if (!member.section) {
+          return { isValid: false, error: "Section is required" }
+        }
+        if (!member.year) {
+          return { isValid: false, error: "Year is required" }
+        }
+        if (!member.branch) {
+          return { isValid: false, error: "Branch is required" }
+        }
+        if (!member.officialEmail.trim()) {
+          return { isValid: false, error: "Official email is required" }
+        }
+        if (!member.phoneNumber.trim()) {
+          return { isValid: false, error: "Phone number is required" }
+        }
+        
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(member.officialEmail)) {
-          return false
+          return { isValid: false, error: "Please enter a valid email address" }
         }
+        
         const phoneRegex = /^\d{10}$/
         if (!phoneRegex.test(member.phoneNumber)) {
-          return false
+          return { isValid: false, error: "Phone number must be exactly 10 digits" }
         }
       }
     } else if (formData.eventType === 'recruitment') {
-      if (!formData.participant) return false
+      if (!formData.participant) return { isValid: false, error: "Participant data not found" }
+      
       if (currentStep === 1) {
         // Personal info step
         const participant = formData.participant
-        if (
-          !participant.name ||
-          !participant.registrationNumber ||
-          !participant.section ||
-          !participant.year ||
-          !participant.branch ||
-          !participant.officialEmail ||
-          !participant.phoneNumber
-        ) {
-          return false
+        
+        if (!participant.name.trim()) {
+          return { isValid: false, error: "Name is required" }
         }
+        if (!participant.registrationNumber.trim()) {
+          return { isValid: false, error: "Registration number is required" }
+        }
+        if (!participant.section) {
+          return { isValid: false, error: "Section is required" }
+        }
+        if (!participant.year) {
+          return { isValid: false, error: "Year is required" }
+        }
+        if (!participant.branch) {
+          return { isValid: false, error: "Branch is required" }
+        }
+        if (!participant.officialEmail.trim()) {
+          return { isValid: false, error: "Official email is required" }
+        }
+        if (!participant.phoneNumber.trim()) {
+          return { isValid: false, error: "Phone number is required" }
+        }
+        
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(participant.officialEmail)) {
-          return false
+          return { isValid: false, error: "Please enter a valid email address" }
         }
+        
         const phoneRegex = /^\d{10}$/
         if (!phoneRegex.test(participant.phoneNumber)) {
-          return false
+          return { isValid: false, error: "Phone number must be exactly 10 digits" }
         }
       } else if (currentStep === 2 && currentEvent.commonQuestions && currentEvent.commonQuestions.length > 0) {
         // Common questions step
@@ -635,14 +708,14 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           if (question.required) {
             const answer = formData.participant.commonAnswers.find(a => a.questionId === question.id)
             if (!answer || answer.answer === '' || (Array.isArray(answer.answer) && answer.answer.length === 0)) {
-              return false
+              return { isValid: false, error: `Please answer the required question: "${question.question}"` }
             }
           }
         }
       } else if (currentStep === getTeamSelectionStepIndex()) {
         // Team selection step
         if (formData.participant.selectedTeams.length === 0) {
-          return false
+          return { isValid: false, error: "Please select at least one team" }
         }
       } else if (currentStep === getTeamQuestionsStepIndex()) {
         // Team-specific questions step
@@ -651,31 +724,35 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           team.questions &&
           team.questions.length > 0
         ) || []
+        
         for (const team of selectedTeams) {
           for (const question of team.questions || []) {
             if (question.required) {
               const teamAnswers = formData.participant.teamAnswers.find(ta => ta.teamId === team.id)
               const answer = teamAnswers?.answers.find(a => a.questionId === question.id)
               if (!answer || answer.answer === '' || (Array.isArray(answer.answer) && answer.answer.length === 0)) {
-                return false
+                return { isValid: false, error: `Please answer the required question for ${team.name}: "${question.question}"` }
               }
             }
           }
         }
       }
     }
-    return true
+    return { isValid: true }
   }
+
   const getTeamSelectionStepIndex = (): number => {
     if (!currentEvent || formData.eventType !== 'recruitment') return -1
     let stepIndex = 2 // Event selection + personal info
     if (currentEvent.commonQuestions && currentEvent.commonQuestions.length > 0) stepIndex++
     return stepIndex
   }
+
   const getTeamQuestionsStepIndex = (): number => {
     if (!currentEvent || formData.eventType !== 'recruitment') return -1
     return getTeamSelectionStepIndex() + 1
   }
+
   const getTotalSteps = (): number => {
     if (!currentEvent) return 1
     if (currentEvent.eventType === 'team_registration') {
@@ -694,14 +771,23 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       return steps
     }
   }
+
   const handleNext = () => {
-    if (validateCurrentStep()) {
+    const validation = validateCurrentStep()
+    if (validation.isValid) {
       setCurrentStep(prev => Math.min(prev + 1, getTotalSteps() - 1))
+    } else {
+      toast({
+        title: "Validation Error",
+        description: validation.error || "Please fill in all required fields correctly."
+      })
     }
   }
+
   const handlePrevious = () => {
     setCurrentStep(prev => Math.max(prev - 1, 0))
   }
+
   const handleRegisterAgain = () => {
     // Clear saved form data
     clearFormData()
@@ -714,38 +800,73 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
     })
     setCurrentStep(0)
     setLastSaved(null)
+    
+    toast({
+      title: "Form Reset",
+      description: "Ready to register for another event!",
+    })
   }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validateCurrentStep()) return
+    
+    const validation = validateCurrentStep()
+    if (!validation.isValid) {
+      toast({
+        title: "Validation Error",
+        description: validation.error || "Please fill in all required fields correctly."
+      })
+      return
+    }
+    
     setIsSubmitting(true)
+    
     try {
       const submitData: RegistrationFormData = {
         eventType: formData.eventType,
         eventId: formData.eventId,
       }
+      
       if (formData.eventType === 'team_registration' && formData.members) {
         submitData.members = formData.members
       } else if (formData.eventType === 'recruitment' && formData.participant) {
         submitData.participant = formData.participant
       }
+      
       const success = await onSubmit?.(submitData)
+      
       if (success) {
         // Clear saved form data after successful submission
         clearFormData()
         setShowSuccess(true)
+        toast({
+          title: "Registration Successful!",
+          description: `Your registration for ${currentEvent?.name} has been submitted successfully.`,
+        })
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: "There was an error submitting your registration. Please try again."
+        })
       }
     } catch (error) {
       console.error("Form submission error:", error)
+      toast({
+        title: "Submission Error",
+        description: "An unexpected error occurred. Please try again later."
+      })
     } finally {
       setIsSubmitting(false)
     }
   }
+
   const renderStepContent = () => {
     if (showSuccess) {
       return <SuccessMessage eventName={currentEvent?.name || "Event"} onRegisterAgain={handleRegisterAgain} />
     }
+    
     if (!currentEvent) return null
+    
     if (currentStep === 0) {
       // Event Selection
       return (
@@ -783,11 +904,13 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         </div>
       )
     }
+    
     if (formData.eventType === 'team_registration' && formData.members) {
       // Team Registration - Member Information
       const memberIndex = currentStep - 1
       const member = formData.members[memberIndex]
       if (!member) return null
+      
       return (
         <div className="space-y-4">
           <h3 className="text-lg sm:text-xl lg:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
@@ -874,6 +997,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         </div>
       )
     }
+    
     if (formData.eventType === 'recruitment' && formData.participant) {
       if (currentStep === 1) {
         // Personal Information
@@ -964,6 +1088,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           </div>
         )
       }
+      
       if (currentStep === 2 && currentEvent.commonQuestions && currentEvent.commonQuestions.length > 0) {
         // Common Questions
         return (
@@ -991,6 +1116,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           </div>
         )
       }
+      
       const teamSelectionStep = getTeamSelectionStepIndex()
       if (currentStep === teamSelectionStep) {
         // Team Selection
@@ -1043,6 +1169,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           </div>
         )
       }
+      
       const teamQuestionsStep = getTeamQuestionsStepIndex()
       if (currentStep === teamQuestionsStep && formData.participant.selectedTeams.length > 0) {
         // Team-specific Questions
@@ -1051,9 +1178,11 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
           team.questions &&
           team.questions.length > 0
         ) || []
+        
         if (selectedTeams.length === 0) {
           return null
         }
+        
         return (
           <div className="space-y-6">
             <h3 className="text-lg sm:text-xl lg:text-2xl text-gray-800 dark:text-cyan-300 font-semibold">
@@ -1090,12 +1219,15 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
         )
       }
     }
+    
     return null
   }
+
   // Get open events for the dropdown
   const openEvents = events.filter((event) => event.isOpen)
   const totalSteps = getTotalSteps()
   const isLastStep = currentStep === totalSteps - 1
+
   if (openEvents.length === 0) {
     return (
       <div className="w-full px-4 py-8 text-center">
@@ -1105,6 +1237,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
       </div>
     )
   }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -1123,6 +1256,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                 <span>Auto-saved at {lastSaved.toLocaleTimeString()}</span>
               </div>
             )}
+            
             {/* Progress Indicator */}
             {totalSteps > 1 && !showSuccess && (
               <div className="flex items-center justify-between mb-8">
@@ -1151,6 +1285,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                 </div>
               </div>
             )}
+            
             {/* Step Content */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -1164,6 +1299,7 @@ export default function EventRegistrationForm({ events = [], onSubmit }: EventRe
                 {renderStepContent()}
               </motion.div>
             </AnimatePresence>
+            
             {/* Navigation Buttons */}
             {!showSuccess && (
               <div className="flex justify-between pt-6 border-t border-gray-200 dark:border-blue-800">
