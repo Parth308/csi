@@ -327,6 +327,21 @@ const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onR
       </p>
     </div>
     <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+      {/* --- Added WhatsApp Button --- */}
+      <a
+        href="https://chat.whatsapp.com/DlmQ5sWnlV87cLpKmfsWlj"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow transition-colors"
+      >
+        {/* Simple WhatsApp Icon SVG */}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 mr-2">
+          <path d="M12.001 2C6.47598 2 2.00098 6.475 2.00098 12C2.00098 13.7653 2.44666 15.5011 3.30661 17.0637L2.00098 22L6.93728 20.6934C8.49993 21.5533 10.2347 21.999 12.001 21.999C17.525 21.999 22.001 17.524 22.001 11.999C22.001 6.475 17.525 2 12.001 2ZM12.001 3.999C14.2057 3.999 16.3205 4.87483 17.8803 6.43464C19.4401 7.99446 20.316 10.1093 20.316 12.314C20.316 14.5187 19.4401 16.6335 17.8803 18.1933C16.3205 19.7531 14.2057 20.629 12.001 20.629C10.5136 20.629 9.05791 20.2576 7.77717 19.5468L7.00098 19.116L6.08498 19.359L6.51598 18.584C5.80427 17.3031 5.43298 15.8473 5.43298 14.359C5.43298 12.155 6.30881 10.04 7.86862 8.48064C9.42843 6.92129 11.5432 6.045 12.748 6.045L12.001 3.999ZM9.75098 8.249C9.33698 8.249 9.00098 8.586 9.00098 8.999C9.00098 9.413 9.33698 9.749 9.75098 9.749C11.818 9.749 13.499 11.431 13.499 13.499C13.499 13.913 13.836 14.249 14.249 14.249C14.663 14.249 14.999 13.913 14.999 13.499C14.999 10.602 12.647 8.249 9.75098 8.249ZM15.749 12.749C15.336 12.749 14.999 13.085 14.999 13.499C14.999 13.913 15.336 14.249 15.749 14.249H16.499C16.913 14.249 17.249 13.913 17.249 13.499C17.249 13.085 16.913 12.749 16.499 12.749H15.749Z" />
+        </svg>
+        <span>Join WhatsApp Group</span>
+      </a>
+      {/* --- End of WhatsApp Button --- */}
+
       <Button
         onClick={onRegisterAgain}
         className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-700 dark:to-blue-800 dark:hover:from-blue-800 dark:hover:to-blue-900 text-white shadow-lg hover:shadow-xl"
@@ -339,7 +354,7 @@ const SuccessMessage = ({ eventName, onRegisterAgain }: { eventName: string, onR
       If you do not receive a confirmation email within 15 minutes, please check your spam folder or contact support.
     </div>
   </motion.div>
-)
+);
 
 // Helper functions
 const getInitialMembers = (count: number): MemberData[] =>
