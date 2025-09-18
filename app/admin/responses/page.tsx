@@ -100,6 +100,7 @@ export default function RegistrationResponsesPage() {
   const [selectedExportEvent, setSelectedExportEvent] = useState<string>('');
   const [selectedEventFilter, setSelectedEventFilter] = useState<string>('all');
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<string>('all');
+  const [selectedTeamFilter, setSelectedTeamFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedRegistrationId, setSelectedRegistrationId] = useState<string | null>(null);
@@ -180,6 +181,23 @@ export default function RegistrationResponsesPage() {
     }
   };
 
+  // Get all teams from recruitment events
+  const getAllTeams = () => {
+    const teams: { id: string; name: string; eventId: string }[] = [];
+    events.forEach(event => {
+      if (event.eventType === 'recruitment' && event.teams) {
+        event.teams.forEach(team => {
+          teams.push({
+            id: team.id,
+            name: team.name,
+            eventId: event._id
+          });
+        });
+      }
+    });
+    return teams;
+  };
+
   const filteredRegistrations = registrations.filter(reg => {
     const matchesEvent = selectedEventFilter === 'all' ||
       (typeof reg.event === 'string' ? reg.event === selectedEventFilter : reg.event._id === selectedEventFilter);
@@ -189,10 +207,14 @@ export default function RegistrationResponsesPage() {
     
     const lowercasedQuery = searchQuery.toLowerCase();
     const matchesSearch = searchQuery === '' ||
-      (reg.participant?.name.toLowerCase().includes(lowercasedQuery)) ||
+      (reg.participant?.name?.toLowerCase().includes(lowercasedQuery)) ||
       (reg.members.some(member => member.name.toLowerCase().includes(lowercasedQuery)));
 
-    return matchesEvent && matchesType && matchesSearch;
+    // Team filter logic
+    const matchesTeam = selectedTeamFilter === 'all' || 
+      (reg.participant?.selectedTeams?.includes(selectedTeamFilter) ?? false);
+
+    return matchesEvent && matchesType && matchesSearch && matchesTeam;
   });
 
   // Auto-select the first registration when filters change
@@ -205,8 +227,12 @@ export default function RegistrationResponsesPage() {
     } else {
       setSelectedRegistrationId(null);
     }
-  }, [selectedEventFilter, selectedTypeFilter, searchQuery, registrations]);
+  }, [selectedEventFilter, selectedTypeFilter, selectedTeamFilter, searchQuery, registrations]);
 
+  // Reset team filter when event filter changes
+  useEffect(() => {
+    setSelectedTeamFilter('all');
+  }, [selectedEventFilter]);
 
   if (status === 'loading') {
     return <div><CSILoading /></div>;
@@ -357,19 +383,19 @@ export default function RegistrationResponsesPage() {
                             placeholder="e.g. John Doe" 
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-9"
+                            className="pl-9 text-black"
                         />
                     </div>
                     <div className="w-full md:w-auto min-w-[180px]">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Event</label>
                       <Select value={selectedEventFilter} onValueChange={setSelectedEventFilter}>
-                        <SelectTrigger>
+                        <SelectTrigger className='text-black'>
                           <SelectValue placeholder="Select event" />
                         </SelectTrigger>
                         <SelectContent className="bg-white text-black">
-                          <SelectItem value="all">All Events</SelectItem>
+                          <SelectItem value="all" className='text-black'>All Events</SelectItem>
                           {events.map(event => (
-                            <SelectItem key={event._id} value={event._id || ''}>
+                            <SelectItem className='text-black' key={event._id} value={event._id || ''}>
                               {event.name}
                             </SelectItem>
                           ))}
@@ -379,7 +405,7 @@ export default function RegistrationResponsesPage() {
                     <div className="w-full md:w-auto min-w-[180px]">
                       <label className="block text-sm font-medium text-gray-700 mb-1">Registration Type</label>
                       <Select value={selectedTypeFilter} onValueChange={setSelectedTypeFilter}>
-                        <SelectTrigger>
+                        <SelectTrigger className='text-black'>
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent className="bg-white text-black">
@@ -389,10 +415,26 @@ export default function RegistrationResponsesPage() {
                         </SelectContent>
                       </Select>
                     </div>
+                    <div className="w-full md:w-auto min-w-[180px]">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Team</label>
+                      <Select value={selectedTeamFilter} onValueChange={setSelectedTeamFilter} disabled={selectedTypeFilter !== 'recruitment' && selectedTypeFilter !== 'all'}>
+                        <SelectTrigger className="text-black">
+                          <SelectValue placeholder="Select team" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white text-black">
+                          <SelectItem value="all">All Teams</SelectItem>
+                          {getAllTeams().map(team => (
+                            <SelectItem key={team.id} value={team.id}>
+                              {team.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                     <div className="w-full md:w-auto">
                         <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
                             <DialogTrigger asChild>
-                                <Button variant="outline" className="w-full">
+                                <Button variant="outline" className="w-full text-black">
                                 <Download className="mr-2 h-4 w-4" />
                                 Export
                                 </Button>
