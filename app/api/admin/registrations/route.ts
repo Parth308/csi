@@ -233,7 +233,7 @@ export async function GET() {
     const registrations = await Registration.find()
       .populate('event')
       .sort({ createdAt: -1 })
-      .limit(100);
+      .limit(10000);
 
     return NextResponse.json({ registrations });
   } catch (error) {
