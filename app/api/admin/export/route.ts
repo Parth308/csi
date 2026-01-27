@@ -73,18 +73,25 @@ interface Registration {
 
 export async function POST(request: NextRequest) {
   try {
-    const { eventId, registrations, events } = await request.json()
+    const { eventId, teamId, registrations, events } = await request.json()
 
     // Filter registrations for the selected event
-    const filteredRegistrations = registrations.filter((reg: Registration) => {
+    let filteredRegistrations = registrations.filter((reg: Registration) => {
       if (typeof reg.event === 'string') {
         return reg.event === eventId
       }
       return reg.event._id === eventId
     })
 
+    // If teamId is specified, filter by team as well (for recruitment events)
+    if (teamId) {
+      filteredRegistrations = filteredRegistrations.filter((reg: Registration) => {
+        return reg.participant?.selectedTeams?.includes(teamId)
+      })
+    }
+
     if (filteredRegistrations.length === 0) {
-      return NextResponse.json({ error: 'No registrations found for this event' }, { status: 404 })
+      return NextResponse.json({ error: 'No registrations found for this event' + (teamId ? ' and team' : '') }, { status: 404 })
     }
 
     // Get event details
@@ -99,6 +106,9 @@ export async function POST(request: NextRequest) {
 
     const eventName = event.name
     const eventType = event.eventType
+    
+    // Get team name if filtering by team
+    const teamName = teamId ? event.teams?.find((t: Team) => t.id === teamId)?.name : null
 
     // Create workbook and worksheet
     const workbook = xlsx.utils.book_new()
@@ -218,16 +228,24 @@ export async function POST(request: NextRequest) {
     const worksheet = xlsx.utils.json_to_sheet(transformedRegistrations)
 
     // Add worksheet to workbook
-    xlsx.utils.book_append_sheet(workbook, worksheet, `${eventName} Registrations`)
+    const sheetName = teamName 
+      ? `${eventName} - ${teamName}`.substring(0, 31) // Excel sheet names max 31 chars
+      : `${eventName} Registrations`.substring(0, 31)
+    xlsx.utils.book_append_sheet(workbook, worksheet, sheetName)
 
     // Generate buffer
     const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' })
+
+    // Generate filename with optional team name
+    const fileName = teamName
+      ? `${eventName.replace(/\s+/g, '_')}_${teamName.replace(/\s+/g, '_')}_registrations.xlsx`
+      : `${eventName.replace(/\s+/g, '_')}_registrations.xlsx`
 
     // Return response
     return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Content-Disposition': `attachment; filename=${eventName.replace(/\s+/g, '_')}_registrations.xlsx`
+        'Content-Disposition': `attachment; filename=${fileName}`
       }
     })
   } catch (error) {

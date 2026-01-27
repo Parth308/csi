@@ -98,6 +98,7 @@ export default function RegistrationResponsesPage() {
   const { toast } = useToast();
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [selectedExportEvent, setSelectedExportEvent] = useState<string>('');
+  const [selectedExportTeam, setSelectedExportTeam] = useState<string>('all');
   const [selectedEventFilter, setSelectedEventFilter] = useState<string>('all');
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<string>('all');
   const [selectedTeamFilter, setSelectedTeamFilter] = useState<string>('all');
@@ -141,7 +142,7 @@ export default function RegistrationResponsesPage() {
     fetchData();
   }, [status]);
 
-  const downloadExcel = async (eventId: string) => {
+  const downloadExcel = async (eventId: string, teamId?: string) => {
     try {
       setIsExportDialogOpen(false);
       const response = await fetch('/api/admin/export', {
@@ -149,7 +150,7 @@ export default function RegistrationResponsesPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ eventId, registrations, events }),
+        body: JSON.stringify({ eventId, teamId: teamId !== 'all' ? teamId : undefined, registrations, events }),
       });
 
       if (!response.ok) {
@@ -161,7 +162,15 @@ export default function RegistrationResponsesPage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${events.find(e => e._id === eventId)?.name.replace(/\s+/g, '_')}_registrations.xlsx` || 'registrations.xlsx';
+      
+      // Generate filename based on event and optionally team
+      const event = events.find(e => e._id === eventId);
+      const team = teamId && teamId !== 'all' ? event?.teams?.find(t => t.id === teamId) : null;
+      const fileName = team 
+        ? `${event?.name.replace(/\s+/g, '_')}_${team.name.replace(/\s+/g, '_')}_registrations.xlsx`
+        : `${event?.name.replace(/\s+/g, '_')}_registrations.xlsx`;
+      a.download = fileName || 'registrations.xlsx';
+      
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -432,7 +441,13 @@ export default function RegistrationResponsesPage() {
                       </Select>
                     </div>
                     <div className="w-full md:w-auto">
-                        <Dialog open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen}>
+                        <Dialog open={isExportDialogOpen} onOpenChange={(open) => {
+                          setIsExportDialogOpen(open);
+                          if (!open) {
+                            setSelectedExportEvent('');
+                            setSelectedExportTeam('all');
+                          }
+                        }}>
                             <DialogTrigger asChild>
                                 <Button variant="outline" className="w-full text-black">
                                 <Download className="mr-2 h-4 w-4" />
@@ -441,10 +456,15 @@ export default function RegistrationResponsesPage() {
                             </DialogTrigger>
                             <DialogContent className="bg-white text-black">
                                 <DialogHeader>
-                                <DialogTitle>Select Event to Export</DialogTitle>
+                                <DialogTitle>Export Registrations</DialogTitle>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
-                                <Select value={selectedExportEvent} onValueChange={setSelectedExportEvent}>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">Select Event</label>
+                                  <Select value={selectedExportEvent} onValueChange={(value) => {
+                                    setSelectedExportEvent(value);
+                                    setSelectedExportTeam('all');
+                                  }}>
                                     <SelectTrigger>
                                     <SelectValue placeholder="Select an event" />
                                     </SelectTrigger>
@@ -455,13 +475,39 @@ export default function RegistrationResponsesPage() {
                                         </SelectItem>
                                     ))}
                                     </SelectContent>
-                                </Select>
+                                  </Select>
+                                </div>
+                                {/* Show team selector only for recruitment events */}
+                                {(() => {
+                                  const selectedEvent = events.find(e => e._id === selectedExportEvent);
+                                  if (selectedEvent?.eventType === 'recruitment' && selectedEvent.teams && selectedEvent.teams.length > 0) {
+                                    return (
+                                      <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Select Team (Optional)</label>
+                                        <Select value={selectedExportTeam} onValueChange={setSelectedExportTeam}>
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="All Teams" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="all" className="bg-white text-black">All Teams</SelectItem>
+                                            {selectedEvent.teams.map(team => (
+                                              <SelectItem key={team.id} value={team.id} className="bg-white text-black">
+                                                {team.name}
+                                              </SelectItem>
+                                            ))}
+                                          </SelectContent>
+                                        </Select>
+                                      </div>
+                                    );
+                                  }
+                                  return null;
+                                })()}
                                 <div className="flex justify-end space-x-2">
                                     <Button variant="outline" onClick={() => setIsExportDialogOpen(false)}>
                                     Cancel
                                     </Button>
                                     <Button
-                                    onClick={() => downloadExcel(selectedExportEvent)}
+                                    onClick={() => downloadExcel(selectedExportEvent, selectedExportTeam)}
                                     disabled={!selectedExportEvent}
                                     >
                                     Export
